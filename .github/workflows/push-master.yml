@@ -9,14 +9,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: hashicorp/setup-terraform@v1
+      # TODO - uses: scaffoldly/terraform-plan-release@v1
       - run: terraform init
       - run: terraform workspace new ${GITHUB_REF##*/} || true
       - run: terraform workspace select ${GITHUB_REF##*/}
       # TODO get/create and decrypt state file
-      - run: terraform plan -out "planfile"
+      - run: terraform plan -out "planfile" | tee planfile.txt
         env:
           TF_VAR_BOOTSTRAP_GITHUB_TOKEN: ${{ secrets.BOOTSTRAP_GITHUB_TOKEN }}
-      - run: echo "\`\`\`\n$(terraform show -no-color planfile)\n\`\`\`" > planfile.txt
       - run: echo "::set-env name=NEXT_VERSION::$(cat terraform.tfstate.d/${GITHUB_REF##*/}/terraform.tfstate | jq -r '.version + 1')"
       - run: gpg --batch -c --passphrase "$BOOTSTRAP_GITHUB_TOKEN" planfile
         env:
