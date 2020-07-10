@@ -21,7 +21,7 @@ jobs:
       - run: gpg --batch -c --passphrase "$BOOTSTRAP_GITHUB_TOKEN" planfile
         env:
           BOOTSTRAP_GITHUB_TOKEN: ${{ secrets.BOOTSTRAP_GITHUB_TOKEN }}
-      - run: git config user.name "${{ env.GITHUB_ACTOR }}"
+      - run: git config user.name "Automated Version Bump"
       - run: git config user.email "gh-action-bump-version@users.noreply.github.com"
       - run: git commit -a -m "Bump to v${{ env.NEXT_VERSION }}"
       - run: git push
