@@ -1,3 +1,3 @@
-#!/bin/bash
+#!/bin/sh
 set -e
-echo "{\"repo\":\"$(git remote get-url origin)\"}"
+echo "{\"repo\":\"$(/usr/bin/git remote get-url origin)\"}"

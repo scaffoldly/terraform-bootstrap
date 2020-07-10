@@ -12,6 +12,7 @@ jobs:
       - run: terraform init
       - run: terraform workspace new ${GITHUB_REF##*/} || true
       - run: terraform workspace select ${GITHUB_REF##*/}
+      - run: bash git.sh
       - run: terraform plan -out "planfile"
         env:
           TF_VAR_BOOTSTRAP_GITHUB_TOKEN: ${{ secrets.BOOTSTRAP_GITHUB_TOKEN }}
