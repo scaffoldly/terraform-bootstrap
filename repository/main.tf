@@ -7,6 +7,8 @@ resource "github_repository" "repository" {
   has_projects  = false
   has_wiki      = false
 
+  default_branch = "master"
+
   template {
     owner      = "scaffoldly"
     repository = var.template_repo
