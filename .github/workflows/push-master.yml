@@ -16,7 +16,7 @@ jobs:
       - run: terraform plan -out "planfile"
         env:
           TF_VAR_BOOTSTRAP_GITHUB_TOKEN: ${{ secrets.BOOTSTRAP_GITHUB_TOKEN }}
-      - run: terraform show planfile > planfile.txt
+      - run: echo "\`\`\`\n$(terraform show -no-color planfile)\n\`\`\`" > planfile.txt
       - run: echo "::set-env name=NEXT_VERSION::$(cat terraform.tfstate.d/${GITHUB_REF##*/}/terraform.tfstate | jq -r '.version + 1')"
       - run: gpg --batch -c --passphrase "$BOOTSTRAP_GITHUB_TOKEN" planfile
         env:
