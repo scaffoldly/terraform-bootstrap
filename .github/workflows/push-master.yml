@@ -14,7 +14,9 @@ jobs:
       - run: terraform workspace new ${GITHUB_REF##*/} || true
       - run: terraform workspace select ${GITHUB_REF##*/}
       # TODO get/create and decrypt state file
-      - run: echo "::set-output name=value::$(terraform plan -no-color -out planfile)"
+      - run: |
+          terraform plan -out planfile
+          echo ::set-output name=plan_output::"```\n$(terraform show -no-color planfile)\n```"
         id: plan
         env:
           TF_VAR_BOOTSTRAP_GITHUB_TOKEN: ${{ secrets.BOOTSTRAP_GITHUB_TOKEN }}
@@ -35,10 +37,7 @@ jobs:
         with:
           tag_name: v${{ env.NEXT_VERSION }}
           release_name: Release v${{ env.NEXT_VERSION }}
-          body: |
-            ```
-            ${{ steps.plan.outputs.value }}
-            ```
+          body: ${{ steps.plan.outputs.plan_output }}
           draft: true
           prerelease: false
       - uses: actions/upload-release-asset@v1
