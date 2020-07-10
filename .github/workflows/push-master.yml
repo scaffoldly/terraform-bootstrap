@@ -14,5 +14,4 @@ jobs:
       - run: terraform workspace select ${GITHUB_REF##*/}
       - run: terraform plan -out "planfile"
         env:
-          TF_ENV_GITHUB_REPOSITORY: $GITHUB_REPOSITORY
-          TF_ENV_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TF_ENV_SCAFFOLDLY_BOOTSTRAP_GITHUB_TOKEN: ${{ secrets.SCAFFOLDLY_BOOTSTRAP_GITHUB_TOKEN }}
