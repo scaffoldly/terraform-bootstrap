@@ -16,7 +16,7 @@ jobs:
       - run: terraform plan -out "planfile"
         env:
           TF_VAR_BOOTSTRAP_GITHUB_TOKEN: ${{ secrets.BOOTSTRAP_GITHUB_TOKEN }}
-      - run: echo "::set-env name=PLAN::$(terraform show planfile)"
+      - run: terraform show planfile > planfile.txt
       - run: echo "::set-env name=NEXT_VERSION::$(cat terraform.tfstate.d/${GITHUB_REF##*/}/terraform.tfstate | jq -r '.version + 1')"
       - run: gpg --batch -c --passphrase "$BOOTSTRAP_GITHUB_TOKEN" planfile
         env:
@@ -25,8 +25,8 @@ jobs:
       - run: git config user.email "gh-action-bump-version@users.noreply.github.com"
       # TODO sync version after release
       - run: echo v${{ env.NEXT_VERSION }} > version.txt
-      - run: git commit -a -m "Bump to v${{ env.NEXT_VERSION }}"
-      - run: git push
+      - run: git commit -a -m "Bump to v${{ env.NEXT_VERSION }}" || true
+      - run: git push || true
       - uses: actions/create-release@v1
         id: create_release
         env:
@@ -34,7 +34,7 @@ jobs:
         with:
           tag_name: v${{ env.NEXT_VERSION }}
           release_name: Release v${{ env.NEXT_VERSION }}
-          body: ${{ env.PLAN }}
+          body_path: planfile.txt
           draft: true
           prerelease: false
       - uses: actions/upload-release-asset@v1
