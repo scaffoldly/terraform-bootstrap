@@ -12,6 +12,31 @@ jobs:
       - run: terraform init
       - run: terraform workspace new ${GITHUB_REF##*/} || true
       - run: terraform workspace select ${GITHUB_REF##*/}
+      # TODO get/create and decrypt state file
       - run: terraform plan -out "planfile"
         env:
           TF_VAR_BOOTSTRAP_GITHUB_TOKEN: ${{ secrets.BOOTSTRAP_GITHUB_TOKEN }}
+      - run: echo "::set-env name=PLAN::$(terraform show planfile)"
+      - run: echo "::set-env name=NEXT_VERSION::$(cat terraform.tfstate.d/${GITHUB_REF##*/}/terraform.tfstate | jq -r '.version + 1')"
+      - run: gpg --batch -c --passphrase "$TF_VAR_BOOTSTRAP_GITHUB_TOKEN" planfile
+      - run: git commit -a -m "CI v${{ env.NEXT_VERSION }}"
+      - run: git push
+      - uses: actions/create-release@v1
+        id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ env.NEXT_VERSION }}
+          release_name: Release v${{ env.NEXT_VERSION }}
+          body: ${{ env.PLAN }}
+          draft: true
+          prerelease: false
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: planfile.gpg
+          asset_name: planfile.gpg
+          asset_content_type: application/octet-stream
+
