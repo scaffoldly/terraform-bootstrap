@@ -18,7 +18,9 @@ jobs:
           TF_VAR_BOOTSTRAP_GITHUB_TOKEN: ${{ secrets.BOOTSTRAP_GITHUB_TOKEN }}
       - run: echo "::set-env name=PLAN::$(terraform show planfile)"
       - run: echo "::set-env name=NEXT_VERSION::$(cat terraform.tfstate.d/${GITHUB_REF##*/}/terraform.tfstate | jq -r '.version + 1')"
-      - run: gpg --batch -c --passphrase "$TF_VAR_BOOTSTRAP_GITHUB_TOKEN" planfile
+      - run: gpg --batch -c --passphrase "$BOOTSTRAP_GITHUB_TOKEN" planfile
+        env:
+          BOOTSTRAP_GITHUB_TOKEN: ${{ secrets.BOOTSTRAP_GITHUB_TOKEN }}
       - run: git commit -a -m "CI v${{ env.NEXT_VERSION }}"
       - run: git push
       - uses: actions/create-release@v1
