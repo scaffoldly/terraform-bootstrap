@@ -14,7 +14,11 @@ jobs:
       - run: terraform workspace new ${GITHUB_REF##*/} || true
       - run: terraform workspace select ${GITHUB_REF##*/}
       # TODO get/create and decrypt state file
-      - run: terraform plan -no-color -out "planfile" | tee planfile.txt
+      - run: |
+          $PLAN=$(terraform plan -no-color -out "planfile")
+          echo "$PLAN"
+          echo ::set-output name=value::"$PLAN"
+        id: plan
         env:
           TF_VAR_BOOTSTRAP_GITHUB_TOKEN: ${{ secrets.BOOTSTRAP_GITHUB_TOKEN }}
       - run: echo "::set-env name=NEXT_VERSION::$(cat terraform.tfstate.d/${GITHUB_REF##*/}/terraform.tfstate | jq -r '.version + 1')"
@@ -34,7 +38,10 @@ jobs:
         with:
           tag_name: v${{ env.NEXT_VERSION }}
           release_name: Release v${{ env.NEXT_VERSION }}
-          body_path: planfile.txt
+          body: |
+            ```
+            ${{ steps.plan.outputs.value }}
+            ```
           draft: true
           prerelease: false
       - uses: actions/upload-release-asset@v1
