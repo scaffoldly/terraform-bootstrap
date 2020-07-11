@@ -15,7 +15,7 @@ jobs:
       - run: terraform workspace select ${GITHUB_REF##*/}
       # TODO get/create and decrypt state file
       - run: |
-          echo ::set-output name=plan_output::"\`\`\`\n$(terraform plan -no-color -out planfile 2>&1)\n\`\`\`"
+          echo "::set-output name=plan_output::\`\`\`\n$(terraform plan -no-color -out planfile)\n\`\`\`
         id: plan
         env:
           TF_VAR_BOOTSTRAP_GITHUB_TOKEN: ${{ secrets.BOOTSTRAP_GITHUB_TOKEN }}
