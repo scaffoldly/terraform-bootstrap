@@ -1,0 +1,14 @@
+on:
+  release:
+    types: [published]
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: hashicorp/setup-terraform@v1
+      # TODO - uses: scaffoldly/terraform-plan-release@v1
+      - run: terraform init
+      - run: terraform workspace new ${GITHUB_REF##*/} || true
+      - run: terraform workspace select ${GITHUB_REF##*/}
