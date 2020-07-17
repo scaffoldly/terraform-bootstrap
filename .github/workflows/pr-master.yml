@@ -7,6 +7,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
       - run: |
           git config user.name "Automated Version Bump"
           git config user.email "gh-action-bump-version@users.noreply.github.com"
@@ -25,10 +27,9 @@ jobs:
           cp misc/empty.tfstate terraform.tfstate.d/live/terraform.tfstate
           gpg --batch -c --passphrase "$BOOTSTRAP_GITHUB_TOKEN" terraform.tfstate.d/live/terraform.tfstate
           rm terraform.tfstate.d/live/terraform.tfstate
-          git pull origin/{GITHUB_HEAD_REF} HEAD
           git add terraform.tfstate.d/live/terraform.tfstate.gpg
           git commit -a -m "Add state file"
-          git push origin HEAD:${GITHUB_HEAD_REF}
+          git push
         if: steps.terraform_state.outputs.files_exists == 'false'
         env:
           BOOTSTRAP_GITHUB_TOKEN: ${{ secrets.BOOTSTRAP_GITHUB_TOKEN }}
