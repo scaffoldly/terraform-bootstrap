@@ -56,8 +56,8 @@ jobs:
         with:
           ref: master
       - run: |
-        git config user.name "Automated Version Bump"
-        git config user.email "gh-action-bump-version@users.noreply.github.com"
+          git config user.name "Automated Version Bump"
+          git config user.email "gh-action-bump-version@users.noreply.github.com"
       - uses: hashicorp/setup-terraform@v1
       - run: |
           terraform init
