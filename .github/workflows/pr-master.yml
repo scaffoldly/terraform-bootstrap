@@ -11,8 +11,6 @@ jobs:
     if: github.event.pull_request.merged != 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: benjlevesque/short-sha@v1.1
-        id: short-sha
       - uses: actions/checkout@v2
         with:
           ref: ${{ github.head_ref }}
@@ -54,8 +52,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: plans/${{ steps.short-sha.outputs.sha }}
-          release_name: Terraform Plan ${{ steps.short-sha.outputs.sha }}
+          tag_name: plans/${{ github.sha }}
+          release_name: Terraform Plan ${{ github.sha }}
           body: |
             ```
             ${{ join(steps.plan.outputs.*, '\n')}}
@@ -70,8 +68,6 @@ jobs:
     if: github.event.pull_request.merged == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: benjlevesque/short-sha@v1.1
-        id: short-sha
       - uses: actions/checkout@v2
         with:
           ref: master
@@ -86,7 +82,7 @@ jobs:
       - run: gpg --batch -d --passphrase "$BOOTSTRAP_GITHUB_TOKEN" -o terraform.tfstate.d/live/terraform.tfstate terraform.tfstate.d/live/terraform.tfstate.gpg
       - uses: dsaltares/fetch-gh-release-asset@0.0.4
         with:
-          version: plans/${{ github.sha[:8] }}
+          version: plans/${{ github.sha }}
           file: planfile.gpg
           token: ${{ secrets.YOUR_TOKEN }}
       - run: gpg --batch -d --passphrase "$BOOTSTRAP_GITHUB_TOKEN" -o planfile planfile.gpg
