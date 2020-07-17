@@ -1,3 +1,3 @@
 data "external" "git" {
-  program = ["bash", "git.sh"]
+  program = ["bash", "misc/git.sh"]
 }

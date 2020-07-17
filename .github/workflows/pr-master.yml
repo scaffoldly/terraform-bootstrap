@@ -1,0 +1,84 @@
+name: Pull Request
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened, closed]
+env:
+  BOOTSTRAP_GITHUB_TOKEN: ${{ secrets.BOOTSTRAP_GITHUB_TOKEN }}
+  TF_VAR_BOOTSTRAP_GITHUB_TOKEN: ${{ secrets.BOOTSTRAP_GITHUB_TOKEN }}
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+      - run: |
+          git config user.name "Automated Version Bump"
+          git config user.email "gh-action-bump-version@users.noreply.github.com"
+      - uses: hashicorp/setup-terraform@v1
+      # TODO - uses: scaffoldly/terraform-plan-release@v1
+      - run: |
+          terraform init
+          terraform workspace new live || true
+          terraform workspace select live
+      - uses: andstor/file-existence-action@v1
+        id: terraform_state
+        with:
+          files: "terraform.tfstate.d/live/terraform.tfstate.gpg"
+      - run: |
+          mkdir -p terraform.tfstate.d/live
+          cp misc/empty.tfstate terraform.tfstate.d/live/terraform.tfstate
+          gpg --batch -c --passphrase "$BOOTSTRAP_GITHUB_TOKEN" terraform.tfstate.d/live/terraform.tfstate
+          rm terraform.tfstate.d/live/terraform.tfstate
+          git add terraform.tfstate.d/live/terraform.tfstate.gpg
+          git commit -a -m "Add state file"
+          git push
+        if: steps.terraform_state.outputs.files_exists == 'false'
+      - run: gpg --batch -d --passphrase "$BOOTSTRAP_GITHUB_TOKEN" -o terraform.tfstate.d/live/terraform.tfstate terraform.tfstate.d/live/terraform.tfstate.gpg
+      - run: terraform plan -no-color -out planfile
+        id: plan
+      - uses: mshick/add-pr-comment@v1
+        with:
+          message: |
+            ```
+            ${{ join(steps.plan.outputs.*, '\n')}}
+            ```
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/upload-artifact@v1
+        with:
+          name: planfile
+          path: planfile
+  apply:
+    if: github.event.pull_request.merged == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: master
+      - run: |
+          git config user.name "Automated Version Bump"
+          git config user.email "gh-action-bump-version@users.noreply.github.com"
+      - uses: hashicorp/setup-terraform@v1
+      - run: |
+          terraform init
+          terraform workspace new live || true
+          terraform workspace select live
+      - run: gpg --batch -d --passphrase "$BOOTSTRAP_GITHUB_TOKEN" -o terraform.tfstate.d/live/terraform.tfstate terraform.tfstate.d/live/terraform.tfstate.gpg
+      - uses: actions/download-artifact@v1
+        with:
+          name: planfile
+      - run: terraform apply -no-color planfile
+        id: apply
+      - uses: mshick/add-pr-comment@v1
+        with:
+          message: |
+            ```
+            ${{ join(steps.apply.outputs.*, '\n')}}
+            ```
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - run: |
+          gpg --batch -c --passphrase "$BOOTSTRAP_GITHUB_TOKEN" terraform.tfstate.d/live/terraform.tfstate
+          rm terraform.tfstate.d/live/terraform.tfstate
+          git add terraform.tfstate.d/live/terraform.tfstate.gpg
+          git commit -a -m "Update state file"
+          git push
