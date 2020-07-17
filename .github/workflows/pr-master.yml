@@ -25,7 +25,7 @@ jobs:
           cp misc/empty.tfstate terraform.tfstate.d/live/terraform.tfstate
           gpg --batch -c --passphrase "$BOOTSTRAP_GITHUB_TOKEN" terraform.tfstate.d/live/terraform.tfstate
           rm terraform.tfstate.d/live/terraform.tfstate
-          git pull
+          git pull origin/{GITHUB_HEAD_REF} HEAD
           git add terraform.tfstate.d/live/terraform.tfstate.gpg
           git commit -a -m "Add state file"
           git push origin HEAD:${GITHUB_HEAD_REF}
