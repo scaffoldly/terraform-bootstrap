@@ -1,7 +1,7 @@
 name: Commit to Master
 on:
   pull_request:
-    types: [opened, synchronize, reopened]:
+    types: [opened, synchronize, reopened]
 jobs:
   plan:
     runs-on: ubuntu-latest
@@ -45,4 +45,3 @@ jobs:
             ${{ join(steps.plan.outputs.*, '\n')}}
             ```
           repo-token: ${{ secrets.GITHUB_TOKEN }}
- 
