@@ -8,7 +8,7 @@ env:
   TF_VAR_BOOTSTRAP_GITHUB_TOKEN: ${{ secrets.BOOTSTRAP_GITHUB_TOKEN }}
 jobs:
   plan:
-    if: github.event.pull_request.merged != 'true'
+    if: github.event.pull_request.merged != true
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -65,7 +65,7 @@ jobs:
           asset_name: planfile.gpg
           asset_content_type: application/octet-stream
   apply:
-    if: github.event.pull_request.merged == 'true'
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
