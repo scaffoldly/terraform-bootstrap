@@ -11,6 +11,8 @@ jobs:
     if: github.event.pull_request.merged != 'true'
     runs-on: ubuntu-latest
     steps:
+      - uses: benjlevesque/short-sha@v1.1
+        id: short-sha
       - uses: actions/checkout@v2
         with:
           ref: ${{ github.head_ref }}
@@ -52,8 +54,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: plans/${{ github.sha[:8] }}
-          release_name: Terraform Plan ${{ github.sha[:8] }}
+          tag_name: plans/${{ steps.short-sha.outputs.sha }}
+          release_name: Terraform Plan ${{ steps.short-sha.outputs.sha }}
           body: |
             ```
             ${{ join(steps.plan.outputs.*, '\n')}}
@@ -68,6 +70,8 @@ jobs:
     if: github.event.pull_request.merged == 'true'
     runs-on: ubuntu-latest
     steps:
+      - uses: benjlevesque/short-sha@v1.1
+        id: short-sha
       - uses: actions/checkout@v2
         with:
           ref: master
