@@ -98,9 +98,10 @@ jobs:
             ${{ join(steps.apply.outputs.*, '\n')}}
             ```
           repo-token: ${{ secrets.GITHUB_TOKEN }}
+      # TODO: More durability of the statefile... this is fragile
       - run: |
           gpg --batch -c --passphrase "$BOOTSTRAP_GITHUB_TOKEN" terraform.tfstate.d/live/terraform.tfstate
           rm terraform.tfstate.d/live/terraform.tfstate
           git add terraform.tfstate.d/live/terraform.tfstate.gpg
-          git commit -a -m "Update state file"
+          git commit -m "Update state file"
           git push
