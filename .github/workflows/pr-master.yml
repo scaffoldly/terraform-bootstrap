@@ -80,7 +80,9 @@ jobs:
           terraform init
           terraform workspace new live || true
           terraform workspace select live
-      - run: gpg --batch -d --passphrase "$BOOTSTRAP_GITHUB_TOKEN" -o terraform.tfstate.d/live/terraform.tfstate terraform.tfstate.d/live/terraform.tfstate.gpg
+      - run: |
+          gpg --batch -d --passphrase "$BOOTSTRAP_GITHUB_TOKEN" -o terraform.tfstate.d/live/terraform.tfstate terraform.tfstate.d/live/terraform.tfstate.gpg
+          rm terraform.tfstate.d/live/terraform.tfstate.gpg
       - uses: dsaltares/fetch-gh-release-asset@0.0.4
         with:
           version: latest
@@ -96,9 +98,10 @@ jobs:
             ${{ join(steps.apply.outputs.*, '\n')}}
             ```
           repo-token: ${{ secrets.GITHUB_TOKEN }}
+      # TODO: More durability of the statefile... this is fragile
       - run: |
           gpg --batch -c --passphrase "$BOOTSTRAP_GITHUB_TOKEN" terraform.tfstate.d/live/terraform.tfstate
           rm terraform.tfstate.d/live/terraform.tfstate
           git add terraform.tfstate.d/live/terraform.tfstate.gpg
-          git commit -a -m "Update state file"
+          git commit -m "Update state file"
           git push
