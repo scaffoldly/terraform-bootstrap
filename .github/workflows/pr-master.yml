@@ -80,7 +80,9 @@ jobs:
           terraform init
           terraform workspace new live || true
           terraform workspace select live
-      - run: gpg --batch -d --passphrase "$BOOTSTRAP_GITHUB_TOKEN" -o terraform.tfstate.d/live/terraform.tfstate terraform.tfstate.d/live/terraform.tfstate.gpg
+      - run: |
+          gpg --batch -d --passphrase "$BOOTSTRAP_GITHUB_TOKEN" -o terraform.tfstate.d/live/terraform.tfstate terraform.tfstate.d/live/terraform.tfstate.gpg
+          rm terraform.tfstate.d/live/terraform.tfstate.gpg
       - uses: dsaltares/fetch-gh-release-asset@0.0.4
         with:
           version: latest
