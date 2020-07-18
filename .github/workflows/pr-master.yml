@@ -18,7 +18,6 @@ jobs:
           git config user.name "Automated Version Bump"
           git config user.email "gh-action-bump-version@users.noreply.github.com"
       - uses: hashicorp/setup-terraform@v1
-      # TODO - uses: scaffoldly/terraform-plan-release@v1
       - run: |
           terraform init
           terraform workspace new live || true
