@@ -52,7 +52,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: plans/${{ github.sha }}
+          tag_name: plan/${{ github.sha }}
           release_name: Terraform Plan ${{ github.sha }}
           body: |
             ```
@@ -82,7 +82,7 @@ jobs:
       - run: gpg --batch -d --passphrase "$BOOTSTRAP_GITHUB_TOKEN" -o terraform.tfstate.d/live/terraform.tfstate terraform.tfstate.d/live/terraform.tfstate.gpg
       - uses: dsaltares/fetch-gh-release-asset@0.0.4
         with:
-          version: plans/${{ github.sha }}
+          version: tags/plans%2F${{ github.sha }}
           file: planfile.gpg
           token: ${{ secrets.YOUR_TOKEN }}
       - run: gpg --batch -d --passphrase "$BOOTSTRAP_GITHUB_TOKEN" -o planfile planfile.gpg
