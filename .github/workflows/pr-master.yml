@@ -82,7 +82,7 @@ jobs:
       - run: gpg --batch -d --passphrase "$BOOTSTRAP_GITHUB_TOKEN" -o terraform.tfstate.d/live/terraform.tfstate terraform.tfstate.d/live/terraform.tfstate.gpg
       - uses: dsaltares/fetch-gh-release-asset@0.0.4
         with:
-          version: tags/plans%2F${{ github.sha }}
+          version: latest
           file: planfile.gpg
           token: ${{ secrets.YOUR_TOKEN }}
       - run: gpg --batch -d --passphrase "$BOOTSTRAP_GITHUB_TOKEN" -o planfile planfile.gpg
