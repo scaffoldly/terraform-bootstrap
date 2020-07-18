@@ -35,7 +35,9 @@ jobs:
           git commit -a -m "Add state file"
           git push
         if: steps.terraform_state.outputs.files_exists == 'false'
-      - run: gpg --batch -d --passphrase "$BOOTSTRAP_GITHUB_TOKEN" -o terraform.tfstate.d/live/terraform.tfstate terraform.tfstate.d/live/terraform.tfstate.gpg
+      - run: |
+          gpg --batch -d --passphrase "$BOOTSTRAP_GITHUB_TOKEN" -o terraform.tfstate.d/live/terraform.tfstate terraform.tfstate.d/live/terraform.tfstate.gpg
+          rm terraform.tfstate.d/live/terraform.tfstate.gpg
       - run: terraform plan -no-color -out planfile
         id: plan
       - run: gpg --batch -c --passphrase "$BOOTSTRAP_GITHUB_TOKEN" planfile
