@@ -1,6 +1,12 @@
 terraform {
   required_version = ">= 0.12"
-  backend "remote" {}
+  backend "remote" {
+    hostname     = "app.terraform.io"
+    organization = "scaffoldly"
+    workspaces {
+      name = "bootstrap"
+    }
+  }
 }
 
 provider "github" {
