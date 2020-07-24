@@ -20,6 +20,7 @@ jobs:
           env
           envsubst < backend.hcl.tmpl > backend.hcl
           envsubst < .terraformrc.tmpl > .terraformrc
+      - run: |
           cat backend.hcl
           cat .terraformrc
       - run: |
