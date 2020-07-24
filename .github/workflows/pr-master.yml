@@ -13,8 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          ref: ${{ github.head_ref }}
       - run: |
           export ORGANIZATION="$(./misc/git.sh | jq -r .organization)"
           env
@@ -63,8 +61,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          ref: master
       - run: |
           export ORGANIZATION=$(./git.sh | jq -r .organization)
           envsubst < backend.hcl.tmpl > backend.hcl
