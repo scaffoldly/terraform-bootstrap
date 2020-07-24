@@ -19,14 +19,12 @@ jobs:
           export ORGANIZATION=$(./git.sh | jq -r .organization)
           envsubst < backend.hcl.tmpl > backend.hcl
           envsubst < .terraformrc.tmpl > .terraformrc
-          echo .terraformrc
-          echo backend.hcl
       - run: |
           git config user.name "Automated Version Bump"
           git config user.email "gh-action-bump-version@users.noreply.github.com"
       - uses: hashicorp/setup-terraform@v1
       - run: |
-          terraform init
+          terraform init -backend-config=backend.hcl
           terraform workspace new live || true
           terraform workspace select live
       - run: terraform plan -no-color -out planfile
@@ -64,11 +62,15 @@ jobs:
         with:
           ref: master
       - run: |
+          export ORGANIZATION=$(./git.sh | jq -r .organization)
+          envsubst < backend.hcl.tmpl > backend.hcl
+          envsubst < .terraformrc.tmpl > .terraformrc
+      - run: |
           git config user.name "Automated Version Bump"
           git config user.email "gh-action-bump-version@users.noreply.github.com"
       - uses: hashicorp/setup-terraform@v1
       - run: |
-          terraform init
+          terraform init -backend-config=backend.hcl
           terraform workspace new live || true
           terraform workspace select live
       - uses: dsaltares/fetch-gh-release-asset@0.0.4
