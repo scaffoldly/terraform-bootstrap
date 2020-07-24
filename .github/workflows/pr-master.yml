@@ -23,8 +23,8 @@ jobs:
       - uses: hashicorp/setup-terraform@v1
       - run: |
           terraform init -backend-config=backend.hcl
-          terraform workspace new live || true
-          terraform workspace select live
+          terraform workspace new bootstrap || true
+          terraform workspace select bootstrap
       - run: terraform plan -no-color -out planfile
         id: plan
       - run: gpg --batch -c --passphrase "$BOOTSTRAP_GITHUB_TOKEN" planfile
