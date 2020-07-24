@@ -1,3 +1,3 @@
 #!/bin/bash
 set -e
-echo "{\"repo\":\"$(/usr/bin/git remote get-url origin)\"}"
+echo "{\"organization\":\"$(/usr/bin/git remote get-url origin | sed 's/.*github.com.\(.*\)\/.*/\1/')\"}"
