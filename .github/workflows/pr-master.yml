@@ -6,6 +6,7 @@ env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   BOOTSTRAP_GITHUB_TOKEN: ${{ secrets.BOOTSTRAP_GITHUB_TOKEN }}
   TF_VAR_BOOTSTRAP_GITHUB_TOKEN: ${{ secrets.BOOTSTRAP_GITHUB_TOKEN }}
+  BOOTSTRAP_TERRAFORM_TOEKN: ${{ secrets.BOOTSTRAP_TERRAFORM_TOKEN }}
 jobs:
   plan:
     if: github.event.pull_request.merged != true
@@ -15,6 +16,12 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
       - run: |
+          export ORGANIZATION=$(./git.sh | jq -r .organization)
+          envsubst < backend.hcl.tmpl > backend.hcl
+          envsubst < .terraformrc.tmpl > .terraformrc
+          echo .terraformrc
+          echo backend.hcl
+      - run: |
           git config user.name "Automated Version Bump"
           git config user.email "gh-action-bump-version@users.noreply.github.com"
       - uses: hashicorp/setup-terraform@v1
@@ -22,22 +29,6 @@ jobs:
           terraform init
           terraform workspace new live || true
           terraform workspace select live
-      - uses: andstor/file-existence-action@v1
-        id: terraform_state
-        with:
-          files: "terraform.tfstate.d/live/terraform.tfstate.gpg"
-      - run: |
-          mkdir -p terraform.tfstate.d/live
-          cp misc/empty.tfstate terraform.tfstate.d/live/terraform.tfstate
-          gpg --batch -c --passphrase "$BOOTSTRAP_GITHUB_TOKEN" terraform.tfstate.d/live/terraform.tfstate
-          rm terraform.tfstate.d/live/terraform.tfstate
-          git add terraform.tfstate.d/live/terraform.tfstate.gpg
-          git commit -a -m "Add state file"
-          git push
-        if: steps.terraform_state.outputs.files_exists == 'false'
-      - run: |
-          gpg --batch -d --passphrase "$BOOTSTRAP_GITHUB_TOKEN" -o terraform.tfstate.d/live/terraform.tfstate terraform.tfstate.d/live/terraform.tfstate.gpg
-          rm terraform.tfstate.d/live/terraform.tfstate.gpg
       - run: terraform plan -no-color -out planfile
         id: plan
       - run: gpg --batch -c --passphrase "$BOOTSTRAP_GITHUB_TOKEN" planfile
@@ -80,9 +71,6 @@ jobs:
           terraform init
           terraform workspace new live || true
           terraform workspace select live
-      - run: |
-          gpg --batch -d --passphrase "$BOOTSTRAP_GITHUB_TOKEN" -o terraform.tfstate.d/live/terraform.tfstate terraform.tfstate.d/live/terraform.tfstate.gpg
-          rm terraform.tfstate.d/live/terraform.tfstate.gpg
       - uses: dsaltares/fetch-gh-release-asset@0.0.4
         with:
           version: latest
@@ -98,10 +86,3 @@ jobs:
             ${{ join(steps.apply.outputs.*, '\n')}}
             ```
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-      # TODO: More durability of the statefile... this is fragile
-      - run: |
-          gpg --batch -c --passphrase "$BOOTSTRAP_GITHUB_TOKEN" terraform.tfstate.d/live/terraform.tfstate
-          rm terraform.tfstate.d/live/terraform.tfstate
-          git add terraform.tfstate.d/live/terraform.tfstate.gpg
-          git commit -m "Update state file"
-          git push
