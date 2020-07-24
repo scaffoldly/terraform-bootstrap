@@ -6,7 +6,7 @@ env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   BOOTSTRAP_GITHUB_TOKEN: ${{ secrets.BOOTSTRAP_GITHUB_TOKEN }}
   TF_VAR_BOOTSTRAP_GITHUB_TOKEN: ${{ secrets.BOOTSTRAP_GITHUB_TOKEN }}
-  BOOTSTRAP_TERRAFORM_TOEKN: ${{ secrets.BOOTSTRAP_TERRAFORM_TOKEN }}
+  BOOTSTRAP_TERRAFORM_TOKEN: ${{ secrets.BOOTSTRAP_TERRAFORM_TOKEN }}
 jobs:
   plan:
     if: github.event.pull_request.merged != true
@@ -20,8 +20,8 @@ jobs:
           env
           envsubst < backend.hcl.tmpl > backend.hcl
           envsubst < .terraformrc.tmpl > .terraformrc
-          echo backend.hcl
-          echo .terraformrc
+          cat backend.hcl
+          cat .terraformrc
       - run: |
           git config user.name "Automated Version Bump"
           git config user.email "gh-action-bump-version@users.noreply.github.com"
