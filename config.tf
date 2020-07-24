@@ -21,8 +21,4 @@ terraform {
       name = "bootstrap"
     }
   }
-
-  credentials "app.terraform.io" {
-    token = var.BOOTSTRAP_TERRAFORM_TOKEN
-  }
 }
