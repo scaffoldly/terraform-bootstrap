@@ -16,7 +16,7 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
       - run: |
-          export ORGANIZATION="$(./git.sh | jq -r .organization)"
+          export ORGANIZATION="$(./misc/git.sh | jq -r .organization)"
           env
           envsubst < backend.hcl.tmpl > backend.hcl
           envsubst < .terraformrc.tmpl > .terraformrc
