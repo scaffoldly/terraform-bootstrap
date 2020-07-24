@@ -16,9 +16,12 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
       - run: |
-          export ORGANIZATION=$(./git.sh | jq -r .organization)
+          export ORGANIZATION="$(./git.sh | jq -r .organization)"
+          env
           envsubst < backend.hcl.tmpl > backend.hcl
           envsubst < .terraformrc.tmpl > .terraformrc
+          echo backend.hcl
+          echo .terraformrc
       - run: |
           git config user.name "Automated Version Bump"
           git config user.email "gh-action-bump-version@users.noreply.github.com"
