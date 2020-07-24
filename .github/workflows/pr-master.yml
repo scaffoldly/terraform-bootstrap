@@ -15,12 +15,8 @@ jobs:
       - uses: actions/checkout@v2
       - run: |
           export ORGANIZATION="$(./misc/git.sh | jq -r .organization)"
-          env
           envsubst < backend.hcl.tmpl > backend.hcl
-          envsubst < .terraformrc.tmpl > .terraformrc
-      - run: |
-          cat backend.hcl
-          cat .terraformrc
+          envsubst < .terraform.d/credentials.tfrc.json.tmpl > .terraform.d/credentials.tfrc.json
       - run: |
           git config user.name "Automated Version Bump"
           git config user.email "gh-action-bump-version@users.noreply.github.com"
@@ -62,9 +58,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: |
-          export ORGANIZATION=$(./git.sh | jq -r .organization)
+          export ORGANIZATION="$(./misc/git.sh | jq -r .organization)"
           envsubst < backend.hcl.tmpl > backend.hcl
-          envsubst < .terraformrc.tmpl > .terraformrc
+          envsubst < .terraform.d/credentials.tfrc.json.tmpl > .terraform.d/credentials.tfrc.json
       - run: |
           git config user.name "Automated Version Bump"
           git config user.email "gh-action-bump-version@users.noreply.github.com"
