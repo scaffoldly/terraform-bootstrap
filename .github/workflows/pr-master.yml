@@ -14,15 +14,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: |
-          export ORGANIZATION="$(./misc/git.sh | jq -r .organization)"
-          envsubst < backend.hcl.tmpl > backend.hcl
-          envsubst < .terraform.d/credentials.tfrc.json.tmpl > .terraform.d/credentials.tfrc.json
-      - run: |
           git config user.name "Automated Version Bump"
           git config user.email "gh-action-bump-version@users.noreply.github.com"
       - uses: hashicorp/setup-terraform@v1
       - run: |
-          terraform init
+          export ORGANIZATION="$(./misc/git.sh | jq -r .organization)"
+          terraform init -backend-config="hostname=app.terraform.io" -backend-config="organization=$ORGANIZATION"
           terraform workspace new bootstrap || true
           terraform workspace select bootstrap
       - run: terraform plan -no-color -out planfile
