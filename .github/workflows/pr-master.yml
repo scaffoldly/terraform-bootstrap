@@ -19,7 +19,7 @@ jobs:
       - uses: hashicorp/setup-terraform@v1
       - run: |
           export ORGANIZATION="$(./misc/git.sh | jq -r .organization)"
-          terraform init -backend-config="hostname=app.terraform.io" -backend-config="organization=$ORGANIZATION"
+          terraform init -backend-config="hostname=app.terraform.io" -backend-config="organization=$ORGANIZATION" -backend-config="token=$BOOTSTRAP_TERRAFORM_TOKEN"
           terraform workspace new bootstrap || true
           terraform workspace select bootstrap
       - run: terraform plan -no-color -out planfile
