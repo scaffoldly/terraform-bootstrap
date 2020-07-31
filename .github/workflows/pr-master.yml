@@ -20,8 +20,8 @@ jobs:
       - run: |
           export ORGANIZATION="$(./misc/git.sh | jq -r .organization)"
           terraform init -backend-config="hostname=app.terraform.io" -backend-config="organization=$ORGANIZATION" -backend-config="token=$BOOTSTRAP_TERRAFORM_TOKEN"
-          terraform workspace new bootstrap || true
-          terraform workspace select bootstrap
+          #terraform workspace new bootstrap || true
+          #terraform workspace select bootstrap
       - run: terraform plan -no-color -out planfile
         id: plan
       - run: gpg --batch -c --passphrase "$BOOTSTRAP_GITHUB_TOKEN" planfile
