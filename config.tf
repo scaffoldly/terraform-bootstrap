@@ -16,3 +16,11 @@ provider "github" {
 provider "external" {
   version = "~> 1.2"
 }
+
+provider "aws" {
+  version = "~> 3.0.0"
+}
+
+provider "random" {
+  version = "2.3.0"
+}
