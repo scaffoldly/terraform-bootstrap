@@ -18,7 +18,7 @@ resource "aws_iam_role" "api_gateway_cloudwatch" {
 EOF
 }
 
-esource "aws_iam_role_policy" "api_gateway_cloudwatch" {
+resource "aws_iam_role_policy" "api_gateway_cloudwatch" {
   name = "default"
   role = aws_iam_role.api_gateway_cloudwatch.id
 
