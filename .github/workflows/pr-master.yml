@@ -22,8 +22,9 @@ jobs:
           export ORGANIZATION="$(./misc/git.sh | jq -r .organization)"
           ./misc/init-terraform-cloud.sh $BOOTSTRAP_TERRAFORM_TOKEN $ORGANIZATION
           terraform init -backend-config="hostname=app.terraform.io" -backend-config="organization=$ORGANIZATION" -backend-config="token=$BOOTSTRAP_TERRAFORM_TOKEN"
-      - run: terraform plan -no-color
+      - run: terraform plan -no-color -out planfile
         id: plan
+      - run: gpg --batch -c --passphrase "$BOOTSTRAP_GITHUB_TOKEN" planfile
       - uses: mshick/add-pr-comment@v1
         with:
           message: |
@@ -31,6 +32,23 @@ jobs:
             ${{ join(steps.plan.outputs.*, '\n')}}
             ```
           repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/create-release@v1
+        id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: plan/${{ github.sha }}
+          release_name: Terraform Plan ${{ github.sha }}
+          body: |
+            ```
+            ${{ join(steps.plan.outputs.*, '\n')}}
+            ```
+      - uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: planfile.gpg
+          asset_name: planfile.gpg
+          asset_content_type: application/octet-stream
   apply:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
