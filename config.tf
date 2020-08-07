@@ -16,3 +16,12 @@ provider "github" {
 provider "external" {
   version = "~> 1.2"
 }
+
+provider "aws" {
+  version = "~> 3.0.0"
+  region  = "us-east-1" # TODO: Make this configurable
+}
+
+provider "random" {
+  version = "2.3.0"
+}
