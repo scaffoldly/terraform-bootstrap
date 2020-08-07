@@ -55,17 +55,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: |
-          export ORGANIZATION="$(./misc/git.sh | jq -r .organization)"
-          envsubst < backend.hcl.tmpl > backend.hcl
-          envsubst < .terraform.d/credentials.tfrc.json.tmpl > .terraform.d/credentials.tfrc.json
-      - run: |
           git config user.name "Automated Version Bump"
           git config user.email "gh-action-bump-version@users.noreply.github.com"
       - uses: hashicorp/setup-terraform@v1
       - run: |
-          terraform init
-          terraform workspace new live || true
-          terraform workspace select live
+          export ORGANIZATION="$(./misc/git.sh | jq -r .organization)"
+          terraform init -backend-config="hostname=app.terraform.io" -backend-config="organization=$ORGANIZATION" -backend-config="token=$BOOTSTRAP_TERRAFORM_TOKEN"
       - uses: dsaltares/fetch-gh-release-asset@0.0.4
         with:
           version: latest
