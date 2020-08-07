@@ -32,6 +32,6 @@ provider "aws" {
   region  = "us-east-1" # TODO: Make this configurable
 
   assume_role {
-    role_arn = "arn:aws:iam::${module.aws_organization.account_id}:role/OrganizationAccountAccessRole"
+    role_arn = "arn:aws:iam::${module.aws_organization.account_id}:role/BootstrapAccessRole"
   }
 }

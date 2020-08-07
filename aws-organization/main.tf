@@ -3,13 +3,14 @@ variable "name" {
 }
 
 resource "random_string" "random" {
-  length  = 4
+  length  = 5
   special = false
 }
 
 resource "aws_organizations_account" "account" {
-  name  = "${var.name}-${random_string.random.result}"
-  email = "aws+${var.name}-${random_string.random.result}@cnuss.com"
+  name      = "${var.name}-${random_string.random.result}"
+  email     = "aws+${var.name}-${random_string.random.result}@cnuss.com" # TODO: Allow email address to be specified
+  role_name = "BootstrapAccessRole"
 }
 
 output "account_id" {
