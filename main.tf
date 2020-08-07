@@ -4,7 +4,7 @@ module "aws_organization" {
 }
 
 module "api_gateway" {
-  source = "./api-gateway"
+  source = "./aws-api-gateway"
 
   providers = {
     aws = aws.org
