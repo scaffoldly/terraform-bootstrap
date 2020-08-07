@@ -7,6 +7,7 @@ env:
   BOOTSTRAP_GITHUB_TOKEN: ${{ secrets.BOOTSTRAP_GITHUB_TOKEN }}
   TF_VAR_BOOTSTRAP_GITHUB_TOKEN: ${{ secrets.BOOTSTRAP_GITHUB_TOKEN }}
   BOOTSTRAP_TERRAFORM_TOKEN: ${{ secrets.BOOTSTRAP_TERRAFORM_TOKEN }}
+  TFE_TOKEN: ${{ secrets.TFE_TOKEN }}
 jobs:
   plan:
     if: github.event.pull_request.merged != true
@@ -19,9 +20,8 @@ jobs:
       - uses: hashicorp/setup-terraform@v1
       - run: |
           export ORGANIZATION="$(./misc/git.sh | jq -r .organization)"
+          ./misc/init-terraform-cloud.sh $BOOTSTRAP_TERRAFORM_TOKEN $ORGANIZATION
           terraform init -backend-config="hostname=app.terraform.io" -backend-config="organization=$ORGANIZATION" -backend-config="token=$BOOTSTRAP_TERRAFORM_TOKEN"
-          #terraform workspace new bootstrap || true
-          #terraform workspace select bootstrap
       - run: terraform plan -no-color
         id: plan
       - uses: mshick/add-pr-comment@v1
