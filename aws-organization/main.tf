@@ -2,6 +2,10 @@ variable "name" {
   type = string
 }
 
+locals {
+  name = lower(var.name)
+}
+
 resource "random_string" "random" {
   length  = 4
   special = false
@@ -9,7 +13,7 @@ resource "random_string" "random" {
 }
 
 resource "aws_organizations_account" "account" {
-  name      = "${var.name}-${random_string.random.result}"
+  name      = "${local.name}-${random_string.random.result}"
   email     = "aws+${var.name}-${random_string.random.result}@cnuss.com" # TODO: Allow email address to be specified
   role_name = "BootstrapAccessRole"
 }
