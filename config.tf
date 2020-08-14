@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 0.12"
+  required_version = ">= 0.13"
   backend "remote" {
     workspaces {
       name = "bootstrap"
@@ -17,11 +17,21 @@ provider "external" {
   version = "~> 1.2"
 }
 
-provider "aws" {
-  version = "~> 3.0.0"
-  region  = "us-east-1" # TODO: Make this configurable
-}
-
 provider "random" {
   version = "2.3.0"
+}
+
+provider "aws" {
+  version = "~> 3.0.0"
+  region  = "us-east-1"
+}
+
+provider "aws" {
+  alias   = "org"
+  version = "~> 3.0.0"
+  region  = "us-east-1" # TODO: Make this configurable
+
+  assume_role {
+    role_arn = "arn:aws:iam::${module.aws_organization.account_id}:role/BootstrapAccessRole"
+  }
 }
