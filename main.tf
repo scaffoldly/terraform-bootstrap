@@ -9,6 +9,8 @@ module "api_gateway" {
   providers = {
     aws = aws.org
   }
+
+  depends_on = [module.aws_organization]
 }
 
 # TODO terraform 0.13 module loops
