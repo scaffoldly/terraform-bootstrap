@@ -1,9 +1,9 @@
 locals {
-  nonlive {
+  nonlive = {
     domain = "scaffoldly.dev"
   }
 
-  live {
+  live = {
     domain = "scaffold.ly"
   }
 }
