@@ -3,7 +3,7 @@ module "aws_organization" {
   name   = data.external.git.result.organization
 }
 
-module "api_gateway" {
+module "api_gateway" { # TODO Rename to aws_api_gateway
   source = "./aws-api-gateway"
 
   providers = {
@@ -12,6 +12,19 @@ module "api_gateway" {
 
   depends_on = [module.aws_organization]
 }
+
+module "aws_logging" {
+  source = "./aws-logging"
+
+  account_name = module.aws_organization.account_name
+
+  providers = {
+    aws = aws.org
+  }
+
+  depends_on = [module.aws_organization]
+}
+
 
 # TODO terraform 0.13 module loops
 module "serverless-example-api" {
