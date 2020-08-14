@@ -40,9 +40,9 @@ module "aws_logging" {
   depends_on = [module.aws_organization]
 }
 
+module "serverless_api" {
+  source   = "./repository-serverless-api"
+  for_each = local.serverless_apis
 
-# TODO terraform 0.13 module loops
-module "serverless-example-api" {
-  source       = "./repository-serverless-api"
-  service_name = "example"
+  service_name = each.key
 }
