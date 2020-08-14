@@ -13,8 +13,8 @@ module "api_gateway" { # TODO Rename to aws_api_gateway
   depends_on = [module.aws_organization]
 }
 
-module "aws_logs" {
-  source = "./aws-logs"
+module "aws_logging" {
+  source = "./aws-logging"
 
   account_name = module.aws_organization.account_name
 
