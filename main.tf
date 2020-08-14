@@ -3,42 +3,42 @@ module "aws_organization" {
   name   = data.external.git.result.organization
 }
 
-# module "dns" {
-#   source = "./dns"
+module "dns" {
+  source = "./dns"
 
-#   domains = [
-#     local.nonlive.domain,
-#     local.live.domain,
-#   ]
+  domains = [
+    local.nonlive.domain,
+    local.live.domain,
+  ]
 
-#   providers = {
-#     aws = aws.org
-#   }
+  providers = {
+    aws = aws.org
+  }
 
-#   depends_on = [module.aws_organization]
-# }
+  depends_on = [module.aws_organization]
+}
 
-# module "api_gateway" { # TODO Rename to aws_api_gateway
-#   source = "./aws-api-gateway"
+module "aws_api_gateway" { # TODO Rename to aws_api_gateway
+  source = "./aws-api-gateway"
 
-#   providers = {
-#     aws = aws.org
-#   }
+  providers = {
+    aws = aws.org
+  }
 
-#   depends_on = [module.aws_organization]
-# }
+  depends_on = [module.aws_organization]
+}
 
-# module "aws_logging" {
-#   source = "./aws-logging"
+module "aws_logging" {
+  source = "./aws-logging"
 
-#   account_name = module.aws_organization.account_name
+  account_name = module.aws_organization.account_name
 
-#   providers = {
-#     aws = aws.org
-#   }
+  providers = {
+    aws = aws.org
+  }
 
-#   depends_on = [module.aws_organization]
-# }
+  depends_on = [module.aws_organization]
+}
 
 module "serverless_api" {
   source   = "./repository-serverless-api"
