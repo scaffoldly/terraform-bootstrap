@@ -62,7 +62,7 @@ data "aws_iam_policy_document" "bucket_policy" {
 }
 
 resource "aws_s3_bucket" "logs" {
-  bucket = "${local.bucket_name}"
+  bucket = local.bucket_name
   acl    = "log-delivery-write"
 
   versioning {
@@ -98,6 +98,36 @@ resource "aws_s3_bucket" "logs" {
 }
 
 resource "aws_s3_bucket_policy" "bucket_policy" {
-  bucket = "${aws_s3_bucket.logs.id}"
-  policy = "${data.aws_iam_policy_document.bucket_policy.json}"
+  bucket = aws_s3_bucket.logs.id
+  policy = data.aws_iam_policy_document.bucket_policy.json
+}
+
+resource "aws_cloudtrail" "cloudtrail" {
+  name                          = "cloudtrail"
+  enable_logging                = true
+  include_global_service_events = true
+  is_multi_region_trail         = true
+  enable_log_file_validation    = true
+
+  s3_bucket_name = local.bucket_name
+
+  event_selector {
+    read_write_type           = "All"
+    include_management_events = true
+
+    data_resource {
+      type   = "AWS::S3::Object"
+      values = ["arn:${data.aws_partition.current.partition}:s3:::"]
+    }
+  }
+
+  event_selector {
+    read_write_type           = "All"
+    include_management_events = true
+
+    data_resource {
+      type   = "AWS::Lambda::Function"
+      values = ["arn:${data.aws_partition.current.partition}:lambda"]
+    }
+  }
 }
