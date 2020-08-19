@@ -18,7 +18,7 @@ module "dns" {
   depends_on = [module.aws_organization]
 }
 
-module "aws_api_gateway" { # TODO Rename to aws_api_gateway
+module "aws_api_gateway" {
   source = "./aws-api-gateway"
 
   providers = {
