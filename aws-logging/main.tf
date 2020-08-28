@@ -239,3 +239,4 @@ resource "aws_cloudtrail" "cloudtrail" {
     }
   }
 }
+ 
