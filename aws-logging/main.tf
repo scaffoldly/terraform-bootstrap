@@ -217,7 +217,7 @@ resource "aws_cloudtrail" "cloudtrail" {
   enable_log_file_validation    = true
 
   s3_bucket_name = local.bucket_name
-  kms_key_id     = aws_kms_key.cloudtrail.key_id
+  kms_key_id     = aws_kms_key.cloudtrail.arn
 
   event_selector {
     read_write_type           = "All"
