@@ -4,12 +4,8 @@ variable "cloudtrail_principal" {
   default = "cloudtrail.amazonaws.com"
 }
 
-variable "delivery_logs_principal" {
-  default = "delivery.logs.amazonaws.com"
-}
-
 locals {
-  bucket_name = "${var.account_name}-logs"
+  bucket_name = "${var.account_name}-logs-cloudtrail"
 }
 
 data "aws_partition" "current" {}
@@ -37,7 +33,6 @@ data "aws_iam_policy_document" "bucket_policy" {
       type = "Service"
       identifiers = [
         var.cloudtrail_principal,
-        var.delivery_logs_principal
       ]
     }
   }
@@ -55,7 +50,6 @@ data "aws_iam_policy_document" "bucket_policy" {
       type = "Service"
       identifiers = [
         var.cloudtrail_principal,
-        var.delivery_logs_principal
       ]
     }
   }
