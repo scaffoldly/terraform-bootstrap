@@ -25,9 +25,9 @@ output "foo" {
 module "aws_api_gateway" {
   source = "./aws-api-gateway"
 
-  subdomain = local.api_subdomain
-
-  stages = module.dns.stages
+  stages        = ["nonlive", "live"]
+  subdomain     = local.api_subdomain
+  stage_domains = module.dns.stage_domains
 
   providers = {
     aws = aws.org

@@ -17,12 +17,13 @@ output "nameservers" {
   value = aws_route53_delegation_set.main.name_servers
 }
 
-output "stages" {
+output "stage_domains" {
   value = {
     for domain in module.dns :
     domain.stage => {
-      domain         = domain.domain
-      certifcate_arn = domain.wildcard_certificate_arn
+      domain                  = domain.domain
+      apex_certificate_arn    = domain.apex_certificate_arn
+      wildcard_certifcate_arn = domain.wildcard_certificate_arn
     }
   }
 }
