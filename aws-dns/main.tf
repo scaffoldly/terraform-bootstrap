@@ -7,7 +7,7 @@ resource "aws_route53_zone" "zone" {
   delegation_set_id = var.delegation_set_id
 }
 
-resource "aws_acm_certificate" "apex {
+resource "aws_acm_certificate" "apex" {
   domain_name       = var.domain
   validation_method = "DNS"
 
