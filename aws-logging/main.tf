@@ -120,7 +120,7 @@ resource "aws_kms_key" "cloudtrail" {
             "Principal": {
                 "AWS": [
                     "arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:root",
-                    "arn:${data.aws_partition.current.partition}:sts::${data.aws_caller_identity.current.account_id}:role/BootstrapAccessRole"
+                    "arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:role/BootstrapAccessRole"
                 ]
             },
             "Action": "kms:*",
@@ -239,3 +239,4 @@ resource "aws_cloudtrail" "cloudtrail" {
     }
   }
 }
+ 
