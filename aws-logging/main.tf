@@ -180,7 +180,7 @@ resource "aws_kms_key" "cloudtrail" {
             "Condition": {
                 "StringEquals": {
                     "kms:CallerAccount": "${data.aws_caller_identity.current.account_id}",
-                    "kms:ViaService": "ec2.${data.aws_region.current}.amazonaws.com"
+                    "kms:ViaService": "ec2.${data.aws_region.current.name}.amazonaws.com"
                 }
             }
         },
