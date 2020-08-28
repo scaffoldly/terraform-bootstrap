@@ -19,7 +19,7 @@ module "dns" {
 }
 
 output "foo" {
-  value = module.dns.stages
+  value = module.dns.stage_domains
 }
 
 module "aws_api_gateway" {
