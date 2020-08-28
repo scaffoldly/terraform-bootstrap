@@ -18,6 +18,10 @@ module "dns" {
   depends_on = [module.aws_organization]
 }
 
+output "foo" {
+  value = module.dns.stages
+}
+
 module "aws_api_gateway" {
   source = "./aws-api-gateway"
 

@@ -53,8 +53,8 @@ resource "aws_api_gateway_account" "account" {
   cloudwatch_role_arn = aws_iam_role.api_gateway_cloudwatch.arn
 }
 
-resource "aws_api_gateway_domain_name" "domain" {
-  for_each        = var.stages
-  certificate_arn = each.certificate_arn
-  domain_name     = "${var.subdomain}.${each.domain}"
-}
+# resource "aws_api_gateway_domain_name" "domain" {
+#   for_each        = var.stages
+#   certificate_arn = each.certificate_arn
+#   domain_name     = "${var.subdomain}.${each.domain}"
+# }
