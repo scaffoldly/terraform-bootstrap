@@ -74,7 +74,6 @@ resource "aws_route53_record" "api_record" {
 
   name    = each.value.domain_name
   type    = "A"
-  ttl     = 300
   zone_id = each.value.tags.zone_id
 
   alias {
