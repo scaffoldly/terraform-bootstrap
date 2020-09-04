@@ -62,5 +62,5 @@ resource "aws_api_gateway_domain_name" "domain" {
 
   security_policy = "TLS_1_2"
   certificate_arn = lookup(each.value, "wildcard_certificate_arn", "unknown-arn")
-  domain_name     = lookup(each.value, "domain", "unknown-domain")
+  domain_name     = "api.${lookup(each.value, "domain", "unknown-domain")}"
 }

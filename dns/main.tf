@@ -21,9 +21,9 @@ output "stage_domains" {
   value = {
     for domain in module.dns :
     domain.stage => {
-      domain                  = domain.domain
-      apex_certificate_arn    = domain.apex_certificate_arn
-      wildcard_certifcate_arn = domain.wildcard_certificate_arn
+      domain                   = domain.domain
+      apex_certificate_arn     = domain.apex_certificate_arn
+      wildcard_certificate_arn = domain.wildcard_certificate_arn
     }
   }
 }
