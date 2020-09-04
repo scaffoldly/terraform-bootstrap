@@ -74,7 +74,7 @@ resource "aws_route53_record" "api_record" {
 
   name    = each.value.domain_name
   type    = "A"
-  zone_id = each.tags.zone_id
+  zone_id = lookup(each.tags, "zone_id", "unknown-zone-id")
 
   alias {
     name                   = each.value.domain_name_configuration[0].target_domain_name
