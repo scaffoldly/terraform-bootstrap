@@ -63,3 +63,4 @@ resource "aws_api_gateway_domain_name" "domain" {
   certificate_arn = lookup(each.value, "wildcard_certificate_arn", "unknown-arn")
   domain_name     = lookup(each.value, "domain", "unknown-domain")
 }
+
