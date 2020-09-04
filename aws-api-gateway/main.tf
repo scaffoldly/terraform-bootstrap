@@ -56,6 +56,7 @@ resource "aws_api_gateway_account" "account" {
   cloudwatch_role_arn = aws_iam_role.api_gateway_cloudwatch.arn
 }
 
+# TODO: Wait for wildcard certificate ARN
 resource "aws_api_gateway_domain_name" "domain" {
   for_each = var.stage_domains
 
@@ -63,4 +64,3 @@ resource "aws_api_gateway_domain_name" "domain" {
   certificate_arn = lookup(each.value, "wildcard_certificate_arn", "unknown-arn")
   domain_name     = lookup(each.value, "domain", "unknown-domain")
 }
-
