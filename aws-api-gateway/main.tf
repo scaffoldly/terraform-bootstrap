@@ -70,15 +70,15 @@ resource "aws_api_gateway_domain_name" "domain" {
 }
 
 resource "aws_route53_record" "api_record" {
-  for_each = aws_api_gateway_domain_name.domain
+  count = length(aws_api_gateway_domain_name.domain)
 
-  name    = each.value.domain_name
+  name    = aws_api_gateway_domain_name[count.index].domain_name
   type    = "A"
-  zone_id = lookup(each.value.tags, "zone_id", "unknown-zone-id")
+  zone_id = aws_api_gateway_domain_name[count.index].tags.zone_id
 
   alias {
-    name                   = each.value.domain_name_configuration[0].target_domain_name
-    zone_id                = each.value.domain_name_configuration[0].hosted_zone_id
+    name                   = aws_api_gateway_domain_name[count.index].domain_name_configuration[0].target_domain_name
+    zone_id                = aws_api_gateway_domain_name[count.index].domain_name_configuration[0].hosted_zone_id
     evaluate_target_health = false
   }
 }
