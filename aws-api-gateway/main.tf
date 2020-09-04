@@ -1,3 +1,11 @@
+variable "subdomain" {}
+variable "stages" {
+  type = list
+}
+variable "stage_domains" {
+  type = map
+}
+
 resource "aws_iam_role" "api_gateway_cloudwatch" {
   name = "api-gateway-cloudwatch"
 
@@ -46,4 +54,12 @@ EOF
 
 resource "aws_api_gateway_account" "account" {
   cloudwatch_role_arn = aws_iam_role.api_gateway_cloudwatch.arn
+}
+
+resource "aws_api_gateway_domain_name" "domain" {
+  for_each = var.stage_domains
+
+  security_policy = "TLS_1_2"
+  certificate_arn = lookup(each.value, "wildcard_certificate_arn", "unknown-arn")
+  domain_name     = lookup(each.value, "domain", "unknown-domain")
 }

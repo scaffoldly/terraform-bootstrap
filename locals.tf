@@ -1,4 +1,6 @@
 locals {
+  api_subdomain = "api"
+
   nonlive = {
     domain = "scaffoldly.dev"
   }
