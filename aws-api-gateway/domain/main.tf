@@ -23,3 +23,4 @@ resource "aws_route53_record" "api_record" {
     zone_id                = aws_api_gateway_domain_name.domain.cloudfront_zone_id
   }
 }
+
