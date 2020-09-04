@@ -70,11 +70,11 @@ resource "aws_api_gateway_domain_name" "domain" {
 }
 
 resource "aws_route53_record" "api_record" {
-  for_each = aws_api_gateway_domain_name.domain
+  for_each = set(aws_api_gateway_domain_name.domain)
 
   name    = each.value.domain_name
   type    = "A"
-  zone_id = each.value.tags.zone_id
+  zone_id = each.tags.zone_id
 
   alias {
     name                   = each.value.domain_name_configuration[0].target_domain_name
