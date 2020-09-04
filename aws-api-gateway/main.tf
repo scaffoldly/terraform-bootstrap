@@ -60,6 +60,6 @@ resource "aws_api_gateway_domain_name" "domain" {
   for_each = var.stage_domains
 
   security_policy = "TLS_1_2"
-  certificate_arn = each.wildcard_certificate_arn
-  domain_name     = each.domain
+  certificate_arn = each.value.wildcard_certificate_arn
+  domain_name     = each.value.domain
 }
