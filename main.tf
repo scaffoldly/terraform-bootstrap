@@ -6,10 +6,10 @@ module "aws_organization" {
 module "dns" {
   source = "./dns"
 
-  domains = [
-    local.nonlive.domain,
-    local.live.domain,
-  ]
+  domains = {
+    nonlive = local.nonlive.domain,
+    live    = local.live.domain,
+  }
 
   providers = {
     aws = aws.org
@@ -18,8 +18,16 @@ module "dns" {
   depends_on = [module.aws_organization]
 }
 
+output "foo" {
+  value = module.dns.stage_domains
+}
+
 module "aws_api_gateway" {
   source = "./aws-api-gateway"
+
+  stages        = ["nonlive", "live"]
+  subdomain     = local.api_subdomain
+  stage_domains = module.dns.stage_domains
 
   providers = {
     aws = aws.org
