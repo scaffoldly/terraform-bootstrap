@@ -57,7 +57,9 @@ resource "aws_api_gateway_account" "account" {
 }
 
 resource "aws_api_gateway_domain_name" "domain" {
-  count           = length(var.stages)
-  certificate_arn = lookup(lookup(var.stage_domains, var.stages[count.index], { unknown_stage : {} }), "wildcard_certificate_arn")
-  domain_name     = "${var.subdomain}.${lookup(lookup(var.stage_domains, var.stages[count.index], { unknown_stage : {} }), "domain")}"
+  for_each = var.stage_domains
+
+  security_policy = "TLS_1_2"
+  certificate_arn = each.wildcard_certificate_arn
+  domain_name     = each.domain
 }
