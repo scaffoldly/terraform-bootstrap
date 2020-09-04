@@ -63,4 +63,23 @@ resource "aws_api_gateway_domain_name" "domain" {
   security_policy = "TLS_1_2"
   certificate_arn = lookup(each.value, "wildcard_certificate_arn", "unknown-arn")
   domain_name     = "api.${lookup(each.value, "domain", "unknown-domain")}"
+
+  tags {
+    zone_id = lookup(each.value, "zone_id", "unknown-zone-id")
+  }
+}
+
+resource "aws_route53_record" "api_record" {
+  for_each = aws_api_gateway_domain_name.domain
+
+  name    = each.value.domain_name
+  type    = "A"
+  ttl     = 300
+  zone_id = each.value.tags.zone_id
+
+  alias {
+    name                   = each.value.domain_name_configuration[0].target_domain_name
+    zone_id                = each.value.domain_name_configuration[0].hosted_zone_id
+    evaluate_target_health = false
+  }
 }
