@@ -18,7 +18,9 @@ module "stage" {
   source   = "./aws-api-gateway-stage"
   for_each = var.stage_domains
 
-  domain = lookup(each.value, "domain", "unknown-domain")
-  name   = var.service_name
-  stage  = each.key
+  domain    = lookup(each.value, "domain", "unknown-domain")
+  subdomain = var.subdomain
+
+  name  = var.service_name
+  stage = each.key
 }

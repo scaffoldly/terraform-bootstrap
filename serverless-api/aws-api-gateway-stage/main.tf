@@ -1,3 +1,4 @@
+variable "subdomain" {}
 variable "domain" {}
 variable "name" {}
 variable "stage" {}
@@ -23,6 +24,12 @@ resource "aws_api_gateway_gateway_response" "response_cors" {
   response_templates = {
     "application/json" = "{\"message\":$context.error.messageString}"
   }
+}
+
+resource "aws_api_gateway_base_path_mapping" "mapping" {
+  api_id      = aws_api_gateway_rest_api.api.id
+  stage_name  = var.stage
+  domain_name = "${var.subdomain}.${var.domain}"
 }
 
 # TODO Health Check Resource + Logging + Etc
