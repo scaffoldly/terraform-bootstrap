@@ -1,6 +1,8 @@
 locals {
   api_subdomain = "api"
 
+  stages = ["nonlive", "live"]
+
   nonlive = {
     domain = "scaffoldly.dev"
   }
@@ -11,7 +13,7 @@ locals {
 
   serverless_apis = {
     example = {
-      stages = ["nonlive", "live"]
+      asdf = "foo" # TODO: Placeholder remove
     }
   }
 }
