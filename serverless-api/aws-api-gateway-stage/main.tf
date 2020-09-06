@@ -11,6 +11,10 @@ resource "aws_cloudwatch_log_group" "group" {
   name = "/aws/apigateway/${var.name}-${var.stage}"
 }
 
+resource "aws_cloudwatch_log_group" "access_logs_group" {
+  name = "/aws/apigateway/${var.name}-${var.stage}-access-logs"
+}
+
 resource "aws_cloudwatch_log_group" "execution_group" {
   name = "API-Gateway-Execution-Logs_${aws_api_gateway_rest_api.api.id}/${var.stage}"
 }
@@ -50,10 +54,45 @@ resource "aws_api_gateway_integration" "health_get" {
   type        = "MOCK"
 }
 
+resource "aws_api_gateway_method_response" "health_get_response_200" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  resource_id = aws_api_gateway_resource.health.id
+  http_method = aws_api_gateway_method.health_get.http_method
+  status_code = "200"
+}
+
+resource "aws_api_gateway_integration_response" "health_get_response_200" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  resource_id = aws_api_gateway_resource.health.id
+  http_method = aws_api_gateway_method.health_get.http_method
+  status_code = aws_api_gateway_method_response.health_get_response_200.status_code
+
+  # Transforms the backend JSON response to XML
+  response_templates = {
+    "application/json" = <<EOF
+{
+  "healthy": true
+}
+EOF
+  }
+}
+
 resource "aws_api_gateway_deployment" "deployment" {
   depends_on  = [aws_api_gateway_integration.health_get]
   rest_api_id = aws_api_gateway_rest_api.api.id
   stage_name  = var.stage
+
+  triggers = {
+    redeployment = sha1(join(",", list(
+      jsonencode(aws_api_gateway_integration.health_get),
+      jsonencode(aws_api_gateway_method_response.health_get_response_200),
+      jsonencode(aws_api_gateway_integration_response.health_get_response_200),
+    )))
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_api_gateway_stage" "stage" {
@@ -61,22 +100,22 @@ resource "aws_api_gateway_stage" "stage" {
   rest_api_id   = aws_api_gateway_rest_api.api.id
   deployment_id = aws_api_gateway_deployment.deployment.id
 
-  depends_on = [aws_cloudwatch_log_group.execution_group]
-}
+  cache_cluster_enabled = true
+  cache_cluster_size    = "0.5"
 
-resource "aws_api_gateway_method_settings" "settings" {
-  rest_api_id = aws_api_gateway_rest_api.api.id
-  stage_name  = aws_api_gateway_stage.stage.stage_name
-  method_path = "${aws_api_gateway_resource.health.path_part}/${aws_api_gateway_method.health_get.http_method}"
+  xray_tracing_enabled = true
 
-  settings {
-    metrics_enabled = true
-    logging_level   = "INFO"
+  access_log_settings {
+    destination_arn = aws_cloudwatch_log_group.access_logs_group.arn
+    format          = "$context.identity.sourceIp $context.identity.caller $context.identity.user [$context.requestTime] \"$context.httpMethod $context.resourcePath $context.protocol\" $context.status $context.responseLength $context.requestId"
   }
+
+  depends_on = [aws_cloudwatch_log_group.execution_group]
 }
 
 resource "aws_api_gateway_base_path_mapping" "mapping" {
   api_id      = aws_api_gateway_rest_api.api.id
   stage_name  = aws_api_gateway_stage.stage.stage_name
   domain_name = "${var.subdomain}.${var.domain}"
+  base_path   = var.name
 }
