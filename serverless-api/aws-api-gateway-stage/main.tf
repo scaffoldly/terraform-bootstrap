@@ -30,12 +30,6 @@ resource "aws_api_gateway_gateway_response" "response_cors" {
   }
 }
 
-resource "aws_api_gateway_base_path_mapping" "mapping" {
-  api_id      = aws_api_gateway_rest_api.api.id
-  stage_name  = var.stage
-  domain_name = "${var.subdomain}.${var.domain}"
-}
-
 resource "aws_api_gateway_resource" "health" {
   rest_api_id = aws_api_gateway_rest_api.api.id
   parent_id   = aws_api_gateway_rest_api.api.root_resource_id
@@ -79,4 +73,10 @@ resource "aws_api_gateway_method_settings" "settings" {
     metrics_enabled = true
     logging_level   = "INFO"
   }
+}
+
+resource "aws_api_gateway_base_path_mapping" "mapping" {
+  api_id      = aws_api_gateway_rest_api.api.id
+  stage_name  = aws_api_gateway_stage.stage.stage_name
+  domain_name = "${var.subdomain}.${var.domain}"
 }
