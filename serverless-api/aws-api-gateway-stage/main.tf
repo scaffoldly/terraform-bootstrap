@@ -104,7 +104,8 @@ resource "aws_api_gateway_stage" "stage" {
   cache_cluster_size    = "0.5"
 
   xray_tracing_enabled = true
-  access_log_settings = {
+
+  access_log_settings {
     destination_arn = aws_cloudwatch_log_group.access_logs_group.arn
     log_format      = "$context.identity.sourceIp $context.identity.caller $context.identity.user [$context.requestTime] \"$context.httpMethod $context.resourcePath $context.protocol\" $context.status $context.responseLength $context.requestId"
   }
