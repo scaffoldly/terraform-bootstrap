@@ -71,7 +71,10 @@ resource "aws_api_gateway_integration_response" "health_get_response_200" {
   response_templates = {
     "application/json" = <<EOF
 {
-  "healthy": true
+  "statusCode": 200,
+  "body": {
+    "healthy": true
+  }
 }
 EOF
   }
@@ -120,8 +123,8 @@ resource "aws_api_gateway_method_settings" "settings" {
     data_trace_enabled = true
     logging_level      = "INFO"
 
-    throttling_rate_limit  = 10000
-    throttling_burst_limit = 5000
+    throttling_rate_limit  = -1
+    throttling_burst_limit = -1
   }
 }
 
