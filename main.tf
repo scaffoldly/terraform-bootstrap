@@ -18,14 +18,10 @@ module "dns" {
   depends_on = [module.aws_organization]
 }
 
-output "foo" {
-  value = module.dns.stage_domains
-}
-
 module "aws_api_gateway" {
   source = "./aws-api-gateway"
 
-  stages        = ["nonlive", "live"]
+  stages        = local.stages
   subdomain     = local.api_subdomain
   stage_domains = module.dns.stage_domains
 
@@ -49,8 +45,17 @@ module "aws_logging" {
 }
 
 module "serverless_api" {
-  source   = "./repository-serverless-api"
+  source   = "./serverless-api"
   for_each = local.serverless_apis
 
   service_name = each.key
+
+  subdomain     = local.api_subdomain
+  stage_domains = module.dns.stage_domains
+
+  providers = {
+    aws = aws.org
+  }
+
+  depends_on = [module.aws_organization]
 }
