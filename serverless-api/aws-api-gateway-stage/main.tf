@@ -51,7 +51,7 @@ resource "aws_api_gateway_method" "health_get" {
 
 resource "aws_api_gateway_integration" "health_get" {
   rest_api_id = aws_api_gateway_rest_api.api.id
-  resource_id = aws_api_gateway_resource.health_get.id
+  resource_id = aws_api_gateway_resource.health.id
   http_method = aws_api_gateway_method.health_get.http_method
   type        = "MOCK"
 }
@@ -73,7 +73,7 @@ resource "aws_api_gateway_stage" "stage" {
 resource "aws_api_gateway_method_settings" "settings" {
   rest_api_id = aws_api_gateway_rest_api.api.id
   stage_name  = aws_api_gateway_stage.stage.stage_name
-  method_path = "${aws_api_gateway_resource.health.path_part}/${aws_api_gateway_method.health.http_method}"
+  method_path = "${aws_api_gateway_resource.health.path_part}/${aws_api_gateway_method.health_get.http_method}"
 
   settings {
     metrics_enabled = true
