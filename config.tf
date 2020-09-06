@@ -35,3 +35,4 @@ provider "aws" {
     role_arn = "arn:aws:iam::${module.aws_organization.account_id}:role/BootstrapAccessRole"
   }
 }
+
