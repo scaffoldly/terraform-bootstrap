@@ -53,7 +53,7 @@ resource "aws_api_gateway_integration" "health_get" {
   http_method = aws_api_gateway_method.health_get.http_method
   type        = "MOCK"
 
-  request_templates {
+  request_templates = {
     "application/json" = "{\"statusCode\": 200}"
   }
 }
@@ -64,14 +64,14 @@ resource "aws_api_gateway_method_response" "health_get_response_200" {
   http_method = aws_api_gateway_method.health_get.http_method
   status_code = "200"
 
-  response_models {
+  response_models = {
     "application/json" = "Empty"
   }
 
-  response_parameters {
+  response_parameters = {
     "method.response.header.Access-Control-Allow-Headers" = true
     "method.response.header.Access-Control-Allow-Methods" = true
-    "method.response.header.Access-Control-Allow-Origin" = true
+    "method.response.header.Access-Control-Allow-Origin"  = true
   }
 }
 
@@ -84,11 +84,11 @@ resource "aws_api_gateway_integration_response" "health_get_response_200" {
   response_templates = {
     "application/json" = ""
   }
-  
-  response_parameters {
+
+  response_parameters = {
     "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
     "method.response.header.Access-Control-Allow-Methods" = "'GET'"
-    "method.response.header.Access-Control-Allow-Origin" = "'*'"
+    "method.response.header.Access-Control-Allow-Origin"  = "'*'"
   }
 }
 
