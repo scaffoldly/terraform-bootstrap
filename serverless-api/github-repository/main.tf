@@ -1,3 +1,9 @@
+variable "prefix" {}
+variable "service_name" {}
+variable "suffix" {}
+variable "template_repo" {}
+
+
 resource "github_repository" "repository" {
   name = "${var.prefix}-${var.service_name}-${var.suffix}"
 

@@ -62,6 +62,6 @@ module "domain" {
 
   zone_id         = lookup(each.value, "zone_id", "unknown-zone-id")
   domain          = lookup(each.value, "domain", "unknown-domain")
+  subdomain       = var.subdomain
   certificate_arn = lookup(each.value, "wildcard_certificate_arn", "unknown-arn")
 }
-
