@@ -107,7 +107,7 @@ resource "aws_api_gateway_stage" "stage" {
 
   access_log_settings {
     destination_arn = aws_cloudwatch_log_group.access_logs_group.arn
-    log_format      = "$context.identity.sourceIp $context.identity.caller $context.identity.user [$context.requestTime] \"$context.httpMethod $context.resourcePath $context.protocol\" $context.status $context.responseLength $context.requestId"
+    format          = "$context.identity.sourceIp $context.identity.caller $context.identity.user [$context.requestTime] \"$context.httpMethod $context.resourcePath $context.protocol\" $context.status $context.responseLength $context.requestId"
   }
 
   depends_on = [aws_cloudwatch_log_group.execution_group]
