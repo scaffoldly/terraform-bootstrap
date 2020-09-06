@@ -81,9 +81,10 @@ EOF
 }
 
 resource "aws_api_gateway_deployment" "deployment" {
-  depends_on  = [aws_api_gateway_integration.health_get]
-  rest_api_id = aws_api_gateway_rest_api.api.id
-  stage_name  = var.stage
+  depends_on        = [aws_api_gateway_integration.health_get]
+  rest_api_id       = aws_api_gateway_rest_api.api.id
+  stage_name        = "bootstrap"
+  stage_description = "A basic stage created to remediate a race condition in API Gateway"
 
   triggers = {
     redeployment = sha1(join(",", list(
