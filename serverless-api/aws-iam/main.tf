@@ -342,7 +342,7 @@ resource "aws_iam_user" "user" {
 resource "aws_iam_user_policy" "policy" {
   name   = "base-policy"
   user   = aws_iam_user.user.name
-  policy = data.aws_iam_policy.deployer.json
+  policy = data.aws_iam_policy_document.deployer.json
 }
 
 resource "aws_iam_user_policy" "assume_cloudformation_role" {
