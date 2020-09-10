@@ -3,9 +3,12 @@ variable "service_name" {}
 variable "suffix" {}
 variable "template_repo" {}
 
+locals {
+  repository_name = "${var.prefix}-${var.service_name}-${var.suffix}"
+}
 
 resource "github_repository" "repository" {
-  name = "${var.prefix}-${var.service_name}-${var.suffix}"
+  name = local.repository_name
 
   private                = true
   has_downloads          = false
@@ -20,4 +23,8 @@ resource "github_repository" "repository" {
     owner      = "scaffoldly"
     repository = var.template_repo
   }
+}
+
+output "name" {
+  value = local.repository_name
 }
