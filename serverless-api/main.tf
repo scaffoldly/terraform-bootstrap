@@ -32,11 +32,13 @@ module "stage" { # TODO RENAME, Prefix with AWS
 }
 
 module "secrets" {
-  source = "./secrets"
+  source   = "./secrets"
+  for_each = module.stage
 
+  stage                         = each.key
   repository_name               = module.repository.name
   deployer_aws_access_key       = module.aws_iam.deployer_access_key
   deployer_aws_secret_key       = module.aws_iam.deployer_secret_key
-  aws_rest_api_id               = module.stage.api_id
-  aws_rest_api_root_resource_id = module.stage.root_resource_id
+  aws_rest_api_id               = each.value.api_id
+  aws_rest_api_root_resource_id = each.value.root_resource_id
 }
