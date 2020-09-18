@@ -25,6 +25,8 @@ resource "github_repository" "repository" {
   }
 }
 
+// TODO: Branch protection
+
 output "name" {
   value = local.repository_name
 }
