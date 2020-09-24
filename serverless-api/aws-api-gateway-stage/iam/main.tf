@@ -1,4 +1,4 @@
-variable "name" {}
+variable "repository_name" {}
 variable "stage" {}
 
 data "aws_iam_policy_document" "base" {
@@ -25,7 +25,7 @@ data "aws_iam_policy_document" "base" {
     ]
 
     resources = [
-      "arn:*:dynamodb:*:*:table/${var.stage}-${var.name}*"
+      "arn:*:dynamodb:*:*:table/${var.stage}-${var.repository_name}*"
     ]
   }
 
@@ -35,13 +35,13 @@ data "aws_iam_policy_document" "base" {
     ]
 
     resources = [
-      "arn:*:secretsmanager:*:*:secret:lambda/${var.stage}/${var.name}*",
+      "arn:*:secretsmanager:*:*:secret:lambda/${var.stage}/${var.repository_name}*",
     ]
   }
 }
 
 resource "aws_iam_role" "role" {
-  name = "${var.name}-${var.stage}"
+  name = "${var.repository_name}-${var.stage}"
 
   assume_role_policy = <<EOF
 {

@@ -2,6 +2,7 @@ variable "subdomain" {}
 variable "domain" {}
 variable "name" {}
 variable "stage" {}
+variable "repository_name" {}
 
 resource "aws_api_gateway_rest_api" "api" {
   name = "${var.name}-${var.stage}"
@@ -151,8 +152,8 @@ resource "aws_api_gateway_base_path_mapping" "mapping" {
 module "iam" {
   source = "./iam"
 
-  name  = var.name
-  stage = var.stage
+  repository_name = var.repository_name
+  stage           = var.stage
 }
 
 output "api_id" {

@@ -29,6 +29,8 @@ module "stage" { # TODO RENAME, Prefix with AWS
 
   name  = var.service_name
   stage = each.key
+
+  repository_name = module.repository.name
 }
 
 module "secrets" {
