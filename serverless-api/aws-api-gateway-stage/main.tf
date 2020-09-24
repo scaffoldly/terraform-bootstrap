@@ -148,6 +148,13 @@ resource "aws_api_gateway_base_path_mapping" "mapping" {
   base_path   = var.name
 }
 
+module "iam" {
+  source = "./iam"
+
+  name  = var.name
+  stage = var.stage
+}
+
 output "api_id" {
   value = aws_api_gateway_rest_api.api.id
 }
