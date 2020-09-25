@@ -156,6 +156,20 @@ module "iam" {
   stage           = var.stage
 }
 
+resource "aws_wafregional_web_acl" "web_acl" {
+  name        = "${var.name}-${var.stage}"
+  metric_name = "${var.name}-${var.stage}"
+
+  default_action {
+    type = "ALLOW"
+  }
+}
+
+resource "aws_wafregional_web_acl_association" "association" {
+  resource_arn = aws_api_gateway_stage.stage.arn
+  web_acl_id   = aws_wafregional_web_acl.web_acl.id
+}
+
 output "api_id" {
   value = aws_api_gateway_rest_api.api.id
 }
