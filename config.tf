@@ -23,13 +23,13 @@ provider "random" {
 
 provider "aws" {
   version = "~> 3.0.0"
-  region  = local.region
+  region  = local.aws_region
 }
 
 provider "aws" {
   alias   = "org"
   version = "~> 3.0.0"
-  region  = local.region
+  region  = local.aws_region
 
   assume_role {
     role_arn = "arn:aws:iam::${module.aws_organization.account_id}:role/BootstrapAccessRole"
