@@ -125,6 +125,12 @@ resource "aws_api_gateway_stage" "stage" {
   }
 
   depends_on = [aws_cloudwatch_log_group.execution_group]
+
+  lifecycle {
+    ignore_changes = [
+      deployment_id
+    ]
+  }
 }
 
 resource "aws_api_gateway_method_settings" "settings" {
@@ -154,20 +160,6 @@ module "iam" {
 
   repository_name = var.repository_name
   stage           = var.stage
-}
-
-resource "aws_wafregional_web_acl" "web_acl" {
-  name        = "${var.name}-${var.stage}"
-  metric_name = "${var.name}-${var.stage}"
-
-  default_action {
-    type = "ALLOW"
-  }
-}
-
-resource "aws_wafregional_web_acl_association" "association" {
-  resource_arn = aws_api_gateway_stage.stage.arn
-  web_acl_id   = aws_wafregional_web_acl.web_acl.id
 }
 
 output "api_id" {
