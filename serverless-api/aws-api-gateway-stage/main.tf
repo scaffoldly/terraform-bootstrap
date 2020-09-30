@@ -126,7 +126,7 @@ resource "aws_api_gateway_stage" "stage" {
 
   depends_on = [aws_cloudwatch_log_group.execution_group]
 
-  lifecycle = {
+  lifecycle {
     ignore_changes = [
       deployment_id
     ]
