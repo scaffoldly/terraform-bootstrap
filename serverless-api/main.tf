@@ -21,7 +21,7 @@ module "aws_iam" {
 }
 
 module "stage" {
-  source   = "./aws-api-gateway-stage"
+  source   = "./stage"
   for_each = var.stage_domains
 
   domain    = lookup(each.value, "domain", "unknown-domain")
