@@ -1,6 +1,7 @@
 module "aws_organization" {
   source = "./aws-organization"
   name   = data.external.git.result.organization
+  email  = local.email
 }
 
 module "dns" {

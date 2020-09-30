@@ -1,4 +1,5 @@
 locals {
+  root_email = "aws+scaffoldly-si38@cnuss.com"
   aws_region = "us-east-1"
 
   api_subdomain = "api"
