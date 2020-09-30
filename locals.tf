@@ -1,4 +1,6 @@
 locals {
+  aws_region = "us-east-1"
+
   api_subdomain = "api"
 
   stages = ["nonlive", "live"]
