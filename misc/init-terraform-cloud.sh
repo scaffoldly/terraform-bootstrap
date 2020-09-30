@@ -2,9 +2,9 @@
 
 set -e
 
-export TOKEN="$1"
-export ORG_NAME="$2"
-export EMAIL="todo@cnuss.com"
+export EMAIL="$1"
+export TOKEN="$2"
+export ORG_NAME="$3"
 
 curl  --request POST 'https://app.terraform.io/api/v2/organizations' \
       --header 'Authorization: Bearer '${TOKEN}'' \
