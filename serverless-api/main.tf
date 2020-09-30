@@ -20,7 +20,7 @@ module "aws_iam" {
   repository_name = module.repository.name
 }
 
-module "aws_stage" {
+module "stage" {
   source   = "./aws-api-gateway-stage"
   for_each = var.stage_domains
 
