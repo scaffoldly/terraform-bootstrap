@@ -14,8 +14,6 @@ locals {
   }
 
   serverless_apis = {
-    example = {
-      asdf = "foo" # TODO: Placeholder remove
-    }
+    example = {}
   }
 }

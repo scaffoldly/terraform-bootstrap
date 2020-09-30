@@ -20,7 +20,7 @@ module "aws_iam" {
   repository_name = module.repository.name
 }
 
-module "stage" { # TODO RENAME, Prefix with AWS
+module "aws_stage" {
   source   = "./aws-api-gateway-stage"
   for_each = var.stage_domains
 

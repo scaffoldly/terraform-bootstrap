@@ -43,3 +43,19 @@ resource "github_actions_secret" "deployer_aws_rest_api_root_resource_id" {
   secret_name     = "${upper(var.stage)}_AWS_REST_API_ROOT_RESOURCE_ID"
   plaintext_value = var.aws_rest_api_root_resource_id
 }
+
+// TODO create a secrets repo and load them in from there
+resource "aws_secretsmanager_secret" "secret" {
+  name = "lambda/${var.stage}/${var.repository_name}"
+}
+
+resource "aws_secretsmanager_secret_version" "value" {
+  secret_id     = aws_secretsmanager_secret.secret.id
+  secret_string = jsonencode({})
+
+  lifecycle {
+    ignore_changes = [
+      secret_string
+    ]
+  }
+}
