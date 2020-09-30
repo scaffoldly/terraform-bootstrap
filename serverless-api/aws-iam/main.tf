@@ -3,8 +3,6 @@ variable "repository_name" {}
 # Inspiration drawn from:
 # https://medium.com/@dav009/serverless-framework-minimal-iam-role-permissions-ba34bec0154e
 data "aws_iam_policy_document" "cloudformation" {
-  # TODO: A-la-carte choices of AWS services that CF manages
-
   statement {
     actions = [
       "iam:PassRole"

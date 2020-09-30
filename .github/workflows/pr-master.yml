@@ -3,6 +3,8 @@ on:
   pull_request:
     types: [opened, edited, synchronize, reopened, closed]
 env:
+  ROOT_EMAIL: ${{ secrets.BOOTSTRAP_ROOT_EMAIL }}
+  TF_VAR_ROOT_EMAIL: ${{ secrets.BOOTSTRAP_ROOT_EMAIL }}
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   BOOTSTRAP_GITHUB_TOKEN: ${{ secrets.BOOTSTRAP_GITHUB_TOKEN }}
   TF_VAR_BOOTSTRAP_GITHUB_TOKEN: ${{ secrets.BOOTSTRAP_GITHUB_TOKEN }}
@@ -21,7 +23,7 @@ jobs:
       - uses: hashicorp/setup-terraform@v1
       - run: |
           export ORGANIZATION="$(./misc/git.sh | jq -r .organization)"
-          ./misc/init-terraform-cloud.sh $BOOTSTRAP_TERRAFORM_TOKEN $ORGANIZATION
+          ./misc/init-terraform-cloud.sh $ROOT_EMAIL $BOOTSTRAP_TERRAFORM_TOKEN $ORGANIZATION
           terraform init -backend-config="hostname=app.terraform.io" -backend-config="organization=$ORGANIZATION" -backend-config="token=$BOOTSTRAP_TERRAFORM_TOKEN"
       - run: terraform plan -no-color -out planfile
         id: plan

@@ -1,4 +1,6 @@
 locals {
+  aws_region = "us-east-1"
+
   api_subdomain = "api"
 
   stages = ["nonlive", "live"]
@@ -12,8 +14,6 @@ locals {
   }
 
   serverless_apis = {
-    example = {
-      asdf = "foo" # TODO: Placeholder remove
-    }
+    example = {}
   }
 }
