@@ -1,15 +1,19 @@
+terraform {
+  required_version = ">= 0.13"
+}
+
 module "aws_organization" {
   source = "./aws-organization"
-  name   = data.external.git.result.organization
-  email  = var.ROOT_EMAIL
+  name   = var.organization
+  email  = var.root_email
 }
 
 module "dns" {
   source = "./dns"
 
   domains = {
-    nonlive = local.nonlive.domain,
-    live    = local.live.domain,
+    nonlive = var.stages["nonlive"]
+    live    = var.stages["live"]
   }
 
   providers = {
@@ -22,8 +26,8 @@ module "dns" {
 module "aws_api_gateway" {
   source = "./aws-api-gateway"
 
-  stages        = local.stages
-  subdomain     = local.api_subdomain
+  stages        = var.stages
+  subdomain     = var.api_subdomain
   stage_domains = module.dns.stage_domains
 
   providers = {
@@ -47,11 +51,11 @@ module "aws_logging" {
 
 module "serverless_api" {
   source   = "./serverless-api"
-  for_each = local.serverless_apis
+  for_each = var.serverless_apis
 
   service_name = each.key
 
-  subdomain     = local.api_subdomain
+  subdomain     = var.api_subdomain
   stage_domains = module.dns.stage_domains
 
   providers = {

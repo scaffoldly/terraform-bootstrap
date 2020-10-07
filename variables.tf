@@ -1,9 +1,10 @@
-variable "ROOT_EMAIL" {
-  type        = string
-  description = "Root email address"
+variable "root_email" {}
+variable "github_token" {}
+variable "organization" {}
+variable "stages" {
+  type = "map"
 }
-
-variable "BOOTSTRAP_GITHUB_TOKEN" {
-  type        = string
-  description = "GitHub Token"
+variable "api_subdomain" {}
+variable "serverless_apis" {
+  type = "map"
 }

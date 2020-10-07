@@ -1,12 +1,3 @@
-terraform {
-  required_version = ">= 0.13"
-  backend "remote" {
-    workspaces {
-      name = "bootstrap"
-    }
-  }
-}
-
 provider "github" {
   version      = "~> 2.8"
   token        = var.BOOTSTRAP_GITHUB_TOKEN
