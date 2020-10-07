@@ -12,8 +12,8 @@ module "dns" {
   source = "./dns"
 
   domains = {
-    nonlive = var.stages["nonlive"]
-    live    = var.stages["live"]
+    nonlive = var.nonlive
+    live    = var.live
   }
 
   providers = {
