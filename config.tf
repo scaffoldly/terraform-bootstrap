@@ -1,7 +1,7 @@
 provider "github" {
   version      = "~> 2.8"
-  token        = var.BOOTSTRAP_GITHUB_TOKEN
-  organization = data.external.git.result.organization
+  token        = var.github_token
+  organization = var.organization
 }
 
 provider "external" {
@@ -14,13 +14,13 @@ provider "random" {
 
 provider "aws" {
   version = "~> 3.0.0"
-  region  = local.aws_region
+  region  = var.aws_region
 }
 
 provider "aws" {
   alias   = "org"
   version = "~> 3.0.0"
-  region  = local.aws_region
+  region  = var.aws_region
 
   assume_role {
     role_arn = "arn:aws:iam::${module.aws_organization.account_id}:role/BootstrapAccessRole"
