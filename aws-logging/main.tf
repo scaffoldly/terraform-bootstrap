@@ -105,6 +105,10 @@ resource "aws_s3_bucket_public_access_block" "logs" {
 resource "aws_s3_bucket_policy" "bucket_policy" {
   bucket = aws_s3_bucket.logs.id
   policy = data.aws_iam_policy_document.bucket_policy.json
+
+  depends_on = [
+    aws_s3_bucket_public_access_block.logs,
+  ]
 }
 
 resource "aws_kms_key" "cloudtrail" {
@@ -238,5 +242,9 @@ resource "aws_cloudtrail" "cloudtrail" {
       values = ["arn:${data.aws_partition.current.partition}:lambda"]
     }
   }
+
+  depends_on = [
+    aws_s3_bucket_policy.bucket_policy,
+  ]
 }
- 
+

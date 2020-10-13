@@ -12,6 +12,10 @@ provider "random" {
   version = "2.3.0"
 }
 
+provider "time" {
+  version = "0.6.0"
+}
+
 provider "aws" {
   version = "~> 3.0.0"
   region  = var.aws_region
