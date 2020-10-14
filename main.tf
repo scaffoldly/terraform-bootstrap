@@ -8,6 +8,20 @@ module "aws_organization" {
   email  = var.root_email
 }
 
+module "aws_logging" {
+  source = "./aws-logging"
+
+  account_name = module.aws_organization.account_name
+
+  providers = {
+    aws = aws.org
+  }
+
+  depends_on = [
+    module.aws_organization
+  ]
+}
+
 module "dns" {
   source = "./dns"
 
@@ -20,7 +34,9 @@ module "dns" {
     aws = aws.org
   }
 
-  depends_on = [module.aws_organization]
+  depends_on = [
+    module.aws_logging
+  ]
 }
 
 module "aws_api_gateway" {
@@ -34,19 +50,9 @@ module "aws_api_gateway" {
     aws = aws.org
   }
 
-  depends_on = [module.aws_organization]
-}
-
-module "aws_logging" {
-  source = "./aws-logging"
-
-  account_name = module.aws_organization.account_name
-
-  providers = {
-    aws = aws.org
-  }
-
-  depends_on = [module.aws_organization]
+  depends_on = [
+    module.dns
+  ]
 }
 
 module "serverless_api" {
@@ -62,5 +68,7 @@ module "serverless_api" {
     aws = aws.org
   }
 
-  depends_on = [module.aws_organization]
+  depends_on = [
+    module.aws_api_gateway
+  ]
 }
