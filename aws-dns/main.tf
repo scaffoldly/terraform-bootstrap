@@ -21,12 +21,12 @@ resource "aws_acm_certificate" "certificate" {
   }
 }
 
-# Used to give AWS time to provision the new account
-resource "time_sleep" "wait_300_seconds" {
+# Used to give user 
+resource "time_sleep" "check_email_for_cert_validations" {
   create_duration = "300s"
 
   depends_on = [
-    aws_acm_certificate.subdomain_wildcard
+    aws_acm_certificate.certificate
   ]
 }
 
