@@ -25,6 +25,8 @@ module "aws_logging" {
 module "dns" {
   source = "./dns"
 
+  subdomain = var.api_subdomain
+
   domains = {
     nonlive = var.nonlive["domain"]
     live    = var.live["domain"]
