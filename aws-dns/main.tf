@@ -1,9 +1,10 @@
 variable "stage" {}
 variable "domain" {}
+variable "subdomain" {}
 variable "delegation_set_id" {}
 
 locals {
-  domain = "sly.${var.domain}"
+  domain = "${var.subdomain}.${var.domain}"
 }
 
 resource "aws_route53_zone" "zone" {
@@ -12,8 +13,8 @@ resource "aws_route53_zone" "zone" {
 }
 
 resource "aws_acm_certificate" "certificate" {
-  domain_name               = "*.${local.domain}"
-  subject_alternative_names = [local.domain, "*.${var.domain}", var.domain, ]
+  domain_name               = "*.${var.domain}"
+  subject_alternative_names = [var.domain]
   validation_method         = "EMAIL"
 
   lifecycle {
