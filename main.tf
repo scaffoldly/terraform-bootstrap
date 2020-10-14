@@ -25,12 +25,7 @@ module "aws_logging" {
 module "dns" {
   source = "./dns"
 
-  subdomain = var.api_subdomain
-
-  domains = {
-    nonlive = var.nonlive["domain"]
-    live    = var.live["domain"]
-  }
+  stages = var.stages
 
   providers = {
     aws = aws.org
@@ -44,7 +39,7 @@ module "dns" {
 module "aws_api_gateway" {
   source = "./aws-api-gateway"
 
-  stages        = var.stages
+  stages        = keys(var.stages)
   stage_domains = module.dns.stage_domains
 
   providers = {

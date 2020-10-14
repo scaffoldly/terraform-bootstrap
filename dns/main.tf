@@ -1,18 +1,16 @@
-variable "subdomain" {}
-
-variable "domains" {
+variable "stages" {
   type = map
 }
 
 resource "aws_route53_delegation_set" "main" {}
 
 module "dns" {
-  for_each = var.domains
+  for_each = var.stages
   source   = "../aws-dns"
 
   stage             = each.key
-  subdomain         = var.subdomain
-  domain            = each.value
+  subdomain         = each.value.serverless_api_subdomain
+  domain            = each.value.domain
   delegation_set_id = aws_route53_delegation_set.main.id
 }
 
