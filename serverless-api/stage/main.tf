@@ -1,4 +1,3 @@
-variable "subdomain" {}
 variable "domain" {}
 variable "name" {}
 variable "stage" {}
@@ -151,7 +150,7 @@ resource "aws_api_gateway_method_settings" "settings" {
 resource "aws_api_gateway_base_path_mapping" "mapping" {
   api_id      = aws_api_gateway_rest_api.api.id
   stage_name  = aws_api_gateway_stage.stage.stage_name
-  domain_name = "${var.subdomain}.${var.domain}"
+  domain_name = var.domain
   base_path   = var.name
 }
 

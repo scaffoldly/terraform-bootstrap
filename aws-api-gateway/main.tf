@@ -1,4 +1,3 @@
-variable "subdomain" {}
 variable "stages" {
   type = list
 }
@@ -62,6 +61,5 @@ module "domain" {
 
   zone_id         = lookup(each.value, "zone_id", "unknown-zone-id")
   domain          = lookup(each.value, "domain", "unknown-domain")
-  subdomain       = var.subdomain
   certificate_arn = lookup(each.value, "certificate_arn", "unknown-arn")
 }

@@ -1,12 +1,11 @@
 variable "zone_id" {}
-variable "subdomain" {}
 variable "domain" {}
 variable "certificate_arn" {}
 
 resource "aws_api_gateway_domain_name" "domain" {
   security_policy = "TLS_1_2"
   certificate_arn = var.certificate_arn
-  domain_name     = "${var.subdomain}.${var.domain}"
+  domain_name     = var.domain
 }
 
 resource "aws_route53_record" "api_record" {

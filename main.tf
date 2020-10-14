@@ -45,7 +45,6 @@ module "aws_api_gateway" {
   source = "./aws-api-gateway"
 
   stages        = var.stages
-  subdomain     = var.api_subdomain
   stage_domains = module.dns.stage_domains
 
   providers = {
@@ -63,7 +62,6 @@ module "serverless_api" {
 
   service_name = each.key
 
-  subdomain     = var.api_subdomain
   stage_domains = module.dns.stage_domains
 
   providers = {
