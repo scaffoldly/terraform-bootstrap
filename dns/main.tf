@@ -1,3 +1,5 @@
+variable "subdomain" {}
+
 variable "domains" {
   type = map
 }
@@ -9,6 +11,7 @@ module "dns" {
   source   = "../aws-dns"
 
   stage             = each.key
+  subdomain         = var.subdomain
   domain            = each.value
   delegation_set_id = aws_route53_delegation_set.main.id
 }
