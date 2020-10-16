@@ -98,14 +98,6 @@ resource "aws_api_gateway_deployment" "deployment" {
   stage_name        = "bootstrap"
   stage_description = "A basic stage created to remediate a race condition in API Gateway"
 
-  triggers = {
-    redeployment = sha1(join(",", list(
-      jsonencode(aws_api_gateway_integration.health_get),
-      jsonencode(aws_api_gateway_method_response.health_get_response_200),
-      jsonencode(aws_api_gateway_integration_response.health_get_response_200),
-    )))
-  }
-
   lifecycle {
     create_before_destroy = true
   }
