@@ -25,6 +25,7 @@ output "stage_domains" {
       domain          = domain.domain
       zone_id         = domain.zone_id
       certificate_arn = domain.certificate_arn
+      nameservers     = aws_route53_delegation_set.main.name_servers
     }
   }
 }
