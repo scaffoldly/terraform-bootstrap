@@ -3,12 +3,12 @@ output "main_nameservers" {
 }
 
 output "serverless_apis_create_these_dns_records" {
-  for_each = module.dns.stage_domains
-
   value = {
-    stage       = each.key
-    domain      = each.value.domain
-    record_type = "NS"
-    records     = each.value.nameservers
+    for stage in module.dns.stage_domains :
+    records => {
+      domain      = stage.domain
+      record_type = "NS"
+      records     = stage.nameservers
+    }
   }
 }
