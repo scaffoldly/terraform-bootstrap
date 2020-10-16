@@ -2,7 +2,7 @@ output "main_nameservers" {
   value = module.dns.nameservers
 }
 
-output "serverless_apis___create_these_dns_records" {
+output "create_these_dns_records" {
   for_each = module.dns.stage_domains
 
   stage       = each.key
