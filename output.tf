@@ -11,3 +11,7 @@ output "serverless_apis_create_these_dns_records" {
     }
   }
 }
+
+output "account_id" {
+  value = module.aws_organization.account_id
+}
