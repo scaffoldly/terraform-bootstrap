@@ -19,5 +19,5 @@ module "cloudfront" {
   stage     = each.key
   subdomain = lookup(each.value, "subdomain", "")
 
-  stage_domain = lookup(var.stage_domains, each.key, {})
+  stage_domain = lookup(var.stage_domains, each.key)
 }
