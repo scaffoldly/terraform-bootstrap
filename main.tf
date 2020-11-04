@@ -74,10 +74,8 @@ module "public_website" {
 
   account_name = module.aws_organization.account_name
 
-  website_name = each.key
-  stage        = lookup(each.value, "stage", "unknown-stage")
-
-  subdomain = lookup(each.value, "subdomain", "")
+  name   = each.key
+  stages = each.value
 
   stage_domains = module.dns.stage_domains
 
