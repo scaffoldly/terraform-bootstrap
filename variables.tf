@@ -8,7 +8,7 @@ variable "stages" {
 
 variable "aws_region" {}
 
-variable "static_websites" {
+variable "public_websites" {
   type = map
 }
 
