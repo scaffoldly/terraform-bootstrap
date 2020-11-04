@@ -6,6 +6,8 @@ variable "stage_domain" {
   type = "map"
 }
 
+data "aws_partition" "current" {}
+
 locals {
   domain = var.subdomain != "" ? "${var.subdomain}.${lookup(var.stage_domain, "domain", "unknown-domain")}" : lookup(var.stage_domain, "domain", "unknown-domain")
 }
@@ -27,7 +29,7 @@ resource "aws_s3_bucket" "bucket" {
   }
 }
 
-resource "aws_cloudfront_origin_access_identity" "origin_access_identity" {}
+resource "aws_cloudfront_origin_access_identity" "identity" {}
 
 resource "aws_s3_bucket_public_access_block" "block" {
   bucket = aws_s3_bucket.bucket.id
@@ -42,7 +44,7 @@ resource "aws_s3_bucket_public_access_block" "block" {
 data "aws_iam_policy_document" "bucket_policy" {
   statement {
     principals = [
-      aws_cloudfront_origin_access_identity.origin_access_identity.iam_arn
+      aws_cloudfront_origin_access_identity.identity.iam_arn
     ]
 
     actions = [
