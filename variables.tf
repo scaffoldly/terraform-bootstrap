@@ -9,9 +9,11 @@ variable "stages" {
 variable "aws_region" {}
 
 variable "public_websites" {
-  type = map
+  type    = map
+  default = {}
 }
 
 variable "serverless_apis" {
-  type = map
+  type    = map
+  default = {}
 }
