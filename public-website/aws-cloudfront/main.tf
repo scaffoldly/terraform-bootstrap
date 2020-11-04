@@ -43,9 +43,12 @@ resource "aws_s3_bucket_public_access_block" "block" {
 // TODO WRITE FOR DEPLOYER
 data "aws_iam_policy_document" "bucket_policy" {
   statement {
-    principals = [
-      aws_cloudfront_origin_access_identity.identity.iam_arn
-    ]
+    principals {
+      type = "AWS"
+      identifiers = [
+        aws_cloudfront_origin_access_identity.identity.iam_arn
+      ]
+    }
 
     actions = [
       "s3:Get*",
