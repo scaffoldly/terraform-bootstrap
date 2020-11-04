@@ -1,18 +1,3 @@
-variable "account_name" {}
-
-variable "cloudtrail_principal" {
-  default = "cloudtrail.amazonaws.com"
-}
-
-locals {
-  bucket_name = "${var.account_name}-logs-cloudtrail"
-}
-
-data "aws_partition" "current" {}
-
-data "aws_region" "current" {}
-
-data "aws_caller_identity" "current" {}
 
 data "aws_iam_policy_document" "bucket_policy" {
   statement {
@@ -21,7 +6,7 @@ data "aws_iam_policy_document" "bucket_policy" {
     ]
 
     resources = [
-      "arn:${data.aws_partition.current.partition}:s3:::${local.bucket_name}/AWSLogs/${data.aws_caller_identity.current.account_id}/*",
+      "arn:${data.aws_partition.current.partition}:s3:::${local.cloudtrail_bucket_name}/AWSLogs/${data.aws_caller_identity.current.account_id}/*",
     ]
 
     condition {
@@ -34,7 +19,7 @@ data "aws_iam_policy_document" "bucket_policy" {
     principals {
       type = "Service"
       identifiers = [
-        var.cloudtrail_principal,
+        "cloudtrail.amazonaws.com",
       ]
     }
   }
@@ -45,20 +30,20 @@ data "aws_iam_policy_document" "bucket_policy" {
     ]
 
     resources = [
-      "arn:${data.aws_partition.current.partition}:s3:::${local.bucket_name}",
+      "arn:${data.aws_partition.current.partition}:s3:::${local.cloudtrail_bucket_name}",
     ]
 
     principals {
       type = "Service"
       identifiers = [
-        var.cloudtrail_principal,
+        "cloudtrail.amazonaws.com",
       ]
     }
   }
 }
 
 resource "aws_s3_bucket" "logs" {
-  bucket = local.bucket_name
+  bucket = local.cloudtrail_bucket_name
   acl    = "log-delivery-write"
 
   versioning {
@@ -220,7 +205,7 @@ resource "aws_cloudtrail" "cloudtrail" {
   is_multi_region_trail         = true
   enable_log_file_validation    = true
 
-  s3_bucket_name = local.bucket_name
+  s3_bucket_name = local.cloudtrail_bucket_name
   kms_key_id     = aws_kms_key.cloudtrail.arn
 
   event_selector {

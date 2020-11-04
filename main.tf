@@ -67,3 +67,25 @@ module "serverless_api" {
     module.aws_api_gateway
   ]
 }
+
+module "public_website" {
+  source   = "./public-website"
+  for_each = var.public_websites
+
+  account_name = module.aws_organization.account_name
+
+  website_name = each.key
+  stage        = lookup(each.value, "stage", "unknown-stage")
+
+  subdomain = lookup(each.value, "subdomain", "")
+
+  stage_domains = module.dns.stage_domains
+
+  providers = {
+    aws = aws.org
+  }
+
+  depends_on = [
+    module.dns
+  ]
+}
