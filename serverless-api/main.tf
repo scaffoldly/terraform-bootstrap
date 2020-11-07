@@ -23,7 +23,7 @@ module "stage" {
   source   = "./stage"
   for_each = var.stage_domains
 
-  domain = lookup(each.value, "serverlesss_api_domain", "unknown-domain")
+  domain = lookup(each.value, "serverless_api_domain", "unknown-domain")
 
   name  = var.service_name
   stage = each.key

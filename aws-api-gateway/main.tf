@@ -1,6 +1,3 @@
-variable "stages" {
-  type = list
-}
 variable "stage_domains" {
   type = map
 }

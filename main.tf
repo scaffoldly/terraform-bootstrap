@@ -40,7 +40,6 @@ module "dns" {
 module "aws_api_gateway" {
   source = "./aws-api-gateway"
 
-  stages        = keys(var.stages)
   stage_domains = module.dns.stage_domains
 
   providers = {
