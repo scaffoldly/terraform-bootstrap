@@ -6,6 +6,9 @@ variable "subdomain_suffix" {}
 variable "certificate_arn" {}
 
 data "aws_partition" "current" {}
+data "aws_s3_bucket" "logs_bucket" {
+  bucket = "${var.account_name}-logs-cloudfront"
+}
 
 locals {
   domain = var.subdomain_suffix != "" ? "${var.name}-${var.subdomain_suffix}.${var.domain}" : "${var.name}.${var.domain}"
@@ -127,7 +130,7 @@ resource "aws_cloudfront_distribution" "distribution" {
   aliases = [local.domain]
 
   logging_config {
-    bucket = "${var.account_name}-logs-cloudfront"
+    bucket = data.aws_s3_bucket.logs_bucket.bucket_regional_domain_name
   }
 
   enabled             = true
