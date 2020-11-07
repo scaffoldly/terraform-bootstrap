@@ -5,11 +5,11 @@ variable "subdomain_suffix" {}
 variable "delegation_set_id" {}
 
 locals {
-  domain = var.subdomain_suffix != "" ? "${var.subdomain}-${var.subdomain_suffix}.${var.domain}" : "${var.subdomain}.${var.domain}"
+  serverless_api_domain = var.subdomain_suffix != "" ? "${var.subdomain}-${var.subdomain_suffix}.${var.domain}" : "${var.subdomain}.${var.domain}"
 }
 
 resource "aws_route53_zone" "zone" {
-  name              = local.domain
+  name              = local.serverless_api_domain
   delegation_set_id = var.delegation_set_id
 }
 
@@ -62,6 +62,10 @@ output "subdomain" {
 
 output "subdomain_suffix" {
   value = var.subdomain_suffix
+}
+
+output "serverless_api_domain" {
+  value = local.serverless_api_domain
 }
 
 output "stage" {
