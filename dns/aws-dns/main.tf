@@ -53,7 +53,7 @@ output "zone_id" {
 }
 
 output "domain" {
-  value = local.domain
+  value = var.domain
 }
 
 output "subdomain" {
