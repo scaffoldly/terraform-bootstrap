@@ -5,7 +5,7 @@ output "main_nameservers" {
 output "serverless_apis_create_these_dns_records" {
   value = {
     for stage in module.dns.stage_domains :
-    stage.domain => {
+    stage.serverless_api_domain => {
       record_type = "NS"
       records     = stage.nameservers
     }
