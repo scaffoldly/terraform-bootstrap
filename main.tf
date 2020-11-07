@@ -25,7 +25,8 @@ module "aws_logging" {
 module "dns" {
   source = "./dns"
 
-  stages = var.stages
+  serverless_api_subdomain = var.serverless_api_subdomain
+  stages                   = var.stages
 
   providers = {
     aws = aws.org
@@ -72,11 +73,8 @@ module "public_website" {
   source   = "./public-website"
   for_each = var.public_websites
 
-  account_name = module.aws_organization.account_name
-
-  name   = each.key
-  stages = each.value
-
+  account_name  = module.aws_organization.account_name
+  name          = each.key
   stage_domains = module.dns.stage_domains
 
   providers = {

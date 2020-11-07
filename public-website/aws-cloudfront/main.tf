@@ -1,15 +1,13 @@
 variable "account_name" {}
 variable "name" {}
-variable "stage" {}
-variable "subdomain" {}
-variable "stage_domain" {
-  type = "map"
-}
+variable "domain" {}
+variable "subdomain_prefix" {}
+variable "certificate_arn" {}
 
 data "aws_partition" "current" {}
 
 locals {
-  domain = var.subdomain != "" ? "${var.subdomain}.${lookup(var.stage_domain, "domain", "unknown-domain")}" : lookup(var.stage_domain, "domain", "unknown-domain")
+  domain = var.subdomain_prefix != "" ? "${var.name}-${var.subdomain_prefix}.${var.domain}" : "${var.name}.${var.domain}"
 }
 
 resource "aws_s3_bucket" "bucket" {
@@ -95,7 +93,7 @@ resource "aws_cloudfront_distribution" "distribution" {
   }
 
   viewer_certificate {
-    acm_certificate_arn      = var.stage_domain["certificate_arn"]
+    acm_certificate_arn      = var.certificate_arn
     minimum_protocol_version = "TLSv1.1_2016"
     ssl_support_method       = "sni-only"
   }
@@ -134,17 +132,4 @@ resource "aws_cloudfront_distribution" "distribution" {
   enabled             = true
   is_ipv6_enabled     = true
   wait_for_deployment = false
-}
-
-resource "aws_route53_record" "api_record" {
-  count   = var.subdomain != "" ? 1 : 0
-  zone_id = var.stage_domain["zone_id"]
-  name    = local.domain
-  type    = "CNAME"
-  ttl     = "600"
-  records = [aws_cloudfront_distribution.distribution.domain_name]
-}
-
-output "domain" {
-  value = var.subdomain != "" ? aws_cloudfront_distribution.distribution.domain_name : null
 }
