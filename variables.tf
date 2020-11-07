@@ -18,31 +18,3 @@ variable "serverless_apis" {
   type    = map
   default = {}
 }
-
-locals {
-  aws_region = "us-east-1"
-
-  serverless_api_subdomain = "sls"
-
-  stages = {
-    nonlive = {
-      domain           = "texts.email"
-      subdomain_suffix = "dev"
-    }
-
-    live = {
-      domain           = "texts.email"
-      subdomain_suffix = ""
-    }
-  }
-
-  public_websites = {
-    media = {}
-  }
-
-  serverless_apis = {
-    email   = {}
-    text    = {}
-    account = {}
-  }
-}
