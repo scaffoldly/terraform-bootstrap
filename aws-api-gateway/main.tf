@@ -59,7 +59,8 @@ module "domain" {
   source   = "./domain"
   for_each = var.stage_domains
 
-  zone_id         = lookup(each.value, "zone_id", "unknown-zone-id")
-  domain          = lookup(each.value, "domain", "unknown-domain")
-  certificate_arn = lookup(each.value, "certificate_arn", "unknown-arn")
+  zone_id          = lookup(each.value, "zone_id", "unknown-zone-id")
+  domain           = lookup(each.value, "domain", "unknown-domain")
+  subdomain_suffix = lookup(each.value, "subdomain_suffix", "unknown-subdomain-suffix")
+  certificate_arn  = lookup(each.value, "certificate_arn", "unknown-arn")
 }

@@ -12,6 +12,6 @@ module "cloudfront" {
   name             = var.name
   stage            = each.key
   domain           = lookup(each.value, "domain", "unknown-domain")
-  subdomain_prefix = lookup(each.value, "subdomain_prefix", "unknown-prefix")
+  subdomain_suffix = lookup(each.value, "subdomain_suffix", "unknown-domain-suffix")
   certificate_arn  = lookup(each.value, "certificate_arn", "unknown-certificate-arn")
 }

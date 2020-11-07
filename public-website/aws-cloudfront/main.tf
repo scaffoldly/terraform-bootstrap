@@ -2,13 +2,13 @@ variable "account_name" {}
 variable "name" {}
 variable "stage" {}
 variable "domain" {}
-variable "subdomain_prefix" {}
+variable "subdomain_suffix" {}
 variable "certificate_arn" {}
 
 data "aws_partition" "current" {}
 
 locals {
-  domain = var.subdomain_prefix != "" ? "${var.name}-${var.subdomain_prefix}.${var.domain}" : "${var.name}.${var.domain}"
+  domain = var.subdomain_suffix != "" ? "${var.name}-${var.subdomain_suffix}.${var.domain}" : "${var.name}.${var.domain}"
 }
 
 resource "aws_s3_bucket" "bucket" {

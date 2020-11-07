@@ -57,6 +57,7 @@ module "serverless_api" {
   for_each = var.serverless_apis
 
   service_name  = each.key
+  subdomain     = var.serverless_api_subdomain
   stage_domains = module.dns.stage_domains
 
   providers = {
