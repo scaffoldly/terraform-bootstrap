@@ -26,7 +26,6 @@ module "dns" {
   source = "./dns"
 
   serverless_api_subdomain = var.serverless_api_subdomain
-  subdomain_suffix         = var.subdomain_suffix
   stages                   = var.stages
 
   providers = {

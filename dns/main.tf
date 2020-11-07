@@ -1,5 +1,4 @@
 variable "serverless_api_subdomain" {}
-variable "subdomain_suffix" {}
 variable "stages" {
   type = map
 }
@@ -13,7 +12,7 @@ module "dns" {
   stage             = each.key
   domain            = each.value.domain
   subdomain         = var.serverless_api_subdomain
-  subdomain_suffix  = var.subdomain_suffix
+  subdomain_suffix  = each.value.subdomain_suffix
   delegation_set_id = aws_route53_delegation_set.main.id
 }
 
