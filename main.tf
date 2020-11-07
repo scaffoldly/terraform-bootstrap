@@ -80,6 +80,7 @@ module "public_website" {
   }
 
   depends_on = [
-    module.dns
+    module.dns,
+    module.aws_logging
   ]
 }
