@@ -1,5 +1,6 @@
 variable "account_name" {}
 variable "name" {}
+variable "stage" {}
 variable "domain" {}
 variable "subdomain_prefix" {}
 variable "certificate_arn" {}

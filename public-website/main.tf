@@ -8,8 +8,7 @@ module "cloudfront" {
   source   = "./aws-cloudfront"
   for_each = var.stage_domains
 
-  account_name = var.account_name
-
+  account_name     = var.account_name
   name             = var.name
   stage            = each.key
   domain           = lookup(each.value, "domain", "unknown-domain")
