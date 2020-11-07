@@ -16,6 +16,10 @@ provider "time" {
   version = "0.6.0"
 }
 
+provider "template" {
+  version = "~> 2.2.0"
+}
+
 provider "aws" {
   version = "~> 3.0.0"
   region  = var.aws_region
