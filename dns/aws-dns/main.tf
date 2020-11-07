@@ -56,6 +56,14 @@ output "domain" {
   value = local.domain
 }
 
+output "subdomain" {
+  value = var.subdomain
+}
+
+output "subdomain_suffix" {
+  value = var.subdomain_suffix
+}
+
 output "stage" {
   value = var.stage
 }

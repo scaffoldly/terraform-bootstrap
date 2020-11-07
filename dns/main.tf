@@ -25,6 +25,8 @@ output "stage_domains" {
     for domain in module.dns :
     domain.stage => {
       serverless_api_domain = domain.domain
+      subdomain             = domain.subdomain
+      subdomain_suffix      = domain.subdomain_suffix
       zone_id               = domain.zone_id
       certificate_arn       = domain.certificate_arn
       nameservers           = aws_route53_delegation_set.main.name_servers
