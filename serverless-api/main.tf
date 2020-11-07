@@ -1,5 +1,4 @@
 variable "service_name" {}
-variable "subdomain" {}
 variable "stage_domains" {
   type = map
 }
@@ -24,9 +23,7 @@ module "stage" {
   source   = "./stage"
   for_each = var.stage_domains
 
-  domain           = lookup(each.value, "domain", "unknown-domain")
-  subdomain        = var.subdomain
-  subdomain_suffix = lookup(each.value, "subdomain_suffix", "unknown-subdomain-suffix")
+  domain = lookup(each.value, "serverlesss_api_domain", "unknown-domain")
 
   name  = var.service_name
   stage = each.key

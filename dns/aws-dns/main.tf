@@ -1,10 +1,11 @@
 variable "stage" {}
 variable "domain" {}
 variable "subdomain" {}
+variable "subdomain_suffix" {}
 variable "delegation_set_id" {}
 
 locals {
-  domain = "${var.subdomain}.${var.domain}"
+  domain = var.subdomain_suffix != "" ? "${var.subdomain}-${var.subdomain_suffix}.${var.domain}" : "${var.subdomain}.${var.domain}"
 }
 
 resource "aws_route53_zone" "zone" {
