@@ -22,6 +22,11 @@ resource "aws_s3_bucket" "bucket" {
     enabled = true
   }
 
+  logging_config {
+    target_bucket = data.aws_s3_bucket.logs_bucket.id
+    target_prefix = "${local.domain}/s3/"
+  }
+
   server_side_encryption_configuration {
     rule {
       apply_server_side_encryption_by_default {
@@ -131,6 +136,7 @@ resource "aws_cloudfront_distribution" "distribution" {
 
   logging_config {
     bucket = data.aws_s3_bucket.logs_bucket.bucket_regional_domain_name
+    prefix = "${local.domain}/cloudfront/"
   }
 
   enabled             = true
