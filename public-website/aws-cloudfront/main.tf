@@ -118,8 +118,7 @@ resource "aws_cloudfront_distribution" "distribution" {
     viewer_protocol_policy = "redirect-to-https"
 
     forwarded_values {
-      query_string = true
-      headers      = ["*"]
+      query_string = false
 
       cookies {
         forward = "none"
