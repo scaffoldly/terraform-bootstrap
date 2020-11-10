@@ -22,7 +22,7 @@ resource "aws_s3_bucket" "bucket" {
     enabled = true
   }
 
-  logging_config {
+  logging {
     target_bucket = data.aws_s3_bucket.logs_bucket.id
     target_prefix = "${local.domain}/s3/"
   }
