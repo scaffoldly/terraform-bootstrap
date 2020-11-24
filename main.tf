@@ -58,6 +58,8 @@ module "serverless_api" {
   service_name  = each.key
   stage_domains = module.dns.stage_domains
 
+  additional_env_vars = var.additional_env_vars
+
   providers = {
     aws = aws.org
   }

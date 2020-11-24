@@ -2,6 +2,9 @@ variable "service_name" {}
 variable "stage_domains" {
   type = map
 }
+variable "additional_env_vars" {
+  type = map
+}
 
 module "repository" {
   source = "./github-repository"
@@ -9,6 +12,8 @@ module "repository" {
   template_repo = "serverless-template-api"
   prefix        = "serverless"
   suffix        = "api"
+
+  additional_env_vars = var.additional_env_vars
 
   service_name = var.service_name
 }
