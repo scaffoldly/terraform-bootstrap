@@ -27,9 +27,13 @@ resource "github_repository" "repository" {
 }
 
 resource "github_actions_secret" "additional_env_vars" {
-  repository      = github_repository.repository.full_name
+  repository      = local.repository_name
   secret_name     = "ADDITIONAL_ENV_VARS"
   plaintext_value = base64encode(jsonencode(var.additional_env_vars))
+
+  depends_on = [
+    github_repository.repository
+  ]
 }
 
 // TODO: Branch protection
