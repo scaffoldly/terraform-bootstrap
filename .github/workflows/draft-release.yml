@@ -19,14 +19,16 @@ jobs:
       - run: terraform init
       - run: terraform fmt -check -recursive -diff
       - run: terraform validate
+      - run: jq -r '.version' module.json
+        id: version
       - uses: "scaffoldly/github-action-bump-version-terraform-module@master"
         with:
           tag-prefix: ""
-      # - uses: actions/create-release@v1
-      #   with:
-      #     tag_name: plan/${{ github.sha }}
-      #     release_name: Terraform Plan ${{ github.sha }}
-      #     body: |
-      #       ```
-      #       ${{ join(steps.plan.outputs.*, '\n')}}
-      #       ```
+      - uses: actions/create-release@v1
+        with:
+          tag_name: ${{ steps.create_release.outputs[0] }}
+          release_name: ${{ steps.create_release.outputs[0] }}
+          body: |
+            ```
+            TODO Git Version Diff
+            ```
