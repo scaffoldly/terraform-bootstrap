@@ -1,4 +1,4 @@
-name: Draft Release
+name: Release
 on:
   push:
     branches:
@@ -8,7 +8,7 @@ env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
-  draft-release:
+  release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -19,15 +19,15 @@ jobs:
       - run: terraform init
       - run: terraform fmt -check -recursive -diff
       - run: terraform validate
-      - run: jq -r '.version' module.json
-        id: version
+      - run: echo "##[set-output name=version;]$(jq -r '.version' module.json)"
+        id: current_version
       - uses: "scaffoldly/github-action-bump-version-terraform-module@master"
         with:
           tag-prefix: ""
       - uses: actions/create-release@v1
         with:
-          tag_name: ${{ join(steps.version.outputs.*, '\n')}}
-          release_name: ${{ join(steps.version.outputs.*, '\n')}}
+          tag_name: ${{ steps.current_version.outputs.version}}
+          release_name: ${{ steps.current_version.outputs.version }}
           body: |
             ```
             TODO Git Version Diff
