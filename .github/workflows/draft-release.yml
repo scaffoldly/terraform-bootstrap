@@ -26,8 +26,8 @@ jobs:
           tag-prefix: ""
       - uses: actions/create-release@v1
         with:
-          tag_name: ${{ steps.create_release.outputs[0] }}
-          release_name: ${{ steps.create_release.outputs[0] }}
+          tag_name: ${{ steps.version.outputs[0] }}
+          release_name: ${{ steps.version.outputs[0] }}
           body: |
             ```
             TODO Git Version Diff
