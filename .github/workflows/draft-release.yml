@@ -1,0 +1,32 @@
+name: Draft Release
+on:
+  push:
+    branches:
+      - master
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  draft-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          git config user.name "Automated Version Bump"
+          git config user.email "gh-action-bump-version@users.noreply.github.com"
+      - uses: hashicorp/setup-terraform@v1
+      - run: terraform init
+      - run: terraform fmt -check -recursive
+      - run: terraform validate
+      - uses: "scaffoldly/github-action-bump-version-terraform-module@master"
+        with:
+          tag-prefix: ""
+      # - uses: actions/create-release@v1
+      #   with:
+      #     tag_name: plan/${{ github.sha }}
+      #     release_name: Terraform Plan ${{ github.sha }}
+      #     body: |
+      #       ```
+      #       ${{ join(steps.plan.outputs.*, '\n')}}
+      #       ```
