@@ -17,7 +17,7 @@ jobs:
           git config user.email "gh-action-bump-version@users.noreply.github.com"
       - uses: hashicorp/setup-terraform@v1
       - run: terraform init
-      - run: terraform fmt -check -recursive
+      - run: terraform fmt -check -recursive -diff
       - run: terraform validate
       - uses: "scaffoldly/github-action-bump-version-terraform-module@master"
         with:
