@@ -26,8 +26,8 @@ jobs:
           tag-prefix: ""
       - uses: actions/create-release@v1
         with:
-          tag_name: ${{join(steps.version.outputs.*, '')}}
-          release_name: ${{join(steps.version.outputs.*, '')}}
+          tag_name: ${{ join(steps.version.outputs.*, '\n')}}
+          release_name: ${{ join(steps.version.outputs.*, '\n')}}
           body: |
             ```
             TODO Git Version Diff
