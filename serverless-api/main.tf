@@ -1,9 +1,9 @@
 variable "service_name" {}
 variable "stage_domains" {
-  type = map
+  type = map(any)
 }
 variable "additional_env_vars" {
-  type = map
+  type = map(any)
 }
 
 module "repository" {

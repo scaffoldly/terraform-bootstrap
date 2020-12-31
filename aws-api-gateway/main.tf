@@ -1,5 +1,5 @@
 variable "stage_domains" {
-  type = map
+  type = map(any)
 }
 
 resource "aws_iam_role" "api_gateway_cloudwatch" {

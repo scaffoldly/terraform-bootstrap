@@ -6,20 +6,20 @@ variable "aws_region" {}
 variable "serverless_api_subdomain" {}
 
 variable "stages" {
-  type = map
+  type = map(any)
 }
 
 variable "public_websites" {
-  type    = map
+  type    = map(any)
   default = {}
 }
 
 variable "serverless_apis" {
-  type    = map
+  type    = map(any)
   default = {}
 }
 
 variable "additional_env_vars" {
-  type    = map
+  type    = map(any)
   default = {}
 }

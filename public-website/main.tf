@@ -1,7 +1,7 @@
 variable "account_name" {}
 variable "name" {}
 variable "stage_domains" {
-  type = map
+  type = map(any)
 }
 
 module "cloudfront" {

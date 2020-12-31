@@ -1,6 +1,6 @@
 variable "serverless_api_subdomain" {}
 variable "stages" {
-  type = map
+  type = map(any)
 }
 
 resource "aws_route53_delegation_set" "main" {}
