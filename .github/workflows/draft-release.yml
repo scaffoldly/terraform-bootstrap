@@ -24,13 +24,7 @@ jobs:
       - uses: "scaffoldly/github-action-bump-version-terraform-module@master"
         with:
           tag-prefix: ""
-      - run: echo "##[set-output name=log;]$(git --no-pager log tags/${{ steps.current_version.outputs.version}}..${{ github.sha }} -- .)"
-        id: changelog
       - uses: actions/create-release@v1
         with:
           tag_name: ${{ steps.current_version.outputs.version}}
-          release_name: ${{ steps.current_version.outputs.version }}
-          body: |
-            ```
-            ${{ steps.changelog.outputs.log }}
-            ```
+          release_name: R${{ steps.current_version.outputs.version }}
