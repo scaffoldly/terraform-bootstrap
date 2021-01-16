@@ -34,6 +34,7 @@ data "aws_iam_policy_document" "base" {
   statement {
     actions = [
       "secretsmanager:GetSecretValue",
+      "secretsmanager:PutSecretValue",
     ]
 
     resources = [
