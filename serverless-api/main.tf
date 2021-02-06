@@ -13,7 +13,7 @@ module "repository" {
   prefix        = "serverless"
   suffix        = "api"
 
-  additional_env_vars = var.additional_env_vars
+  # additional_env_vars = var.additional_env_vars
 
   service_name = var.service_name
 
