@@ -1,4 +1,4 @@
-variable repository_names {
+variable "repository_names" {
   type = list(any)
 }
 variable "stage_domains" {
