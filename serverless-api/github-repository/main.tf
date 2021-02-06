@@ -34,7 +34,7 @@ resource "github_repository_file" "stage_domains" {
   file       = ".scaffoldly/config/stage-domains.yml"
 
   content = templatefile("${path.module}/yaml.tpl", {
-    yaml = yamlencode(var.stage_domain)
+    yaml = yamlencode(var.stage_domains)
   })
 
   commit_message      = "[Scaffoldly] Update stage-domains.yml"
