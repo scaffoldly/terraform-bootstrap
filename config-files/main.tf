@@ -1,5 +1,5 @@
 variable repository_names {
-  type = list
+  type = list(any)
 }
 variable "stage_domains" {
   type = map(any)
