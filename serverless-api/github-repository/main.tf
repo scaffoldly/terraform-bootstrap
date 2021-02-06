@@ -39,6 +39,7 @@ resource "github_repository_file" "stage_domains" {
 
   commit_message = "[Scaffoldly] Update stage-domains.yml"
   commit_author  = "Scaffoldly Bootstrap"
+  commit_email   = "bootstrap@scaffold.ly"
 }
 
 // TODO: Branch protection
