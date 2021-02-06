@@ -16,6 +16,8 @@ module "repository" {
   additional_env_vars = var.additional_env_vars
 
   service_name = var.service_name
+
+  stage_domains = var.stage_domains
 }
 
 module "aws_iam" {

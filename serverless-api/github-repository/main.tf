@@ -2,7 +2,9 @@ variable "prefix" {}
 variable "service_name" {}
 variable "suffix" {}
 variable "template_repo" {}
-variable "additional_env_vars" {}
+variable "stage_domains" {
+  type = map(any)
+}
 
 locals {
   repository_name = "${var.prefix}-${var.service_name}-${var.suffix}"
@@ -18,7 +20,7 @@ resource "github_repository" "repository" {
   has_wiki               = false
   delete_branch_on_merge = true
 
-  default_branch = "master"
+  default_branch = "master" # TODO Change to main
 
   template {
     owner      = "scaffoldly"
@@ -26,14 +28,18 @@ resource "github_repository" "repository" {
   }
 }
 
-resource "github_actions_secret" "additional_env_vars" {
-  repository      = local.repository_name
-  secret_name     = "ADDITIONAL_ENV_VARS"
-  plaintext_value = base64encode(jsonencode(var.additional_env_vars))
+resource "github_repository_file" "stage_domains" {
+  repository = github_repository.repository.name
+  branch     = "master" # TODO Change to main
+  file       = ".scaffoldly/config/stage-domains.yml"
 
-  depends_on = [
-    github_repository.repository
-  ]
+  content = templatefile("${path.module}/yaml.tpl", {
+    yaml = yamlencode(var.stage_domain)
+  })
+
+  commit_message      = "[Scaffoldly] Update stage-domains.yml"
+  commit_author       = "Scaffoldly Bootstrap"
+  overwrite_on_create = true
 }
 
 // TODO: Branch protection
