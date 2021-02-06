@@ -37,9 +37,8 @@ resource "github_repository_file" "stage_domains" {
     yaml = yamlencode(var.stage_domains)
   })
 
-  commit_message      = "[Scaffoldly] Update stage-domains.yml"
-  commit_author       = "Scaffoldly Bootstrap"
-  overwrite_on_create = true
+  commit_message = "[Scaffoldly] Update stage-domains.yml"
+  commit_author  = "Scaffoldly Bootstrap"
 }
 
 // TODO: Branch protection
