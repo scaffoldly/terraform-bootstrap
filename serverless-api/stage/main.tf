@@ -160,3 +160,15 @@ output "api_id" {
 output "root_resource_id" {
   value = aws_api_gateway_rest_api.api.root_resource_id
 }
+
+output "name" {
+  value = var.stage
+}
+
+output "config" {
+  value = tomap({
+    "dommain"   = var.domain
+    "base_path" = var.name
+    "base_url"  = "https://${var.domain}/${var.name}"
+  })
+}

@@ -55,11 +55,8 @@ module "serverless_api" {
   source   = "./serverless-api"
   for_each = var.serverless_apis
 
-  service_name = each.key
-
-  stage_domains   = module.dns.stage_domains
-  serverless_apis = var.serverless_apis
-  shared_env_vars = var.shared_env_vars
+  service_name  = each.key
+  stage_domains = module.dns.stage_domains
 
   providers = {
     aws = aws.org
@@ -86,4 +83,13 @@ module "public_website" {
     module.dns,
     module.aws_logging
   ]
+}
+
+module "config_files" {
+  source = "./config-files"
+
+  repository_names = module.serverless_api.*.repository_name
+  stage_domains    = module.dns.stage_domains
+  shared_env_vars  = var.shared_env_vars
+  serverless_apis  = merge(module.serverless_api.*.stage_configs...)
 }

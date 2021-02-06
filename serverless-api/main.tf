@@ -2,12 +2,6 @@ variable "service_name" {}
 variable "stage_domains" {
   type = map(any)
 }
-variable "serverless_apis" {
-  type = map(any)
-}
-variable "shared_env_vars" {
-  type = map(any)
-}
 
 module "repository" {
   source = "./github-repository"
@@ -17,10 +11,6 @@ module "repository" {
   suffix        = "api"
 
   service_name = var.service_name
-
-  stage_domains   = var.stage_domains
-  serverless_apis = var.serverless_apis
-  shared_env_vars = var.shared_env_vars
 }
 
 module "aws_iam" {
@@ -51,4 +41,17 @@ module "secrets" {
   deployer_aws_secret_key       = module.aws_iam.deployer_secret_key
   aws_rest_api_id               = each.value.api_id
   aws_rest_api_root_resource_id = each.value.root_resource_id
+}
+
+output "repository_name" {
+  value = module.repository.name
+}
+
+output "stage_configs" {
+  value = {
+    for stage in module.stage :
+    stage.name => {
+      config = stage.config
+    }
+  }
 }
