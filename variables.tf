@@ -19,7 +19,7 @@ variable "serverless_apis" {
   default = {}
 }
 
-variable "additional_env_vars" {
+variable "shared_env_vars" {
   type    = map(any)
   default = {}
 }

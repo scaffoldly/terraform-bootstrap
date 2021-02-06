@@ -55,10 +55,11 @@ module "serverless_api" {
   source   = "./serverless-api"
   for_each = var.serverless_apis
 
-  service_name  = each.key
-  stage_domains = module.dns.stage_domains
+  service_name = each.key
 
-  additional_env_vars = var.additional_env_vars
+  stage_domains   = module.dns.stage_domains
+  serverless_apis = var.serverless_apis
+  shared_env_vars = var.shared_env_vars
 
   providers = {
     aws = aws.org

@@ -2,7 +2,10 @@ variable "service_name" {}
 variable "stage_domains" {
   type = map(any)
 }
-variable "additional_env_vars" {
+variable "serverless_apis" {
+  type = map(any)
+}
+variable "shared_env_vars" {
   type = map(any)
 }
 
@@ -13,11 +16,11 @@ module "repository" {
   prefix        = "serverless"
   suffix        = "api"
 
-  # additional_env_vars = var.additional_env_vars
-
   service_name = var.service_name
 
-  stage_domains = var.stage_domains
+  stage_domains   = var.stage_domains
+  serverless_apis = var.serverless_apis
+  shared_env_vars = var.shared_env_vars
 }
 
 module "aws_iam" {
