@@ -51,9 +51,9 @@ output "stage_configs" {
   value = {
     for config in module.stage :
     config.stage => {
-      domain       = config.domain
-      base_path    = config.base_path
-      url          = config.url
+      domain    = config.domain
+      base_path = config.base_path
+      url       = config.url
     }
   }
 }

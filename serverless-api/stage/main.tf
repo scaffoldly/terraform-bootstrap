@@ -170,6 +170,6 @@ output "config" {
     stage     = var.stage
     domain    = "https://${var.domain}"
     base_path = "/${var.name}"
-    url  = "https://${var.domain}/${var.name}"
+    url       = "https://${var.domain}/${var.name}"
   }
 }
