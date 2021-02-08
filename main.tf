@@ -88,8 +88,8 @@ module "public_website" {
 module "config_files" {
   source = "./config-files"
 
-  repository_names = module.serverless_api.*.repository_name
-  stage_domains    = module.dns.stage_domains
-  shared_env_vars  = var.shared_env_vars
-  serverless_apis  = merge(module.serverless_api.*.stage_configs...)
+  repository_names       = module.serverless_api.*.repository_name
+  stage_domains          = module.dns.stage_domains
+  shared_env_vars        = var.shared_env_vars
+  serverless_api_configs = zipmap(keys(var.serverless_apis), module.serverless_api.*.stage_configs)
 }

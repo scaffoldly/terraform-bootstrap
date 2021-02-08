@@ -2,7 +2,7 @@ variable "repository_name" {}
 variable "stage_domains" {
   type = map(any)
 }
-variable "serverless_apis" {
+variable "serverless_api_configs" {
   type = map(any)
 }
 variable "shared_env_vars" {
@@ -30,13 +30,13 @@ resource "github_repository_file" "stage_domains" {
 resource "github_repository_file" "serverless_apis" {
   repository = var.repository_name
   branch     = data.github_repository.repository.default_branch
-  file       = ".scaffoldly/config/serverless-apis.yml"
+  file       = ".scaffoldly/config/apis.yml"
 
   content = templatefile("${path.module}/yaml.tpl", {
-    yaml = yamlencode(var.serverless_apis)
+    yaml = yamlencode(var.serverless_api_configs)
   })
 
-  commit_message = "[Scaffoldly] Update config: serverless-apis.yml"
+  commit_message = "[Scaffoldly] Update config: apis.yml"
   commit_author  = "Scaffoldly Bootstrap"
   commit_email   = "bootstrap@scaffold.ly"
 }

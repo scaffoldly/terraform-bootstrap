@@ -166,9 +166,10 @@ output "name" {
 }
 
 output "config" {
-  value = tomap({
-    "dommain"   = var.domain
-    "base_path" = var.name
-    "base_url"  = "https://${var.domain}/${var.name}"
-  })
+  value = {
+    stage     = var.stage
+    domain    = "https://${var.domain}"
+    base_path = "/${var.name}"
+    url  = "https://${var.domain}/${var.name}"
+  }
 }
