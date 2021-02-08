@@ -49,11 +49,11 @@ output "repository_name" {
 
 output "stage_configs" {
   value = {
-    for config in module.stage :
-    config.stage => {
-      domain    = config.domain
-      base_path = config.base_path
-      url       = config.url
+    for stage in module.stage :
+    stage.name => {
+      domain    = stage.domain
+      base_path = stage.base_path
+      url       = stage.url
     }
   }
 }

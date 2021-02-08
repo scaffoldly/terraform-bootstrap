@@ -165,11 +165,14 @@ output "name" {
   value = var.stage
 }
 
-output "config" {
-  value = {
-    stage     = var.stage
-    domain    = "https://${var.domain}"
-    base_path = "/${var.name}"
-    url       = "https://${var.domain}/${var.name}"
-  }
+output "domain" {
+  value = "https://${var.domain}"
+}
+
+output "base_path" {
+  value = "/${var.name}"
+}
+
+output "url" {
+  value = "https://${var.domain}/${var.name}"
 }
