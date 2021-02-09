@@ -1,6 +1,4 @@
-variable "repository_names" {
-  type = list(any)
-}
+variable "repository_name" {}
 variable "stage_domains" {
   type = map(any)
 }
@@ -11,12 +9,48 @@ variable "shared_env_vars" {
   type = map(any)
 }
 
-module "repository_files" {
-  count  = length(var.repository_names)
-  source = "./repository-files"
+data "github_repository" "repository" {
+  full_name = var.repository_name
+}
 
-  repository_name        = var.repository_names[count.index]
-  stage_domains          = var.stage_domains
-  serverless_api_configs = var.serverless_api_configs
-  shared_env_vars        = var.shared_env_vars
+resource "github_repository_file" "stage_domains" {
+  repository = var.repository_name
+  branch     = data.github_repository.repository.default_branch
+  file       = ".scaffoldly/config/stage-domains.yml"
+
+  content = templatefile("${path.module}/yaml.tpl", {
+    yaml = yamlencode(var.stage_domains)
+  })
+
+  commit_message = "[Scaffoldly] Update config: stage-domains.yml"
+  commit_author  = "Scaffoldly Bootstrap"
+  commit_email   = "bootstrap@scaffold.ly"
+}
+
+resource "github_repository_file" "serverless_apis" {
+  repository = var.repository_name
+  branch     = data.github_repository.repository.default_branch
+  file       = ".scaffoldly/config/apis.yml"
+
+  content = templatefile("${path.module}/yaml.tpl", {
+    yaml = yamlencode(var.serverless_api_configs)
+  })
+
+  commit_message = "[Scaffoldly] Update config: apis.yml"
+  commit_author  = "Scaffoldly Bootstrap"
+  commit_email   = "bootstrap@scaffold.ly"
+}
+
+resource "github_repository_file" "shared_env_vars" {
+  repository = var.repository_name
+  branch     = data.github_repository.repository.default_branch
+  file       = ".scaffoldly/env/shared.yml"
+
+  content = templatefile("${path.module}/yaml.tpl", {
+    yaml = yamlencode(var.shared_env_vars)
+  })
+
+  commit_message = "[Scaffoldly] Update env: shared.yml"
+  commit_author  = "Scaffoldly Bootstrap"
+  commit_email   = "bootstrap@scaffold.ly"
 }
