@@ -20,7 +20,7 @@ jobs:
       - run: terraform init
       - run: terraform fmt -check -recursive -diff
       - run: terraform validate
-        uses: "scaffoldly/github-action-bump-version-terraform-module@master"
+      - uses: "scaffoldly/github-action-bump-version-terraform-module@master"
         with:
           tag-prefix: "v"
       - run: git push --tags $GITHUB_REPOSITORY
