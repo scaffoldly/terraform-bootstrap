@@ -14,7 +14,12 @@ module "repository" {
   suffix        = "api"
 
   service_name = var.service_name
+}
 
+module "config" {
+  source = "./config"
+
+  repository_name = module.repository.name
   stage_domains   = var.stage_domains
   shared_env_vars = var.shared_env_vars
 }

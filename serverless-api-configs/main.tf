@@ -5,11 +5,11 @@ variable "stage_config" {
 }
 
 data "github_repository" "repository" {
-  full_name = var.repository_name
+  name = var.repository_name
 }
 
 resource "github_repository_file" "serverless_apis" {
-  repository = var.repository_name
+  repository = data.github_repository.repository.name
   branch     = data.github_repository.repository.default_branch
   file       = ".scaffoldly/config/${var.service_name}.yml"
 
