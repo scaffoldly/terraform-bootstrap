@@ -22,4 +22,3 @@ jobs:
       - uses: "scaffoldly/github-action-bump-version-terraform-module@master"
         with:
           tag-prefix: "v"
-      - run: git push --tags
