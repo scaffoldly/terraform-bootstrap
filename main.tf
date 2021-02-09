@@ -92,5 +92,5 @@ module "config_files" {
   repository_name        = module.serverless_api[each.key].repository_name
   stage_domains          = module.dns.stage_domains
   shared_env_vars        = var.shared_env_vars
-  serverless_api_configs = zipmap(keys(var.serverless_apis), module.serverless_api[each.key].stage_configs)
+  serverless_api_configs = zipmap(keys(var.serverless_apis), [for i, z in module.serverless_api : z if z == "stage_configs"])
 }
