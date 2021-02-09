@@ -2,7 +2,8 @@ name: Release
 
 on:
   push:
-    tags: ["v*"]
+    tags:
+      - "*"
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
