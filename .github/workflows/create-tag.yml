@@ -1,9 +1,9 @@
-name: Release
+name: Build and Tag
 on:
   push:
     branches:
       - master
-#
+
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -19,12 +19,6 @@ jobs:
       - run: terraform init
       - run: terraform fmt -check -recursive -diff
       - run: terraform validate
-      - run: echo "##[set-output name=version;]$(jq -r '.version' module.json)"
-        id: current_version
-      - uses: actions/create-release@v1
-        with:
-          tag_name: ${{ steps.current_version.outputs.version}}
-          release_name: ${{ steps.current_version.outputs.version }}
       - uses: "scaffoldly/github-action-bump-version-terraform-module@master"
         with:
-          tag-prefix: ""
+          tag-prefix: "v"

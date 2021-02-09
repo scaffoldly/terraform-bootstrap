@@ -1,0 +1,26 @@
+name: Release
+on:
+  create:
+    tags:
+      - v*
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          git config user.name "Automated Version Bump"
+          git config user.email "gh-action-bump-version@users.noreply.github.com"
+      - uses: hashicorp/setup-terraform@v1
+      - run: terraform init
+      - run: terraform fmt -check -recursive -diff
+      - run: terraform validate
+      - uses: actions/create-release@v1
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: true
