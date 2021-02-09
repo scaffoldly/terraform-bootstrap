@@ -2,8 +2,7 @@ name: Release
 
 on:
   create:
-    tags:
-      - v*
+    tags: [v*]
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
