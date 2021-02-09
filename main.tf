@@ -55,8 +55,9 @@ module "serverless_api" {
   source   = "./serverless-api"
   for_each = var.serverless_apis
 
-  service_name  = each.key
-  stage_domains = module.dns.stage_domains
+  service_name    = each.key
+  stage_domains   = module.dns.stage_domains
+  shared_env_vars = var.shared_env_vars
 
   providers = {
     aws = aws.org
@@ -85,12 +86,11 @@ module "public_website" {
   ]
 }
 
-module "config_files" {
-  source   = "./config-files"
+module "serverless_api_configs" {
+  source   = "./serverless-api-configs"
   for_each = var.serverless_apis
 
-  repository_name        = module.serverless_api[each.key].repository_name
-  stage_domains          = module.dns.stage_domains
-  shared_env_vars        = var.shared_env_vars
-  serverless_api_configs = zipmap(keys(var.serverless_apis), [for i, z in module.serverless_api : z if z == "stage_configs"])
+  service_name    = module.serverless_api[each.key].service_name
+  repository_name = module.serverless_api[each.key].repository_name
+  stage_config    = module.serverless_api[each.key].stage_config
 }

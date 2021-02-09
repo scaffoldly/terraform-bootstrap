@@ -2,6 +2,9 @@ variable "service_name" {}
 variable "stage_domains" {
   type = map(any)
 }
+variable "shared_env_vars" {
+  type = map(any)
+}
 
 module "repository" {
   source = "./github-repository"
@@ -11,6 +14,9 @@ module "repository" {
   suffix        = "api"
 
   service_name = var.service_name
+
+  stage_domains   = var.stage_domains
+  shared_env_vars = var.shared_env_vars
 }
 
 module "aws_iam" {
@@ -43,11 +49,15 @@ module "secrets" {
   aws_rest_api_root_resource_id = each.value.root_resource_id
 }
 
+output "service_name" {
+  value = var.service_name
+}
+
 output "repository_name" {
   value = module.repository.name
 }
 
-output "stage_configs" {
+output "stage_config" {
   value = {
     for stage in module.stage :
     stage.name => {

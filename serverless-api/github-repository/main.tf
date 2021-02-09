@@ -3,6 +3,13 @@ variable "service_name" {}
 variable "suffix" {}
 variable "template_repo" {}
 
+variable "stage_domains" {
+  type = map(any)
+}
+variable "shared_env_vars" {
+  type = map(any)
+}
+
 locals {
   repository_name = "${var.prefix}-${var.service_name}-${var.suffix}"
 }
@@ -25,8 +32,36 @@ resource "github_repository" "repository" {
   }
 }
 
+resource "github_repository_file" "stage_domains" {
+  repository = github_repository.repository.name
+  branch     = github_repository.repository.default_branch
+  file       = ".scaffoldly/config/stage-domains.yml"
+
+  content = templatefile("${path.module}/yaml.tpl", {
+    yaml = yamlencode(var.stage_domains)
+  })
+
+  commit_message = "[Scaffoldly] Update config: stage-domains.yml"
+  commit_author  = "Scaffoldly Bootstrap"
+  commit_email   = "bootstrap@scaffold.ly"
+}
+
+resource "github_repository_file" "shared_env_vars" {
+  repository = github_repository.repository.name
+  branch     = github_repository.repository.default_branch
+  file       = ".scaffoldly/env/shared.yml"
+
+  content = templatefile("${path.module}/yaml.tpl", {
+    yaml = yamlencode(var.shared_env_vars)
+  })
+
+  commit_message = "[Scaffoldly] Update env: shared.yml"
+  commit_author  = "Scaffoldly Bootstrap"
+  commit_email   = "bootstrap@scaffold.ly"
+}
+
 // TODO: Branch protection
 
 output "name" {
-  value = github_repository.repository.name
+  value = github_repository.repository.full_name
 }
