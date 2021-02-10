@@ -5,13 +5,14 @@ variable "stage_domains" {
 variable "shared_env_vars" {
   type = map(any)
 }
+variable "template" {}
 
 module "repository" {
   source = "./github-repository"
 
-  template_repo = "serverless-template-api"
-  prefix        = "serverless"
-  suffix        = "api"
+  template = var.template
+  prefix   = "serverless"
+  suffix   = "api"
 
   service_name = var.service_name
 }

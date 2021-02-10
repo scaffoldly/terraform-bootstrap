@@ -1,10 +1,12 @@
 variable "prefix" {}
 variable "service_name" {}
 variable "suffix" {}
-variable "template_repo" {}
+variable "template" {}
 
 locals {
   repository_name = "${var.prefix}-${var.service_name}-${var.suffix}"
+  template_owner  = split("/", var.template)[0]
+  template_repo   = split("/", var.template)[1]
 }
 
 resource "github_repository" "repository" {
@@ -20,8 +22,8 @@ resource "github_repository" "repository" {
   default_branch = "master" # TODO Change to main
 
   template {
-    owner      = "scaffoldly"
-    repository = var.template_repo
+    owner      = local.template_owner
+    repository = local.template_repo
   }
 }
 

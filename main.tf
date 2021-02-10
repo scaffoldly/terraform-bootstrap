@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 0.13"
+  required_version = ">= 0.13" # TODO Terraform 0.14
 }
 
 module "aws_organization" {
@@ -58,6 +58,8 @@ module "serverless_api" {
   service_name    = each.key
   stage_domains   = module.dns.stage_domains
   shared_env_vars = var.shared_env_vars
+
+  template = lookup(each.value, "template", "serverless-rest-api")
 
   providers = {
     aws = aws.org

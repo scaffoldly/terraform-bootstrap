@@ -2,7 +2,10 @@ variable "root_email" {}
 variable "github_token" {}
 variable "organization" {}
 
-variable "aws_region" {}
+variable "aws_regions" {
+  type = list(any)
+}
+
 variable "serverless_api_subdomain" {}
 
 variable "stages" {
