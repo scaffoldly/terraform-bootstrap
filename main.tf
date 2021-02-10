@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 0.13" # TODO Terraform 0.14
+  required_version = ">= 0.14"
 }
 
 module "aws_organization" {

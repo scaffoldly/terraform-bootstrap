@@ -25,6 +25,12 @@ resource "github_repository" "repository" {
     owner      = local.template_owner
     repository = local.template_repo
   }
+
+  lifecycle {
+    ignore_changes = [
+      template,
+    ]
+  }
 }
 
 // TODO: Branch protection
