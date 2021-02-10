@@ -8,13 +8,12 @@ variable "shared_env_vars" {
 variable "template" {}
 
 module "repository" {
-  source = "./github-repository"
+  source = "../github-repository"
 
   template = var.template
   prefix   = "serverless"
   suffix   = "api"
-
-  service_name = var.service_name
+  name     = var.service_name
 }
 
 module "config" {

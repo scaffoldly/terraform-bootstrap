@@ -1,10 +1,14 @@
-variable "prefix" {}
-variable "service_name" {}
-variable "suffix" {}
+variable "prefix" {
+  default = ""
+}
+variable "name" {}
+variable "suffix" {
+  default = ""
+}
 variable "template" {}
 
 locals {
-  repository_name = "${var.prefix}-${var.service_name}-${var.suffix}"
+  repository_name = format("%s%s%s", var.prefix ? "${var.prefix}-" : "", var.name, var.suffix ? "-${var.suffix}" : "")
   template_owner  = split("/", var.template)[0]
   template_repo   = split("/", var.template)[1]
 }

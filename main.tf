@@ -78,6 +78,8 @@ module "public_website" {
   name          = each.key
   stage_domains = module.dns.stage_domains
 
+  template = lookup(each.value, "template", "")
+
   providers = {
     aws = aws.org
   }
