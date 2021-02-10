@@ -92,5 +92,17 @@ module "serverless_api_configs" {
 
   service_name    = module.serverless_api[each.key].service_name
   repository_name = module.serverless_api[each.key].repository_name
-  stage_configs   = zipmap(keys(var.serverless_apis), matchkeys(values(module.serverless_api), keys(module.serverless_api), ["stage_config"]))
+  stage_config    = module.serverless_api[each.key].stage_config
+}
+
+output "serverless_apis" {
+  value = var.serverless_apis
+}
+
+output "values_module_serverless_api" {
+  value = values(module.serverless_api)
+}
+
+output "keys_module_serverless_api" {
+  value = keys(module.serverless_api)
 }
