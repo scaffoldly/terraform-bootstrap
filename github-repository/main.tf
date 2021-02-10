@@ -8,7 +8,7 @@ variable "suffix" {
 variable "template" {}
 
 locals {
-  repository_name = format("%s%s%s", var.prefix ? "${var.prefix}-" : "", var.name, var.suffix ? "-${var.suffix}" : "")
+  repository_name = format("%s%s%s", var.prefix != "" ? "${var.prefix}-" : "", var.name, var.suffix != "" ? "-${var.suffix}" : "")
   template_owner  = split("/", var.template)[0]
   template_repo   = split("/", var.template)[1]
 }
