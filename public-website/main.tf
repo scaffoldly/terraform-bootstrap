@@ -29,5 +29,5 @@ module "repository" {
 
   template = var.template
   suffix   = local.repository_suffix
-  name     = var.service_name
+  name     = var.name
 }
