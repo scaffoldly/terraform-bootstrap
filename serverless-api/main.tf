@@ -2,25 +2,22 @@ variable "service_name" {}
 variable "stage_domains" {
   type = map(any)
 }
-variable "shared_env_vars" {
-  type = map(any)
+variable "template" {
+  default = "scaffoldly/serverless-rest-api"
 }
-variable "template" {}
+variable "repo_name" {
+  default = ""
+}
+
+locals {
+  repo_name = var.repo_name != "" ? var.repo_name : "${var.name}-${split("/", var.template)[1]}"
+}
 
 module "repository" {
   source = "../github-repository"
 
   template = var.template
-  prefix   = "serverless"
-  suffix   = "api"
-  name     = var.service_name
-}
-
-module "config" {
-  source = "./config"
-
-  repository_name = module.repository.name
-  shared_env_vars = var.shared_env_vars
+  name     = local.repo_name
 }
 
 module "aws_iam" {

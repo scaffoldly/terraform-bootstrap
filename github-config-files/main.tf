@@ -1,5 +1,7 @@
 variable "repository_name" {}
-
+variable "stage_configs" {
+  type = map(any)
+}
 variable "shared_env_vars" {
   type = map(any)
 }
@@ -38,6 +40,18 @@ resource "github_repository_file" "shared_env_vars" {
   content = jsonencode(var.shared_env_vars)
 
   commit_message = "[Scaffoldly] Update shared-env"
+  commit_author  = "Scaffoldly Bootstrap"
+  commit_email   = "bootstrap@scaffold.ly"
+}
+
+resource "github_repository_file" "services" {
+  repository = data.github_repository.repository.name
+  branch     = data.github_repository.repository.default_branch
+  file       = ".scaffoldly/services.json"
+
+  content = jsonencode(var.stage_configs)
+
+  commit_message = "[Scaffoldly] Update service map"
   commit_author  = "Scaffoldly Bootstrap"
   commit_email   = "bootstrap@scaffold.ly"
 }

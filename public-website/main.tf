@@ -4,11 +4,14 @@ variable "stage_domains" {
   type = map(any)
 }
 variable "template" {
+  default = "scaffoldly/web-angular"
+}
+variable "repo_name" {
   default = ""
 }
 
 locals {
-  repository_suffix = var.template != "" ? split("/", var.template)[1] : ""
+  repo_name = var.repo_name != "" ? var.repo_name : "${var.name}-${split("/", var.template)[1]}"
 }
 
 module "cloudfront" {
@@ -25,9 +28,11 @@ module "cloudfront" {
 
 module "repository" {
   source = "../github-repository"
-  count  = var.template != "" ? 1 : 0
 
   template = var.template
-  suffix   = local.repository_suffix
-  name     = var.name
+  name     = local.repo_name
+}
+
+output "repository_name" {
+  value = module.repository.name
 }

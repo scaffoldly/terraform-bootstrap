@@ -59,7 +59,8 @@ module "serverless_api" {
   stage_domains   = module.dns.stage_domains
   shared_env_vars = var.shared_env_vars
 
-  template = lookup(each.value, "template", "serverless-rest-api")
+  template  = lookup(each.value, "template", null)
+  repo_name = lookup(each.value, "repo_name", null)
 
   providers = {
     aws = aws.org
@@ -78,7 +79,8 @@ module "public_website" {
   name          = each.key
   stage_domains = module.dns.stage_domains
 
-  template = lookup(each.value, "template", "")
+  template  = lookup(each.value, "template", null)
+  repo_name = lookup(each.value, "repo_name", null)
 
   providers = {
     aws = aws.org
@@ -90,11 +92,19 @@ module "public_website" {
   ]
 }
 
-module "serverless_api_configs" {
-  source   = "./serverless-api-configs"
+module "github_config_files_serverless_apis" {
+  source   = "./github-config-files"
   for_each = var.serverless_apis
 
-  service_name    = module.serverless_api[each.key].service_name
   repository_name = module.serverless_api[each.key].repository_name
   stage_configs   = zipmap(keys(module.serverless_api), values(module.serverless_api)[*].stage_config)
+}
+
+module "github_config_files_public_websites" {
+  source   = "./github-config-files"
+  for_each = var.public_websites
+
+  repository_name = module.public_websites[each.key].repository_name
+  stage_configs   = zipmap(keys(module.serverless_api), values(module.serverless_api)[*].stage_config)
+  shared_env_vars = var.shared_env_vars
 }
