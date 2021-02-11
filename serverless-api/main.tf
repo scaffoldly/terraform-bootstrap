@@ -2,9 +2,7 @@ variable "service_name" {}
 variable "stage_domains" {
   type = map(any)
 }
-variable "template" {
-  default = "scaffoldly/serverless-rest-api"
-}
+variable "template" {}
 variable "repo_name" {
   default = ""
 }

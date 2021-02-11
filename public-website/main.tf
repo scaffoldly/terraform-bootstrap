@@ -3,9 +3,7 @@ variable "name" {}
 variable "stage_domains" {
   type = map(any)
 }
-variable "template" {
-  default = "scaffoldly/web-angular"
-}
+variable "template" {}
 variable "repo_name" {
   default = ""
 }
