@@ -10,7 +10,7 @@ variable "repo_name" {
 }
 
 locals {
-  repo_name = var.repo_name != "" ? var.repo_name : "${var.name}-${split("/", var.template)[1]}"
+  repo_name = var.repo_name != "" ? var.repo_name : "${var.service_name}-${split("/", var.template)[1]}"
 }
 
 module "repository" {

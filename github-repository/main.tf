@@ -7,7 +7,7 @@ locals {
 }
 
 resource "github_repository" "repository" {
-  name = local.repository_name
+  name = var.name
 
   private                = true
   has_downloads          = false
