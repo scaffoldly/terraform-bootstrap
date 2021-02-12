@@ -60,6 +60,7 @@ output "stage_config" {
   value = {
     for stage in module.stage :
     stage.name => {
+      repo_name = module.repository.name
       domain    = stage.domain
       base_path = stage.base_path
       url       = stage.url

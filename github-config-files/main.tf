@@ -63,6 +63,5 @@ module "stage_config_file" {
   repository = data.github_repository.repository.name
   branch     = data.github_repository.repository.default_branch
 
-  service_name = each.key
   stage_config = each.value
 }

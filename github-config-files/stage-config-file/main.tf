@@ -1,12 +1,7 @@
 variable "repository" {}
 variable "branch" {}
-variable "service_name" {}
 variable "stage_config" {
   type = map(any)
-}
-
-locals {
-  scrubbed_service_name = replace(var.service_name, "-", "_")
 }
 
 resource "github_repository_file" "services" {
@@ -14,13 +9,13 @@ resource "github_repository_file" "services" {
 
   repository = var.repository
   branch     = var.branch
-  file       = ".scaffoldly/.env/${each.key}/${var.service_name}.env"
+  file       = ".scaffoldly/.env/${each.key}/${lookup(each.value, "repo_name", "unknown")}.env"
 
   content = <<EOF
-  ${upper(local.scrubbed_service_name)}_${upper(each.key)}_URL=${lookup(each.value, "url", "")}
+  ${replace(upper(lookup(each.value, "repo_name", "unknown")), "-", "_")}_${upper(each.key)}_URL=${lookup(each.value, "url", "")}
   EOF
 
-  commit_message = "[Scaffoldly] Update env: ${var.service_name} ${each.key}"
+  commit_message = "[Scaffoldly] Update env: ${var.service_name}-${each.key}"
   commit_author  = "Scaffoldly Bootstrap"
   commit_email   = "bootstrap@scaffold.ly"
 }
