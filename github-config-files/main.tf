@@ -55,3 +55,14 @@ resource "github_repository_file" "services" {
   commit_author  = "Scaffoldly Bootstrap"
   commit_email   = "bootstrap@scaffold.ly"
 }
+
+module "stage_config_file" {
+  source   = "./stage-config-file"
+  for_each = var.stage_configs
+
+  repository = data.github_repository.repository.name
+  branch     = data.github_repository.repository.default_branch
+
+  service_name = each.key
+  stage_config = each.value
+}
