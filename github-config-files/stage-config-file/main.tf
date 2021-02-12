@@ -15,7 +15,7 @@ resource "github_repository_file" "services" {
   ${replace(upper(lookup(each.value, "repo_name", "unknown")), "-", "_")}_${upper(each.key)}_URL=${lookup(each.value, "url", "")}
   EOF
 
-  commit_message = "[Scaffoldly] Update env: ${var.service_name}-${each.key}"
+  commit_message = "[Scaffoldly] Update env: ${lookup(each.value, "repo_name", "unknown")} (${each.key} API URL)"
   commit_author  = "Scaffoldly Bootstrap"
   commit_email   = "bootstrap@scaffold.ly"
 }
