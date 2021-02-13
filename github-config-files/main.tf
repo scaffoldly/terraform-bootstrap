@@ -2,9 +2,6 @@ variable "repository_name" {}
 variable "stages" {
   type = list(any)
 }
-variable "stage_configs" {
-  type = map(any)
-}
 variable "stage_urls" {
   type = map(any)
 }
@@ -60,41 +57,28 @@ resource "github_repository_file" "shared_env_vars" {
   commit_email   = "bootstrap@scaffold.ly"
 }
 
-resource "github_repository_file" "services" {
-  repository = data.github_repository.repository.name
-  branch     = data.github_repository.repository.default_branch
-  file       = ".scaffoldly/services.json"
-
-  content = jsonencode(var.stage_configs)
-
-  commit_message = "[Scaffoldly] Update service map"
-  commit_author  = "Scaffoldly Bootstrap"
-  commit_email   = "bootstrap@scaffold.ly"
-}
-
-resource "github_repository_file" "stage_urls" {
-  count = length(var.stages)
-
-  repository = data.github_repository.repository.name
-  branch     = data.github_repository.repository.default_branch
-  file       = ".scaffoldly/services-${var.stages[count.index]}.json"
-
-  content = jsonencode({
-    for key, value in var.stage_urls :
-    key => lookup(value, var.stages[count.index], "unknown-foo-bar")
-  })
-
-  commit_message = "[Scaffoldly] Update ${var.stages[count.index]} stage urls"
-  commit_author  = "Scaffoldly Bootstrap"
-  commit_email   = "bootstrap@scaffold.ly"
-}
-
-# module "stage_config_file" {
-#   for_each = var.stage_configs
-#   source   = "./stage-config-file"
-
+# resource "github_repository_file" "services" {
 #   repository = data.github_repository.repository.name
 #   branch     = data.github_repository.repository.default_branch
+#   file       = ".scaffoldly/services.json"
 
+#   content = jsonencode(var.stage_configs)
 
+#   commit_message = "[Scaffoldly] Update service map"
+#   commit_author  = "Scaffoldly Bootstrap"
+#   commit_email   = "bootstrap@scaffold.ly"
 # }
+
+module "stage_urls_files" {
+  count  = length(var.stages)
+  source = "./stage-urls-files"
+
+  repository = data.github_repository.repository.name
+  branch     = data.github_repository.repository.default_branch
+
+  stage_name = var.stages[count.index]
+  stage_urls = {
+    for key, value in var.stage_urls :
+    key => lookup(value, var.stages[count.index], "unknown-url")
+  }
+}
