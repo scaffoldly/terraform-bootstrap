@@ -67,3 +67,10 @@ output "stage_config" {
     }
   }
 }
+
+output "stage_urls" {
+  value = {
+    for stage in module.stage :
+    stage.name => stage.url
+  }
+}
