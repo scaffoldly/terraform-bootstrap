@@ -53,7 +53,6 @@ module "stage_files" {
 }
 
 module "stage_files_default" {
-  count  = length(var.stages)
   source = "./stage-files"
 
   repository = data.github_repository.repository.name
