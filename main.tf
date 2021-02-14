@@ -58,7 +58,7 @@ module "serverless_api" {
   service_name  = each.key
   stage_domains = module.dns.stage_domains
 
-  template  = lookup(each.value, "template", "scaffoldly/serverless-rest-api")
+  template  = lookup(each.value, "template", "scaffoldly/sls-rest-api-template")
   repo_name = lookup(each.value, "repo_name", "")
 
   providers = {
@@ -78,7 +78,7 @@ module "public_website" {
   name          = each.key
   stage_domains = module.dns.stage_domains
 
-  template  = lookup(each.value, "template", "scaffoldly/web-angular")
+  template  = lookup(each.value, "template", "scaffoldly/web-angular-template")
   repo_name = lookup(each.value, "repo_name", "")
 
   providers = {

@@ -9,7 +9,7 @@ variable "repo_name" {
 }
 
 locals {
-  repo_name = var.repo_name != "" ? var.repo_name : "${var.name}-${split("/", var.template)[1]}"
+  repo_name = var.repo_name != "" ? var.repo_name : "${var.name}-${replace(split("/", var.template)[1], "-template", "")}"
 }
 
 module "cloudfront" {
@@ -29,6 +29,16 @@ module "repository" {
 
   template = var.template
   name     = local.repo_name
+}
+
+module "aws_iam" {
+  source   = "./aws-iam"
+  for_each = module.cloudfront
+
+  stage           = each.value.stage
+  repository_name = module.repository.name
+  bucket_name     = each.value.bucket_name
+  distribution_id = each.value.distribution_id
 }
 
 output "repository_name" {

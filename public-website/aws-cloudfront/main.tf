@@ -143,3 +143,15 @@ resource "aws_cloudfront_distribution" "distribution" {
   is_ipv6_enabled     = true
   wait_for_deployment = false
 }
+
+output "stage" {
+  value = var.stage
+}
+
+output "bucket_name" {
+  value = aws_s3_bucket.bucket.id
+}
+
+output "distribution_id" {
+  value = aws_cloudfront_distribution.distribution.id
+}
