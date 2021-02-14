@@ -12,6 +12,7 @@ variable "shared_env_vars" {
 
 locals {
   stage_path = var.stage_name != "" ? "${var.stage_name}/" : ""
+  env_suffix = var.stage_name != "" ? ".${var.stage_name}" : ""
 }
 
 resource "github_repository_file" "service_urls_json" {
@@ -41,9 +42,7 @@ resource "github_repository_file" "shared_env_vars_json" {
 resource "github_repository_file" "env" {
   repository = var.repository
   branch     = var.branch
-  
-  # Use var.stage_name so all .env files stay in the root
-  file       = ".scaffoldly/${var.stage_name}.env"
+  file       = ".scaffoldly/.env${local.env_suffix}"
 
   content = <<EOF
 # DO NOT EDIT. 
@@ -53,7 +52,7 @@ service_urls=${jsonencode(var.stage_urls)}
 shared_env_vars=${jsonencode(var.shared_env_vars)}
 EOF
 
-  commit_message = "[Scaffoldly] Update ${var.stage_name}.env"
+  commit_message = "[Scaffoldly] Update .env${local.env_suffix}"
   commit_author  = "Scaffoldly Bootstrap"
   commit_email   = "bootstrap@scaffold.ly"
 }
