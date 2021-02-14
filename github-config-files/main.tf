@@ -13,16 +13,6 @@ data "github_repository" "repository" {
   name = var.repository_name
 }
 
-# locals {
-#   stage_blah = flatten([
-#     for service_name, service_config in var.stage_configs : {
-#       service_name = for config in service_config : {
-#         service_name = config.url
-#       }
-#     }
-#   ])
-# }
-
 resource "github_repository_file" "readme" {
   repository = var.repository_name
   branch     = data.github_repository.repository.default_branch
@@ -45,40 +35,36 @@ EOF
   commit_email   = "bootstrap@scaffold.ly"
 }
 
-resource "github_repository_file" "shared_env_vars" {
-  repository = var.repository_name
-  branch     = data.github_repository.repository.default_branch
-  file       = ".scaffoldly/shared-env.json"
-
-  content = jsonencode(var.shared_env_vars)
-
-  commit_message = "[Scaffoldly] Update shared-env"
-  commit_author  = "Scaffoldly Bootstrap"
-  commit_email   = "bootstrap@scaffold.ly"
-}
-
-# resource "github_repository_file" "services" {
-#   repository = data.github_repository.repository.name
-#   branch     = data.github_repository.repository.default_branch
-#   file       = ".scaffoldly/services.json"
-
-#   content = jsonencode(var.stage_configs)
-
-#   commit_message = "[Scaffoldly] Update service map"
-#   commit_author  = "Scaffoldly Bootstrap"
-#   commit_email   = "bootstrap@scaffold.ly"
-# }
-
-module "stage_urls_files" {
+module "stage_files" {
   count  = length(var.stages)
-  source = "./stage-urls-files"
+  source = "./stage-files"
 
   repository = data.github_repository.repository.name
   branch     = data.github_repository.repository.default_branch
 
   stage_name = var.stages[count.index]
+
   stage_urls = {
     for key, value in var.stage_urls :
     key => lookup(value, var.stages[count.index], "unknown-url")
   }
+
+  shared_env_vars = var.shared_env_vars
+}
+
+module "stage_files_default" {
+  count  = length(var.stages)
+  source = "./stage-files"
+
+  repository = data.github_repository.repository.name
+  branch     = data.github_repository.repository.default_branch
+
+  stage_name = ""
+
+  stage_urls = {
+    for key, value in var.stage_urls :
+    key => lookup(value, "nonlive", "unknown-url") # TODO: Configurable default stage
+  }
+
+  shared_env_vars = var.shared_env_vars
 }
