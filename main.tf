@@ -91,32 +91,32 @@ module "public_website" {
   ]
 }
 
-module "github_config_files_serverless_apis" {
-  source   = "./github-config-files"
-  for_each = var.serverless_apis
+# module "github_config_files_serverless_apis" {
+#   source   = "./github-config-files"
+#   for_each = var.serverless_apis
 
-  repository_name = module.serverless_api[each.key].repository_name
-  stages          = keys(var.stages)
-  stage_urls      = zipmap(values(module.serverless_api)[*].repository_name, values(module.serverless_api)[*].stage_urls)
-  shared_env_vars = var.shared_env_vars
+#   repository_name = module.serverless_api[each.key].repository_name
+#   stages          = keys(var.stages)
+#   stage_urls      = zipmap(values(module.serverless_api)[*].repository_name, values(module.serverless_api)[*].stage_urls)
+#   shared_env_vars = var.shared_env_vars
 
-  depends_on = [
-    module.public_website,
-    module.serverless_api
-  ]
-}
+#   depends_on = [
+#     module.public_website,
+#     module.serverless_api
+#   ]
+# }
 
-module "github_config_files_public_websites" {
-  source   = "./github-config-files"
-  for_each = var.public_websites
+# module "github_config_files_public_websites" {
+#   source   = "./github-config-files"
+#   for_each = var.public_websites
 
-  repository_name = module.public_website[each.key].repository_name
-  stages          = keys(var.stages)
-  stage_urls      = zipmap(values(module.serverless_api)[*].repository_name, values(module.serverless_api)[*].stage_urls)
-  shared_env_vars = var.shared_env_vars
+#   repository_name = module.public_website[each.key].repository_name
+#   stages          = keys(var.stages)
+#   stage_urls      = zipmap(values(module.serverless_api)[*].repository_name, values(module.serverless_api)[*].stage_urls)
+#   shared_env_vars = var.shared_env_vars
 
-  depends_on = [
-    module.public_website,
-    module.serverless_api
-  ]
-}
+#   depends_on = [
+#     module.public_website,
+#     module.serverless_api
+#   ]
+# }
