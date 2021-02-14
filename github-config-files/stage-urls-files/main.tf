@@ -23,7 +23,7 @@ resource "github_repository_file" "env" {
   file       = ".scaffoldly/${var.stage_name}/service-urls.env"
 
   content = <<EOF
-SERVICE_URLS=${replace(jsonencode(var.stage_urls), "\"", "\\\"")}
+SERVICE_URLS="${replace(jsonencode(var.stage_urls), "\"", "\\\"")}"
 EOF
 
   commit_message = "[Scaffoldly] Update ${var.stage_name}/service-urls.env"
