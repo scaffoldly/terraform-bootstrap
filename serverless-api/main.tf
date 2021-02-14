@@ -59,6 +59,6 @@ output "repository_name" {
 output "stage_urls" {
   value = {
     for stage in module.stage :
-    module.repository.name => stage.url
+    stage.name => stage.url
   }
 }
