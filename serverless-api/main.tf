@@ -1,4 +1,4 @@
-variable "service_name" {}
+variable "name" {}
 variable "stage_domains" {
   type = map(any)
 }
@@ -32,7 +32,7 @@ module "stage" {
 
   domain = lookup(each.value, "serverless_api_domain", "unknown-domain")
 
-  name  = var.service_name
+  name  = var.name
   stage = each.key
 
   repository_name = module.repository.name
@@ -51,7 +51,7 @@ module "secrets" {
 }
 
 output "service_name" {
-  value = var.service_name
+  value = var.name
 }
 
 output "repository_name" {

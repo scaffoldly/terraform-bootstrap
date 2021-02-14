@@ -55,7 +55,7 @@ module "serverless_api" {
   source   = "./serverless-api"
   for_each = var.serverless_apis
 
-  service_name  = each.key
+  name          = each.key
   stage_domains = module.dns.stage_domains
 
   template  = lookup(each.value, "template", "scaffoldly/sls-rest-api-template")
