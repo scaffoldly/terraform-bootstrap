@@ -41,7 +41,7 @@ data "aws_iam_policy_document" "base" {
 }
 
 resource "aws_iam_user" "user" {
-  name = "${var.repository_name}-deployer"
+  name = "${var.repository_name}-${var.stage}-deployer"
 }
 
 resource "aws_iam_user_policy" "policy" {
