@@ -97,7 +97,7 @@ module "github_config_files_serverless_apis" {
 
   repository_name = module.serverless_api[each.key].repository_name
   stages          = keys(var.stages)
-  stage_urls      = zipmap(keys(module.serverless_api), values(module.serverless_api)[*].stage_urls)
+  stage_urls      = zipmap(values(module.serverless_api)[*].repository_name, values(module.serverless_api)[*].stage_urls)
   shared_env_vars = var.shared_env_vars
 
   depends_on = [
