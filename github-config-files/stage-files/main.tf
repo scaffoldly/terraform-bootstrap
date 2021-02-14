@@ -25,6 +25,12 @@ resource "github_repository_file" "service_urls_json" {
   commit_message = "[Scaffoldly] Update ${local.stage_path}service-urls.json"
   commit_author  = "Scaffoldly Bootstrap"
   commit_email   = "bootstrap@scaffold.ly"
+
+  lifecycle {
+    ignore_changes = [
+      branch
+    ]
+  }
 }
 
 resource "github_repository_file" "shared_env_vars_json" {
@@ -37,6 +43,12 @@ resource "github_repository_file" "shared_env_vars_json" {
   commit_message = "[Scaffoldly] Update ${local.stage_path}shared-env-vars.json"
   commit_author  = "Scaffoldly Bootstrap"
   commit_email   = "bootstrap@scaffold.ly"
+
+  lifecycle {
+    ignore_changes = [
+      branch
+    ]
+  }
 }
 
 resource "github_repository_file" "env" {
@@ -55,4 +67,10 @@ EOF
   commit_message = "[Scaffoldly] Update .env${local.env_suffix}"
   commit_author  = "Scaffoldly Bootstrap"
   commit_email   = "bootstrap@scaffold.ly"
+
+  lifecycle {
+    ignore_changes = [
+      branch
+    ]
+  }
 }

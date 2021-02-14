@@ -33,6 +33,12 @@ EOF
   commit_message = "[Scaffoldly] Update Readme"
   commit_author  = "Scaffoldly Bootstrap"
   commit_email   = "bootstrap@scaffold.ly"
+
+  lifecycle {
+    ignore_changes = [
+      branch
+    ]
+  }
 }
 
 module "stage_files" {
