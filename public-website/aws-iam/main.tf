@@ -4,6 +4,7 @@ variable "repository_name" {}
 variable "bucket_name" {}
 variable "distribution_id" {}
 
+data "aws_region" "current" {}
 data "aws_partition" "current" {}
 data "aws_caller_identity" "current" {}
 
@@ -66,6 +67,12 @@ resource "github_actions_secret" "deployer_aws_account_id" {
   repository      = var.repository_name
   secret_name     = "${upper(var.stage)}_AWS_ACCOUNT_ID"
   plaintext_value = data.aws_caller_identity.current.account_id
+}
+
+resource "github_actions_secret" "deployer_aws_default_region" {
+  repository      = var.repository_name
+  secret_name     = "${upper(var.stage)}_AWS_DEFAULT_REGION"
+  plaintext_value = data.aws_region.current.name
 }
 
 resource "github_actions_secret" "deployer_aws_access_key" {
