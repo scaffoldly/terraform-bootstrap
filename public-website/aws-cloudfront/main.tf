@@ -6,6 +6,8 @@ variable "subdomain_suffix" {}
 variable "certificate_arn" {}
 
 data "aws_partition" "current" {}
+data "aws_caller_identity" "current" {}
+
 data "aws_s3_bucket" "logs_bucket" {
   bucket = "${var.account_name}-logs-cloudfront"
 }
@@ -47,8 +49,29 @@ resource "aws_s3_bucket_public_access_block" "block" {
   restrict_public_buckets = false
 }
 
-// TODO WRITE FOR DEPLOYER
 data "aws_iam_policy_document" "bucket_policy" {
+  statement {
+    # This statement defers access control evaluation to IAM Policiesfor any 
+    # IAM role or user in this AWS account, making ACL control within the 
+    # account more succinct, instead of having to navigate through IAM policies
+    # and S3 bucket policies
+    principals {
+      type = "AWS"
+      identifiers = [
+        "arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:root"
+      ]
+    }
+
+    actions = [
+      "s3:*",
+    ]
+
+    resources = [
+      "arn:${data.aws_partition.current.partition}:s3:::${aws_s3_bucket.bucket.id}",
+      "arn:${data.aws_partition.current.partition}:s3:::${aws_s3_bucket.bucket.id}/*",
+    ]
+  }
+
   statement {
     principals {
       type = "AWS"
