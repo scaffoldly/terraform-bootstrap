@@ -92,3 +92,9 @@ resource "github_actions_secret" "deployer_aws_bucket_name" {
   secret_name     = "${upper(var.stage)}_AWS_BUCKET_NAME"
   plaintext_value = var.bucket_name
 }
+
+resource "github_actions_secret" "deployer_aws_cloudfont_distribution_id" {
+  repository      = var.repository_name
+  secret_name     = "${upper(var.stage)}_AWS_CLOUDFRONT_DISTRIBUTION_ID"
+  plaintext_value = var.distribution_id
+}

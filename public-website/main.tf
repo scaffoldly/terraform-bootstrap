@@ -46,3 +46,5 @@ module "aws_iam" {
 output "repository_name" {
   value = module.repository.name
 }
+
+# TODO Instructions to add CNAME records to cloudfronts
