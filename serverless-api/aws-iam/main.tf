@@ -351,6 +351,11 @@ resource "aws_iam_user_policy" "assume_cloudformation_role" {
 
 resource "aws_iam_access_key" "access_key" {
   user = aws_iam_user.user.name
+
+  depends_on = [
+    aws_iam_user_policy.policy,
+    aws_iam_user_policy.assume_cloudformation_role
+  ]
 }
 
 output "deployer_access_key" {
