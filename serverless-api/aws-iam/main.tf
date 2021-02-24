@@ -173,7 +173,8 @@ data "aws_iam_policy_document" "cloudformation" {
       "dynamodb:RestoreTable*",
       "dynamodb:UpdateTable*",
       "dynamodb:UpdateContinuousBackups",
-      "dynamodb:GetShardIterator"
+      "dynamodb:GetShardIterator",
+      "dynamodb:*TimeToLive*",
     ]
 
     resources = [
