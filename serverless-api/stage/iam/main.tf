@@ -24,6 +24,11 @@ data "aws_iam_policy_document" "base" {
       "dynamodb:*Item*",
       "dynamodb:Query",
       "dynamodb:Scan",
+      "dynamodb:GetRecords",
+      "dynamodb:GetShardIterator",
+      "dynamodb:DescribeStream",
+      "dynamodb:ListShards",
+      "dynamodb:ListStreams",
     ]
 
     resources = [
