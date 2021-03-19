@@ -29,7 +29,7 @@ variable "stages" {
   type = map(
     object({
       domain           = string
-      subdomain_suffix = string
+      subdomain_suffix = optional(string)
     })
   )
 }
@@ -39,7 +39,7 @@ variable "public_websites" {
   type = map(
     object({
       template  = string
-      repo_name = string
+      repo_name = optional(string)
     })
   )
   default = {}
@@ -50,7 +50,7 @@ variable "serverless_apis" {
   type = map(
     object({
       template  = string
-      repo_name = string
+      repo_name = optional(string)
     })
   )
   default = {}
