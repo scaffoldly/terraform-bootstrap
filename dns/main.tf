@@ -3,6 +3,8 @@ terraform {
   experiments      = [module_variable_optional_attrs]
 }
 
+provider "aws" {}
+
 provider "aws" {
   alias = "dns"
 }
