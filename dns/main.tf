@@ -17,7 +17,7 @@ variable "stages" {
   type = map(
     object({
       domain           = string
-      subdomain_suffix = string
+      subdomain_suffix = optional(string)
     })
   )
 }
@@ -31,7 +31,7 @@ module "dns" {
   stage            = each.key
   domain           = each.value.domain
   subdomain        = var.serverless_api_subdomain
-  subdomain_suffix = each.value.subdomain_suffix
+  subdomain_suffix = each.value.subdomain_suffix != null ? each.value.subdomain_suffix : ""
 
   providers = {
     aws.dns = aws.dns
