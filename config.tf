@@ -59,6 +59,16 @@ provider "aws" {
     role_arn = "arn:aws:iam::${module.aws_organization.account_id}:role/BootstrapAccessRole"
   }
 }
+
+provider "aws" { # TODO Remove
+  alias   = "org"
+  version = "~> 3.0.0"
+  region  = var.aws_regions[0] # TODO Create this provider in each module with region for_each
+
+  assume_role {
+    role_arn = "arn:aws:iam::${module.aws_organization.account_id}:role/BootstrapAccessRole"
+  }
+}
 # provider "aws" {
 #   region = var.aws_regions[0] # TODO Create this provider in each module with region for_each
 
