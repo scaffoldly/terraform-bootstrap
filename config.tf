@@ -30,7 +30,7 @@ terraform {
 
     time = {
       source  = "hashicorp/time"
-      version = "0.7.0"
+      version = "0.6.0"
     }
 
     template = {
@@ -41,7 +41,7 @@ terraform {
 }
 
 provider "time" {
-  alias = "old"
+  alias   = "old"
   version = "~> 0.6.0"
 }
 
