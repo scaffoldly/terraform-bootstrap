@@ -1,5 +1,5 @@
 module "aws_organization" {
-  source = "./aws-organization"
+  source = "./organization/aws" # TODO Add main.tf in ./organization
   name   = var.organization
   email  = var.root_email
 
@@ -9,7 +9,7 @@ module "aws_organization" {
 }
 
 module "aws_logging" {
-  source = "./aws-logging"
+  source = "./logging/aws" # TODO Add main.tf in ./logging
 
   account_name = module.aws_organization.account_name
 
@@ -36,7 +36,7 @@ module "dns" {
 }
 
 module "aws_api_gateway" {
-  source = "./aws-api-gateway"
+  source = "./api-gateway/aws" # TODO Add main.tf in ./api-gateway
 
   stage_domains = module.dns.stage_domains
 
