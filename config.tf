@@ -40,6 +40,11 @@ terraform {
   }
 }
 
+provider "time" {
+  alias = "old"
+  version = "~> 0.6.0"
+}
+
 provider "aws" {
   alias   = "root"
   version = "~> 3.0.0"
