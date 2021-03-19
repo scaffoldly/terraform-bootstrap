@@ -1,9 +1,25 @@
-variable "stage" {}
-variable "repository_name" {}
-variable "deployer_aws_access_key" {}
-variable "deployer_aws_secret_key" {}
-variable "aws_rest_api_id" {}
-variable "aws_rest_api_root_resource_id" {}
+terraform {
+  required_version = ">= 0.14"
+}
+
+variable "stage" {
+  type = string
+}
+variable "repository_name" {
+  type = string
+}
+variable "deployer_aws_access_key" {
+  type = string
+}
+variable "deployer_aws_secret_key" {
+  type = string
+}
+variable "aws_rest_api_id" {
+  type = string
+}
+variable "aws_rest_api_root_resource_id" {
+  type = string
+}
 
 data "aws_partition" "current" {}
 data "aws_caller_identity" "current" {}

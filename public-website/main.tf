@@ -1,10 +1,32 @@
-variable "account_name" {}
-variable "name" {}
-variable "stage_domains" {
-  type = map(any)
+terraform {
+  required_version = ">= 0.14"
 }
-variable "template" {}
+
+variable "account_name" {
+  type = string
+}
+variable "name" {
+  type = string
+}
+# TODO: Remove nameservers and zone_id with switch to simpledns
+variable "stage_domains" {
+  type = map(
+    object({
+      domain                = string
+      subdomain             = string
+      subdomain_suffix      = string
+      serverless_api_domain = string
+      zone_id               = string
+      certificate_arn       = string
+      nameservers           = string
+    })
+  )
+}
+variable "template" {
+  type = string
+}
 variable "repo_name" {
+  type    = string
   default = ""
 }
 

@@ -1,7 +1,19 @@
-variable "domain" {}
-variable "name" {}
-variable "stage" {}
-variable "repository_name" {}
+terraform {
+  required_version = ">= 0.14"
+}
+
+variable "domain" {
+  type = string
+}
+variable "name" {
+  type = string
+}
+variable "stage" {
+  type = string
+}
+variable "repository_name" {
+  type = string
+}
 
 resource "aws_api_gateway_rest_api" "api" {
   name = "${var.name}-${var.stage}"

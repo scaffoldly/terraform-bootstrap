@@ -1,5 +1,20 @@
+terraform {
+  required_version = ">= 0.14"
+}
+
+# TODO: Remove nameservers and zone_id with switch to simpledns
 variable "stage_domains" {
-  type = map(any)
+  type = map(
+    object({
+      domain                = string
+      subdomain             = string
+      subdomain_suffix      = string
+      serverless_api_domain = string
+      zone_id               = string
+      certificate_arn       = string
+      nameservers           = string
+    })
+  )
 }
 
 resource "aws_iam_role" "api_gateway_cloudwatch" {

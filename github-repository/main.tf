@@ -1,15 +1,25 @@
-variable "name" {}
-variable "template" {}
+terraform {
+  required_version = ">= 0.14"
+}
+
+variable "name" {
+  type = string
+}
+variable "template" {
+  type = string
+}
 
 locals {
   template_owner = split("/", var.template)[0]
   template_repo  = split("/", var.template)[1]
 }
 
+# TODO: Github Users / Teams / CODEOWNERS
+
 resource "github_repository" "repository" {
   name = var.name
 
-  private                = true
+  visibility             = "private"
   has_downloads          = false
   has_issues             = false
   has_projects           = false

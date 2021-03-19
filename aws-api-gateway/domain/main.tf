@@ -1,6 +1,16 @@
-variable "zone_id" {}
-variable "domain" {}
-variable "certificate_arn" {}
+terraform {
+  required_version = ">= 0.14"
+}
+
+variable "zone_id" {
+  type = string
+}
+variable "domain" {
+  type = string
+}
+variable "certificate_arn" {
+  type = string
+}
 
 resource "aws_api_gateway_domain_name" "domain" {
   security_policy = "TLS_1_2"
@@ -8,6 +18,7 @@ resource "aws_api_gateway_domain_name" "domain" {
   domain_name     = var.domain
 }
 
+# TODO Switch this to regular A-Record
 resource "aws_route53_record" "api_record" {
   name    = aws_api_gateway_domain_name.domain.domain_name
   type    = "A"

@@ -1,3 +1,7 @@
+terraform {
+  required_version = ">= 0.14"
+}
+
 variable "name" {
   type = string
 }

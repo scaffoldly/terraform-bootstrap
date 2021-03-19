@@ -1,8 +1,19 @@
+terraform {
+  required_version = ">= 0.14"
+}
 
-variable "stage" {}
-variable "repository_name" {}
-variable "bucket_name" {}
-variable "distribution_id" {}
+variable "stage" {
+  type = string
+}
+variable "repository_name" {
+  type = string
+}
+variable "bucket_name" {
+  type = string
+}
+variable "distribution_id" {
+  type = string
+}
 
 data "aws_region" "current" {}
 data "aws_partition" "current" {}

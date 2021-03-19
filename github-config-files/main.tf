@@ -1,12 +1,18 @@
-variable "repository_name" {}
+terraform {
+  required_version = ">= 0.14"
+}
+
+variable "repository_name" {
+  type = string
+}
 variable "stages" {
-  type = list(any)
+  type = list(string)
 }
 variable "stage_urls" {
-  type = map(any)
+  type = map(string)
 }
 variable "shared_env_vars" {
-  type = map(any)
+  type = map(string)
 }
 
 data "github_repository" "repository" {

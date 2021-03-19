@@ -1,28 +1,56 @@
-variable "root_email" {}
-variable "github_token" {}
-variable "organization" {}
+variable "root_email" {
+  type = string
+}
+
+variable "github_token" {
+  type = string
+}
+
+variable "organization" {
+  type = string
+}
 
 variable "aws_regions" {
-  type = list(any)
+  type = list(string)
 }
 
-variable "serverless_api_subdomain" {}
+variable "serverless_api_subdomain" {
+  type    = string
+  default = "sly"
+}
 
 variable "stages" {
-  type = map(any)
+  type = map(
+    object({
+      domain           = string
+      subdomain_suffix = string
+    })
+  )
 }
 
+# TODO: Env Vars
 variable "public_websites" {
-  type    = map(any)
+  type = map(
+    object({
+      template  = string
+      repo_name = string
+    })
+  )
   default = {}
 }
 
+# TODO: Env Vars
 variable "serverless_apis" {
-  type    = map(any)
+  type = map(
+    object({
+      template  = string
+      repo_name = string
+    })
+  )
   default = {}
 }
 
 variable "shared_env_vars" {
-  type    = map(any)
+  type    = map(string)
   default = {}
 }

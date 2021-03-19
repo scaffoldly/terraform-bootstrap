@@ -1,37 +1,63 @@
-provider "github" {
-  version      = "~> 2.8"
-  token        = var.github_token
-  organization = var.organization
-}
+terraform {
+  required_version = ">= 0.14"
 
-provider "external" {
-  version = "~> 1.2"
-}
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "3.33.0"
+    }
 
-provider "random" {
-  version = "2.3.0"
-}
+    dnsimple = {
+      source  = "dnsimple/dnsimple"
+      version = "0.5.1"
+    }
 
-provider "time" {
-  version = "0.6.0"
-}
+    external = {
+      source  = "hashicorp/external"
+      version = "2.1.0"
+    }
 
-provider "template" {
-  version = "~> 2.2.0"
+    github = {
+      source  = "integrations/github"
+      version = "4.5.2"
+    }
+
+    random = {
+      source  = "hashicorp/random"
+      version = "3.1.0"
+    }
+
+    time = {
+      source  = "hashicorp/time"
+      version = "0.7.0"
+    }
+
+    template = {
+      source  = "hashicorp/template"
+      version = "2.2.0"
+    }
+  }
 }
 
 provider "aws" {
-  version = "~> 3.0.0"
-  region  = var.aws_regions[0]
+  alias  = "root"
+  region = var.aws_regions[0]
 }
 
 provider "aws" {
-  alias   = "org"
-  version = "~> 3.0.0"
-  region  = var.aws_regions[0] # TODO Create this provider in each module with region for_each
+  region = var.aws_regions[0] # TODO Create this provider in each module with region for_each
 
   assume_role {
     role_arn = "arn:aws:iam::${module.aws_organization.account_id}:role/BootstrapAccessRole"
   }
 }
 
+provider "dnsimple" {
+  token   = var.dnsimple_token
+  account = var.dnsimple_account
+}
+
+provider "github" {
+  token        = var.github_token
+  organization = var.organization
+}

@@ -1,6 +1,18 @@
-variable "serverless_api_subdomain" {}
+terraform {
+  required_version = ">= 0.14"
+}
+
+variable "serverless_api_subdomain" {
+  type = string
+}
+
 variable "stages" {
-  type = map(any)
+  type = map(
+    object({
+      domain           = string
+      subdomain_suffix = string
+    })
+  )
 }
 
 resource "aws_route53_delegation_set" "main" {}

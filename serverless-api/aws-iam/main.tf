@@ -1,4 +1,10 @@
-variable "repository_name" {}
+terraform {
+  required_version = ">= 0.14"
+}
+
+variable "repository_name" {
+  type = string
+}
 
 # Inspiration drawn from:
 # https://medium.com/@dav009/serverless-framework-minimal-iam-role-permissions-ba34bec0154e

@@ -1,5 +1,13 @@
-variable "repository_name" {}
-variable "stage" {}
+terraform {
+  required_version = ">= 0.14"
+}
+
+variable "repository_name" {
+  type = string
+}
+variable "stage" {
+  type = string
+}
 
 data "aws_iam_policy_document" "base" {
   # TODO: A-la-carte choices of AWS services that CF manages

@@ -1,21 +1,17 @@
-terraform {
-  required_version = ">= 0.14"
-}
-
 module "aws_organization" {
   source = "./aws-organization"
   name   = var.organization
   email  = var.root_email
+
+  providers = {
+    aws = aws.root
+  }
 }
 
 module "aws_logging" {
   source = "./aws-logging"
 
   account_name = module.aws_organization.account_name
-
-  providers = {
-    aws = aws.org
-  }
 
   depends_on = [
     module.aws_organization
@@ -28,10 +24,6 @@ module "dns" {
   serverless_api_subdomain = var.serverless_api_subdomain
   stages                   = var.stages
 
-  providers = {
-    aws = aws.org
-  }
-
   depends_on = [
     module.aws_logging
   ]
@@ -41,10 +33,6 @@ module "aws_api_gateway" {
   source = "./aws-api-gateway"
 
   stage_domains = module.dns.stage_domains
-
-  providers = {
-    aws = aws.org
-  }
 
   depends_on = [
     module.dns
@@ -61,10 +49,6 @@ module "serverless_api" {
   template  = lookup(each.value, "template", "scaffoldly/sls-rest-api-template")
   repo_name = lookup(each.value, "repo_name", "")
 
-  providers = {
-    aws = aws.org
-  }
-
   depends_on = [
     module.aws_api_gateway
   ]
@@ -80,10 +64,6 @@ module "public_website" {
 
   template  = lookup(each.value, "template", "scaffoldly/web-angular-template")
   repo_name = lookup(each.value, "repo_name", "")
-
-  providers = {
-    aws = aws.org
-  }
 
   depends_on = [
     module.dns,

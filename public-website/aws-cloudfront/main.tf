@@ -1,9 +1,25 @@
-variable "account_name" {}
-variable "name" {}
-variable "stage" {}
-variable "domain" {}
-variable "subdomain_suffix" {}
-variable "certificate_arn" {}
+terraform {
+  required_version = ">= 0.14"
+}
+
+variable "account_name" {
+  type = string
+}
+variable "name" {
+  type = string
+}
+variable "stage" {
+  type = string
+}
+variable "domain" {
+  type = string
+}
+variable "subdomain_suffix" {
+  type = string
+}
+variable "certificate_arn" {
+  type = string
+}
 
 data "aws_partition" "current" {}
 data "aws_caller_identity" "current" {}
