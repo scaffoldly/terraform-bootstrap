@@ -7,6 +7,10 @@ provider "aws" {
   alias = "dns"
 }
 
+provider "time" {
+  alias = "old"
+}
+
 variable "dns_provider" {
   type = string
 }
@@ -37,6 +41,7 @@ module "dns" {
   providers = {
     aws.org = aws # TODO REMOVE
     aws.dns = aws.dns
+    time    = time.old # TODO REMOVE
   }
 }
 

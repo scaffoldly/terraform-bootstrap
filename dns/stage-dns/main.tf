@@ -6,10 +6,6 @@ provider "aws" {
   alias = "dns"
 }
 
-provider "time" {
-  version = "0.7.0"
-}
-
 variable "dns_provider" {
   type = string
 }
