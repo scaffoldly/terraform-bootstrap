@@ -5,6 +5,9 @@ terraform {
 variable "repository_name" {
   type = string
 }
+variable "repository_full_name" {
+  type = string
+}
 variable "stages" {
   type = list(string)
 }
@@ -16,11 +19,11 @@ variable "shared_env_vars" {
 }
 
 data "github_repository" "repository" {
-  name = var.repository_name
+  full_name = var.repository_full_name
 }
 
 resource "github_repository_file" "readme" {
-  repository = var.repository_name
+  repository = data.github_repository.repository.name
   branch     = data.github_repository.repository.default_branch
   file       = ".scaffoldly/README.md"
 

@@ -5,7 +5,6 @@ terraform {
 variable "name" {
   type = string
 }
-# TODO: Remove nameservers and zone_id with switch to simpledns
 variable "stage_domains" {
   type = map(
     object({
@@ -13,9 +12,8 @@ variable "stage_domains" {
       subdomain             = string
       subdomain_suffix      = string
       serverless_api_domain = string
-      zone_id               = string
       certificate_arn       = string
-      nameservers           = string
+      dns_provider          = string
     })
   )
 }
@@ -76,6 +74,9 @@ output "service_name" {
 
 output "repository_name" {
   value = module.repository.name
+}
+output "repository_full_name" {
+  value = module.repository.full_name
 }
 
 output "stage_urls" {

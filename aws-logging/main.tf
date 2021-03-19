@@ -2,6 +2,8 @@ terraform {
   required_version = ">= 0.14"
 }
 
+# TODO: Log storage in the root account
+
 variable "account_name" {
   type = string
 }

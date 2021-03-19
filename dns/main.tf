@@ -2,6 +2,13 @@ terraform {
   required_version = ">= 0.14"
 }
 
+provider "aws" {
+  alias = "dns"
+}
+
+variable "dns_provider" {
+  type = string
+}
 variable "serverless_api_subdomain" {
   type = string
 }
@@ -15,21 +22,20 @@ variable "stages" {
   )
 }
 
-resource "aws_route53_delegation_set" "main" {}
-
 module "dns" {
   for_each = var.stages
-  source   = "./aws-dns"
+  source   = "./stage-dns"
 
-  stage             = each.key
-  domain            = each.value.domain
-  subdomain         = var.serverless_api_subdomain
-  subdomain_suffix  = each.value.subdomain_suffix
-  delegation_set_id = aws_route53_delegation_set.main.id
-}
+  dns_provider = var.dns_provider
 
-output "nameservers" {
-  value = aws_route53_delegation_set.main.name_servers
+  stage            = each.key
+  domain           = each.value.domain
+  subdomain        = var.serverless_api_subdomain
+  subdomain_suffix = each.value.subdomain_suffix
+
+  providers = {
+    aws.dns = aws.dns
+  }
 }
 
 output "stage_domains" {
@@ -40,9 +46,8 @@ output "stage_domains" {
       subdomain             = domain.subdomain
       subdomain_suffix      = domain.subdomain_suffix
       serverless_api_domain = domain.serverless_api_domain
-      zone_id               = domain.zone_id
       certificate_arn       = domain.certificate_arn
-      nameservers           = aws_route53_delegation_set.main.name_servers
+      dns_provider          = domain.dns_provider
     }
   }
 }

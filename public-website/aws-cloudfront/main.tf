@@ -2,6 +2,10 @@ terraform {
   required_version = ">= 0.14"
 }
 
+provider "aws" {
+  alias = "dns"
+}
+
 variable "account_name" {
   type = string
 }
@@ -9,6 +13,9 @@ variable "name" {
   type = string
 }
 variable "stage" {
+  type = string
+}
+variable "dns_provider" {
   type = string
 }
 variable "domain" {
@@ -23,6 +30,14 @@ variable "certificate_arn" {
 
 data "aws_partition" "current" {}
 data "aws_caller_identity" "current" {}
+
+data "aws_route53_zone" "zone" {
+  count = var.dns_provider == "aws" ? 1 : 0
+
+  name = "${var.domain}."
+
+  provider = aws.dns
+}
 
 data "aws_s3_bucket" "logs_bucket" {
   bucket = "${var.account_name}-logs-cloudfront"
@@ -128,13 +143,13 @@ resource "aws_cloudfront_distribution" "distribution" {
 
   default_root_object = "index.html"
 
-  custom_error_response {
+  custom_error_response { # TODO Make sure Angular works with this
     error_code         = 403
     response_code      = 200
     response_page_path = "/index.html"
   }
 
-  custom_error_response {
+  custom_error_response { # TODO Make sure Angular works with this
     error_code         = 404
     response_code      = 200
     response_page_path = "/index.html"
@@ -182,6 +197,23 @@ resource "aws_cloudfront_distribution" "distribution" {
   is_ipv6_enabled     = true
   wait_for_deployment = false
 }
+
+resource "aws_route53_record" "record" {
+  count   = var.dns_provider == "aws" ? 1 : 0
+  name    = local.domain
+  type    = "A"
+  zone_id = data.aws_route53_zone.zone[0].zone_id
+
+  alias {
+    evaluate_target_health = true
+    name                   = aws_cloudfront_distribution.distribution.domain_name
+    zone_id                = aws_cloudfront_distribution.distribution.hosted_zone_id
+  }
+
+  provider = aws.dns
+}
+
+# NOTE: When adding simpledns, remember you can't CNAME the root record
 
 output "stage" {
   value = var.stage

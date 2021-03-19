@@ -2,7 +2,10 @@ terraform {
   required_version = ">= 0.14"
 }
 
-# TODO: Remove nameservers and zone_id with switch to simpledns
+provider "aws" {
+  alias = "dns"
+}
+
 variable "stage_domains" {
   type = map(
     object({
@@ -10,9 +13,8 @@ variable "stage_domains" {
       subdomain             = string
       subdomain_suffix      = string
       serverless_api_domain = string
-      zone_id               = string
       certificate_arn       = string
-      nameservers           = string
+      dns_provider          = string
     })
   )
 }
@@ -71,7 +73,11 @@ module "domain" {
   source   = "./domain"
   for_each = var.stage_domains
 
-  zone_id         = lookup(each.value, "zone_id", "unknown-zone-id")
+  dns_provider    = lookup(each.value, "dns_provider", "unknown-dns-provider")
   domain          = lookup(each.value, "serverless_api_domain", "unknown-domain")
   certificate_arn = lookup(each.value, "certificate_arn", "unknown-arn")
+
+  providers = {
+    aws.dns = aws.dns
+  }
 }

@@ -2,13 +2,16 @@ terraform {
   required_version = ">= 0.14"
 }
 
+provider "aws" {
+  alias = "dns"
+}
+
 variable "account_name" {
   type = string
 }
 variable "name" {
   type = string
 }
-# TODO: Remove nameservers and zone_id with switch to simpledns
 variable "stage_domains" {
   type = map(
     object({
@@ -16,9 +19,8 @@ variable "stage_domains" {
       subdomain             = string
       subdomain_suffix      = string
       serverless_api_domain = string
-      zone_id               = string
       certificate_arn       = string
-      nameservers           = string
+      dns_provider          = string
     })
   )
 }
@@ -43,9 +45,14 @@ module "cloudfront" {
   account_name     = var.account_name
   name             = var.name
   stage            = each.key
+  dns_provider     = lookup(each.value, "dns_provider", "unknown-dns-provider")
   domain           = lookup(each.value, "domain", "unknown-domain")
   subdomain_suffix = lookup(each.value, "subdomain_suffix", "unknown-domain-suffix")
   certificate_arn  = lookup(each.value, "certificate_arn", "unknown-certificate-arn")
+
+  providers = {
+    aws.dns = aws.dns
+  }
 }
 
 module "repository" {
@@ -68,5 +75,7 @@ module "aws_iam" {
 output "repository_name" {
   value = module.repository.name
 }
+output "repository_full_name" {
+  value = module.repository.full_name
+}
 
-# TODO Instructions to add CNAME records to cloudfronts

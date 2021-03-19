@@ -18,11 +18,17 @@ module "aws_logging" {
   ]
 }
 
+# TODO test with xyz.com|dev AND subdomain_suffix
 module "dns" {
   source = "./dns"
 
   serverless_api_subdomain = var.serverless_api_subdomain
   stages                   = var.stages
+  dns_provider             = var.dns_provider
+
+  providers = {
+    aws.dns = aws.root
+  }
 
   depends_on = [
     module.aws_logging
@@ -33,6 +39,10 @@ module "aws_api_gateway" {
   source = "./aws-api-gateway"
 
   stage_domains = module.dns.stage_domains
+
+  providers = {
+    aws.dns = aws.root
+  }
 
   depends_on = [
     module.dns
@@ -65,6 +75,10 @@ module "public_website" {
   template  = lookup(each.value, "template", "scaffoldly/web-angular-template")
   repo_name = lookup(each.value, "repo_name", "")
 
+  providers = {
+    aws.dns = aws.root
+  }
+
   depends_on = [
     module.dns,
     module.aws_logging
@@ -75,10 +89,11 @@ module "github_config_files_serverless_apis" {
   source   = "./github-config-files"
   for_each = var.serverless_apis
 
-  repository_name = module.serverless_api[each.key].repository_name
-  stages          = keys(var.stages)
-  stage_urls      = zipmap(values(module.serverless_api)[*].repository_name, values(module.serverless_api)[*].stage_urls)
-  shared_env_vars = var.shared_env_vars
+  repository_name      = module.serverless_api[each.key].repository_name
+  repository_full_name = module.serverless_api[each.key].repository_full_name
+  stages               = keys(var.stages)
+  stage_urls           = zipmap(values(module.serverless_api)[*].repository_name, values(module.serverless_api)[*].stage_urls)
+  shared_env_vars      = var.shared_env_vars
 
   depends_on = [
     module.public_website,
@@ -90,10 +105,11 @@ module "github_config_files_public_websites" {
   source   = "./github-config-files"
   for_each = var.public_websites
 
-  repository_name = module.public_website[each.key].repository_name
-  stages          = keys(var.stages)
-  stage_urls      = zipmap(values(module.serverless_api)[*].repository_name, values(module.serverless_api)[*].stage_urls)
-  shared_env_vars = var.shared_env_vars
+  repository_name      = module.public_website[each.key].repository_name
+  repository_full_name = module.public_website[each.key].repository_full_name
+  stages               = keys(var.stages)
+  stage_urls           = zipmap(values(module.serverless_api)[*].repository_name, values(module.serverless_api)[*].stage_urls)
+  shared_env_vars      = var.shared_env_vars
 
   depends_on = [
     module.public_website,
