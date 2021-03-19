@@ -39,6 +39,7 @@ module "dns" {
   subdomain_suffix = each.value.subdomain_suffix != null ? each.value.subdomain_suffix : ""
 
   providers = {
+    aws     = aws
     aws.org = aws # TODO REMOVE
     aws.dns = aws.dns
     time    = time.old # TODO REMOVE
