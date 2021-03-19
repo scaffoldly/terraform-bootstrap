@@ -41,12 +41,12 @@ terraform {
 }
 
 provider "aws" {
+  alias   = "root"
   version = "~> 3.0.0"
   region  = var.aws_regions[0]
 }
 
 provider "aws" {
-  alias   = "org"
   version = "~> 3.0.0"
   region  = var.aws_regions[0] # TODO Create this provider in each module with region for_each
 
