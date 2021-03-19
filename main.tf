@@ -72,7 +72,7 @@ module "public_website" {
   name          = each.key
   stage_domains = module.dns.stage_domains
 
-  template  = lookup(each.value, "template", "scaffoldly/web-angular-template")
+  template  = lookup(each.value, "template", "scaffoldly/web-cdn-template")
   repo_name = lookup(each.value, "repo_name", "")
 
   providers = {
