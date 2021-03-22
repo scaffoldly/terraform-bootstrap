@@ -52,6 +52,16 @@ resource "aws_acm_certificate" "certificate" {
   }
 }
 
+resource "aws_acm_certificate" "certificate" {
+  domain_name               = "*.${var.domain}"
+  subject_alternative_names = [var.domain]
+  validation_method         = "EMAIL"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
 resource "time_sleep" "check_email_for_cert_validations" {
   create_duration = "300s"
 
@@ -60,24 +70,24 @@ resource "time_sleep" "check_email_for_cert_validations" {
   ]
 }
 
-resource "aws_route53_record" "verification_record" {
-  # TODO check if the dns_provider is aws, would have added count if not for this stupid for_each
-  for_each = {
-    for dvo in aws_acm_certificate.certificate.domain_validation_options : dvo.domain_name => {
-      name   = dvo.resource_record_name
-      record = dvo.resource_record_value
-      type   = dvo.resource_record_type
-    }
-  }
+# resource "aws_route53_record" "dns_verification_record" {
+#   # TODO check if the dns_provider is aws, would have added count if not for this stupid for_each
+#   for_each = {
+#     for dvo in aws_acm_certificate.certificate.domain_validation_options : dvo.domain_name => {
+#       name   = dvo.resource_record_name
+#       record = dvo.resource_record_value
+#       type   = dvo.resource_record_type
+#     }
+#   }
 
-  name    = each.value.name
-  records = [each.value.record]
-  ttl     = 60
-  type    = each.value.type
-  zone_id = data.aws_route53_zone.zone[0].zone_id
+#   name    = each.value.name
+#   records = [each.value.record]
+#   ttl     = 60
+#   type    = each.value.type
+#   zone_id = data.aws_route53_zone.zone[0].zone_id
 
-  provider = aws.dns
-}
+#   provider = aws.dns
+# }
 
 output "domain" {
   value = var.domain
