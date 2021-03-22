@@ -28,7 +28,7 @@ variable "repo_name" {
 locals {
   template_suffix          = split("/", var.template)[1]
   scrubbed_template_suffix = replace(local.template_suffix, "-template", "")
-  repo_name                = var.repo_name != "" ? var.repo_name : "${var.name}-${local.scrubbed_template_suffix}"
+  repo_name                = var.repo_name != null ? var.repo_name : "${var.name}-${local.scrubbed_template_suffix}"
 }
 
 module "repository" {

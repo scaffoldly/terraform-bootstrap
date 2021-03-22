@@ -57,7 +57,7 @@ module "serverless_api" {
   stage_domains = module.dns.stage_domains
 
   template  = lookup(each.value, "template", "scaffoldly/sls-rest-api-template")
-  repo_name = lookup(each.value, "repo_name", "")
+  repo_name = lookup(each.value, "repo_name", null)
 
   depends_on = [
     module.aws_api_gateway
@@ -73,7 +73,7 @@ module "public_website" {
   stage_domains = module.dns.stage_domains
 
   template  = lookup(each.value, "template", "scaffoldly/web-cdn-template")
-  repo_name = lookup(each.value, "repo_name", "")
+  repo_name = lookup(each.value, "repo_name", null)
 
   providers = {
     aws.dns = aws.root
