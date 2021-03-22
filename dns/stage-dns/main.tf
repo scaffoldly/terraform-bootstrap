@@ -37,7 +37,7 @@ resource "aws_route53_zone" "zone" {
 data "aws_route53_zone" "zone" {
   count = var.dns_provider == "aws" ? 1 : 0
 
-  name = "${var.domain}."
+  name = var.domain
 
   provider = aws.dns
 }
