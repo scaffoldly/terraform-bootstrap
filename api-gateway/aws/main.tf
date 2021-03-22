@@ -74,6 +74,7 @@ module "domain" {
   for_each = var.stage_domains
 
   dns_provider    = lookup(each.value, "dns_provider", "unknown-dns-provider")
+  zone_id         = lookup(each.value, "zone_id", "unknown-zone-id")
   domain          = lookup(each.value, "serverless_api_domain", "unknown-domain")
   certificate_arn = lookup(each.value, "certificate_arn", "unknown-arn")
 

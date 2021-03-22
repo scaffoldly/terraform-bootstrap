@@ -15,14 +15,17 @@ variable "domain" {
 variable "certificate_arn" {
   type = string
 }
-
-data "aws_route53_zone" "zone" {
-  count = var.dns_provider == "aws" ? 1 : 0
-
-  name = "${var.domain}."
-
-  provider = aws.dns
+variable "zone_id" {
+  type = string
 }
+
+# data "aws_route53_zone" "zone" {
+#   count = var.dns_provider == "aws" ? 1 : 0
+
+#   name = "${var.domain}."
+
+#   provider = aws.dns
+# }
 
 resource "aws_api_gateway_domain_name" "domain" {
   security_policy = "TLS_1_2"
@@ -31,14 +34,23 @@ resource "aws_api_gateway_domain_name" "domain" {
 }
 
 resource "aws_route53_record" "api_record" {
-  count = var.dns_provider == "aws" ? 1 : 0
-
   name    = aws_api_gateway_domain_name.domain.domain_name
   type    = "CNAME"
-  zone_id = data.aws_route53_zone.zone[0].zone_id
+  zone_id = var.zone_id
   ttl     = "300"
 
   records = [aws_api_gateway_domain_name.domain.cloudfront_domain_name]
-
-  provider = aws.dns
 }
+
+# resource "aws_route53_record" "api_record" {
+#   count = var.dns_provider == "aws" ? 1 : 0
+
+#   name    = aws_api_gateway_domain_name.domain.domain_name
+#   type    = "CNAME"
+#   zone_id = data.aws_route53_zone.zone[0].zone_id
+#   ttl     = "300"
+
+#   records = [aws_api_gateway_domain_name.domain.cloudfront_domain_name]
+
+#   provider = aws.dns
+# }
