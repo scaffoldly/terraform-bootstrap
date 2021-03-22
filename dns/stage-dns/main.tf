@@ -42,15 +42,15 @@ data "aws_route53_zone" "zone" {
   provider = aws.dns
 }
 
-resource "aws_acm_certificate" "certificate" {
-  domain_name               = "*.${var.domain}"
-  subject_alternative_names = [var.domain]
-  validation_method         = "DNS"
+# resource "aws_acm_certificate" "certificate" {
+#   domain_name               = "*.${var.domain}"
+#   subject_alternative_names = [var.domain]
+#   validation_method         = "DNS"
 
-  lifecycle {
-    create_before_destroy = true
-  }
-}
+#   lifecycle {
+#     create_before_destroy = true
+#   }
+# }
 
 resource "aws_acm_certificate" "certificate" {
   domain_name               = "*.${var.domain}"
