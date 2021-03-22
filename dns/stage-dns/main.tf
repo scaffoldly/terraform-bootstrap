@@ -34,13 +34,13 @@ resource "aws_route53_zone" "zone" {
   delegation_set_id = var.delegation_set_id
 }
 
-data "aws_route53_zone" "zone" {
-  count = var.dns_provider == "aws" ? 1 : 0
+# data "aws_route53_zone" "zone" {
+#   count = var.dns_provider == "aws" ? 1 : 0
 
-  name = "${var.domain}."
+#   name = "${var.domain}."
 
-  provider = aws.dns
-}
+#   provider = aws.dns
+# }
 
 # resource "aws_acm_certificate" "certificate" {
 #   domain_name               = "*.${var.domain}"
