@@ -3,14 +3,8 @@ terraform {
   experiments      = [module_variable_optional_attrs]
 }
 
-provider "aws" {}
-
 provider "aws" {
   alias = "dns"
-}
-
-provider "time" {
-  alias = "old"
 }
 
 variable "dns_provider" {
@@ -29,22 +23,22 @@ variable "stages" {
   )
 }
 
+resource "aws_route53_delegation_set" "main" {}
+
 module "dns" {
   for_each = var.stages
   source   = "./stage-dns"
 
   dns_provider = var.dns_provider
 
-  stage            = each.key
-  domain           = each.value.domain
-  subdomain        = var.serverless_api_subdomain
-  subdomain_suffix = each.value.subdomain_suffix != null ? each.value.subdomain_suffix : ""
+  stage             = each.key
+  domain            = each.value.domain
+  subdomain         = var.serverless_api_subdomain
+  subdomain_suffix  = each.value.subdomain_suffix != null ? each.value.subdomain_suffix : ""
+  delegation_set_id = aws_route53_delegation_set.main.id
 
   providers = {
-    aws     = aws
-    aws.org = aws # TODO REMOVE
     aws.dns = aws.dns
-    time    = time.old # TODO REMOVE
   }
 }
 

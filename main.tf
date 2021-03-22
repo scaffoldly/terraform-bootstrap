@@ -27,9 +27,7 @@ module "dns" {
   dns_provider             = var.dns_provider
 
   providers = {
-    aws      = aws
-    aws.dns  = aws.root
-    time.old = time.old # TODO REMOVE
+    aws.dns = aws.root
   }
 
   depends_on = [

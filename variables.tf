@@ -14,7 +14,6 @@ variable "aws_regions" {
   type = list(string)
 }
 
-# TODO Support simpledns
 variable "dns_provider" {
   type    = string
   default = "aws"

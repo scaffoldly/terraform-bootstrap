@@ -21,9 +21,17 @@ variable "subdomain" {
 variable "subdomain_suffix" {
   type = string
 }
+variable "delegation_set_id" { # TODO Remove
+  type = string
+}
 
 locals {
   serverless_api_domain = var.subdomain_suffix != "" ? "${var.subdomain}-${var.subdomain_suffix}.${var.domain}" : "${var.subdomain}.${var.domain}"
+}
+
+resource "aws_route53_zone" "zone" {
+  name              = local.serverless_api_domain
+  delegation_set_id = var.delegation_set_id
 }
 
 data "aws_route53_zone" "zone" {
@@ -42,6 +50,14 @@ resource "aws_acm_certificate" "certificate" {
   lifecycle {
     create_before_destroy = true
   }
+}
+
+resource "time_sleep" "check_email_for_cert_validations" {
+  create_duration = "300s"
+
+  depends_on = [
+    aws_acm_certificate.certificate
+  ]
 }
 
 resource "aws_route53_record" "verification_record" {
