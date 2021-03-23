@@ -89,6 +89,7 @@ module "github_config_files_serverless_apis" {
   source   = "./github-config-files"
   for_each = var.serverless_apis
 
+  repository_name      = module.serverless_api[each.key].repository_name
   repository_full_name = module.serverless_api[each.key].repository_full_name
   stages               = keys(var.stages)
   stage_urls           = zipmap(values(module.serverless_api)[*].repository_name, values(module.serverless_api)[*].stage_urls)
@@ -104,6 +105,7 @@ module "github_config_files_public_websites" {
   source   = "./github-config-files"
   for_each = var.public_websites
 
+  repository_name      = module.public_website[each.key].repository_name
   repository_full_name = module.public_website[each.key].repository_full_name
   stages               = keys(var.stages)
   stage_urls           = zipmap(values(module.serverless_api)[*].repository_name, values(module.serverless_api)[*].stage_urls)

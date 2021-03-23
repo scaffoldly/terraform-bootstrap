@@ -2,6 +2,9 @@ terraform {
   required_version = ">= 0.14"
 }
 
+variable "repository_name" {
+  type = string
+}
 variable "repository_full_name" {
   type = string
 }
@@ -20,7 +23,7 @@ data "github_repository" "repository" {
 }
 
 resource "github_repository_file" "readme" {
-  repository = var.repository_full_name
+  repository = var.repository_name
   branch     = data.github_repository.repository.default_branch
   file       = ".scaffoldly/README.md"
 
@@ -51,7 +54,7 @@ module "stage_files" {
   count  = length(var.stages)
   source = "./stage-files"
 
-  repository = var.repository_full_name
+  repository = var.repository_name
   branch     = data.github_repository.repository.default_branch
 
   stage_name = var.stages[count.index]
@@ -67,7 +70,7 @@ module "stage_files" {
 module "stage_files_default" {
   source = "./stage-files"
 
-  repository = var.repository_full_name
+  repository = var.repository_name
   branch     = data.github_repository.repository.default_branch
 
   stage_name = ""
