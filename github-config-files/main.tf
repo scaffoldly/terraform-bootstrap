@@ -2,9 +2,6 @@ terraform {
   required_version = ">= 0.14"
 }
 
-variable "repository_name" {
-  type = string
-}
 variable "repository_full_name" {
   type = string
 }
@@ -12,7 +9,7 @@ variable "stages" {
   type = list(string)
 }
 variable "stage_urls" {
-  type = map(string)
+  type = map(any) # TODO Figure out proper type
 }
 variable "shared_env_vars" {
   type = map(string)
