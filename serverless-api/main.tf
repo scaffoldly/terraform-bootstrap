@@ -14,6 +14,7 @@ variable "stage_domains" {
       serverless_api_domain = string
       certificate_arn       = string
       dns_provider          = string
+      dns_domain_id         = string
     })
   )
 }

@@ -52,7 +52,7 @@ output "stage_domains" {
       serverless_api_domain = domain.serverless_api_domain
       certificate_arn       = domain.certificate_arn
       dns_provider          = domain.dns_provider
-      zone_id               = domain.zone_id
+      dns_domain_id         = domain.dns_domain_id
     }
   }
 }

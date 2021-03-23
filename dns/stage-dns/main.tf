@@ -117,6 +117,6 @@ output "dns_provider" {
   value = var.dns_provider
 }
 
-output "zone_id" {
+output "dns_domain_id" {
   value = aws_route53_zone.zone.zone_id
 }

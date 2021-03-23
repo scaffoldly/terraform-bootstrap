@@ -9,16 +9,15 @@ provider "aws" {
 variable "dns_provider" {
   type = string
 }
+variable "dns_domain_id" {
+  type = string
+}
 variable "domain" {
   type = string
 }
 variable "certificate_arn" {
   type = string
 }
-variable "zone_id" {
-  type = string
-}
-
 # data "aws_route53_zone" "zone" {
 #   count = var.dns_provider == "aws" ? 1 : 0
 
@@ -36,7 +35,7 @@ resource "aws_api_gateway_domain_name" "domain" {
 resource "aws_route53_record" "api_record" {
   name    = aws_api_gateway_domain_name.domain.domain_name
   type    = "CNAME"
-  zone_id = var.zone_id
+  zone_id = var.dns_domain_id
   ttl     = "300"
 
   records = [aws_api_gateway_domain_name.domain.cloudfront_domain_name]

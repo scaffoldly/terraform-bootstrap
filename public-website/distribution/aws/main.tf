@@ -18,6 +18,9 @@ variable "stage" {
 variable "dns_provider" {
   type = string
 }
+variable "dns_domain_id" {
+  type = string
+}
 variable "domain" {
   type = string
 }
