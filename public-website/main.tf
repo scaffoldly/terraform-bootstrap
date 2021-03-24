@@ -39,7 +39,7 @@ locals {
 }
 
 module "cloudfront" {
-  source   = "./distribution/aws"
+  source   = "./distribution"
   for_each = var.stage_domains
 
   account_name     = var.account_name
@@ -64,7 +64,7 @@ module "repository" {
 }
 
 module "aws_iam" {
-  source   = "./iam/aws"
+  source   = "./iam"
   for_each = module.cloudfront
 
   stage           = each.value.stage
