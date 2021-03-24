@@ -30,43 +30,43 @@ locals {
   serverless_api_domain = var.subdomain_suffix != "" ? "${var.subdomain}-${var.subdomain_suffix}.${var.domain}" : "${var.subdomain}.${var.domain}"
 }
 
+data "aws_route53_zone" "zone" {
+  name = "${var.domain}."
+
+  provider = aws.dns
+}
+
 # TODO: Different Certs for CloudFront vs API Gateway
-module "aws_dns" {
-  # Prep of DNS provider option
-  count = var.dns_provider == "aws" ? 1 : 0
+resource "aws_acm_certificate" "serverless_api_domain" {
+  domain_name               = local.serverless_api_domain
+  subject_alternative_names = [var.domain, "*.${var.domain}"]
+  validation_method         = "DNS"
 
-  source = "./aws"
-
-  dns_domain         = var.domain
-  primary_domain     = local.serverless_api_domain
-  additional_domains = [var.domain, "*.${var.domain}"]
-
-  providers = {
-    aws.dns = aws.dns
+  options {
+    certificate_transparency_logging_preference = "ENABLED"
   }
-}
-
-resource "aws_route53_zone" "zone" {
-  name              = local.serverless_api_domain
-  delegation_set_id = var.delegation_set_id
-}
-
-resource "aws_acm_certificate" "certificate" {
-  domain_name               = "*.${var.domain}"
-  subject_alternative_names = [var.domain]
-  validation_method         = "EMAIL"
 
   lifecycle {
     create_before_destroy = true
   }
 }
 
-resource "time_sleep" "check_email_for_cert_validations" {
-  create_duration = "300s"
+resource "aws_route53_record" "verification_record" {
+  for_each = {
+    for dvo in aws_acm_certificate.serverless_api_domain.domain_validation_options : dvo.domain_name => {
+      name   = dvo.resource_record_name
+      record = dvo.resource_record_value
+      type   = dvo.resource_record_type
+    }
+  }
 
-  depends_on = [
-    aws_acm_certificate.certificate
-  ]
+  name    = each.value.name
+  records = [each.value.record]
+  ttl     = 60
+  type    = each.value.type
+  zone_id = data.aws_route53_zone.zone.zone_id
+
+  provider = aws.dns
 }
 
 output "domain" {
@@ -90,7 +90,7 @@ output "stage" {
 }
 
 output "certificate_arn" {
-  value = module.aws_dns[0].certificate_arn
+  value = aws_acm_certificate.serverless_api_domain.arn
 }
 
 output "dns_provider" {
@@ -98,5 +98,5 @@ output "dns_provider" {
 }
 
 output "dns_domain_id" {
-  value = module.aws_dns[0].certificate_arn
+  value = data.aws_route53_zone.zone.zone_id
 }
