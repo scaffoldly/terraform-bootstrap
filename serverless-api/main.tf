@@ -40,7 +40,7 @@ module "repository" {
 }
 
 module "aws_iam" {
-  source = "./iam/aws"
+  source = "./iam"
 
   repository_name = module.repository.name
 }
@@ -58,7 +58,7 @@ module "stage" {
 }
 
 module "secrets" {
-  source   = "./secrets/aws"
+  source   = "./secrets"
   for_each = module.stage
 
   stage                         = each.key
