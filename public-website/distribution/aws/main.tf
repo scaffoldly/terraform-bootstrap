@@ -201,22 +201,19 @@ resource "aws_cloudfront_distribution" "distribution" {
   wait_for_deployment = false
 }
 
-# resource "aws_route53_record" "record" {
-#   count   = var.dns_provider == "aws" ? 1 : 0
-#   name    = local.domain
-#   type    = "A"
-#   zone_id = data.aws_route53_zone.zone[0].zone_id
-
-#   alias {
-#     evaluate_target_health = true
-#     name                   = aws_cloudfront_distribution.distribution.domain_name
-#     zone_id                = aws_cloudfront_distribution.distribution.hosted_zone_id
-#   }
-
-#   provider = aws.dns
-# }
-
 # NOTE: When adding simpledns, remember you can't CNAME the root record
+module "aws_cname_record" {
+  count  = var.dns_provider == "aws" ? 1 : 0
+  source = "../../../dns/cname-record/aws"
+
+  dns_domain_id = var.dns_domain_id
+  domain_name   = local.domain
+  target        = aws_cloudfront_distribution.distribution.domain_name
+
+  providers = {
+    aws.dns = aws.dns
+  }
+}
 
 output "stage" {
   value = var.stage
