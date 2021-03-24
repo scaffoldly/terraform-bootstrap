@@ -158,8 +158,8 @@ resource "aws_api_gateway_base_path_mapping" "mapping" {
   base_path   = var.name
 }
 
-module "iam" {
-  source = "./aws/iam"
+module "iam" { # TODO Rename
+  source = "./iam"
 
   repository_name = var.repository_name
   stage           = var.stage
