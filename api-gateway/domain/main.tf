@@ -25,18 +25,6 @@ resource "aws_api_gateway_domain_name" "domain" {
   domain_name     = var.domain
 }
 
-resource "aws_route53_record" "api_record" {
-  name    = aws_api_gateway_domain_name.domain.domain_name
-  type    = "A"
-  zone_id = var.dns_domain_id
-
-  alias {
-    evaluate_target_health = true
-    name                   = aws_api_gateway_domain_name.domain.cloudfront_domain_name
-    zone_id                = aws_api_gateway_domain_name.domain.cloudfront_zone_id
-  }
-}
-
 resource "aws_route53_record" "record" {
   count = var.dns_provider == "aws" ? 1 : 0
 
