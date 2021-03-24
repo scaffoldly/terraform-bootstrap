@@ -6,8 +6,13 @@ provider "aws" {
   alias = "dns"
 }
 
-variable "domain" {
+variable "primary_domain" {
   type = string
+}
+
+variable "additional_domains" {
+  type    = list(string)
+  default = []
 }
 
 data "aws_route53_zone" "zone" {
@@ -17,8 +22,8 @@ data "aws_route53_zone" "zone" {
 }
 
 resource "aws_acm_certificate" "certificate" {
-  domain_name               = var.domain
-  subject_alternative_names = [var.domain]
+  domain_name               = var.primary_domain
+  subject_alternative_names = var.additional_domains
   validation_method         = "DNS"
 
   options {
@@ -46,15 +51,6 @@ resource "aws_route53_record" "verification_record" {
   zone_id = data.aws_route53_zone.zone.zone_id
 
   provider = aws.dns
-}
-
-# Dirty Filthy Hack
-resource "time_sleep" "wait_for_cert_validations" {
-  create_duration = "300s"
-
-  depends_on = [
-    aws_acm_certificate.certificate,
-  ]
 }
 
 output "certificate_arn" {

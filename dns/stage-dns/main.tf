@@ -30,13 +30,15 @@ locals {
   serverless_api_domain = var.subdomain_suffix != "" ? "${var.subdomain}-${var.subdomain_suffix}.${var.domain}" : "${var.subdomain}.${var.domain}"
 }
 
+# TODO: Different Certs for CloudFront vs API Gateway
 module "aws_dns" {
   # Prep of DNS provider option
   count = var.dns_provider == "aws" ? 1 : 0
 
   source = "./aws"
 
-  domain = var.domain
+  primary_domain     = var.serverless_api_domain
+  additional_domains = [var.domain, "*.${var.domain}"]
 
   providers = {
     aws.dns = aws.dns
