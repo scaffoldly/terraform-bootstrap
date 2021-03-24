@@ -13,7 +13,6 @@ variable "dns_provider" {
 variable "serverless_api_subdomain" {
   type = string
 }
-
 variable "stages" {
   type = map(
     object({

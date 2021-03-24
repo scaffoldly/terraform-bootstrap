@@ -66,6 +66,8 @@ resource "aws_route53_record" "verification_record" {
   type    = each.value.type
   zone_id = data.aws_route53_zone.zone.zone_id
 
+  allow_overwrite = true # Dirty hack to allow wildcard certs to not collide
+
   provider = aws.dns
 }
 
