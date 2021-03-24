@@ -29,8 +29,7 @@ module "dns" {
   for_each = var.stages
   source   = "./stage-dns"
 
-  dns_provider = var.dns_provider
-
+  dns_provider      = var.dns_provider
   stage             = each.key
   domain            = each.value.domain
   subdomain         = var.serverless_api_subdomain
