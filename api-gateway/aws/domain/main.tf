@@ -37,15 +37,15 @@ resource "aws_route53_record" "api_record" {
   }
 }
 
-module "aws_cname_record" {
-  count  = var.dns_provider == "aws" ? 1 : 0
-  source = "../../../dns/cname-record/aws"
+resource "aws_route53_record" "record" {
+  count = var.dns_provider == "aws" ? 1 : 0
 
-  dns_domain_id = var.dns_domain_id
-  domain_name   = aws_api_gateway_domain_name.domain.domain_name
-  target        = aws_api_gateway_domain_name.domain.cloudfront_domain_name
+  name    = aws_api_gateway_domain_name.domain.domain_name
+  type    = "CNAME"
+  zone_id = var.dns_domain_id
+  ttl     = "300"
 
-  providers = {
-    aws.dns = aws.dns
-  }
+  records = [aws_api_gateway_domain_name.domain.cloudfront_domain_name]
+
+  provider = aws.dns
 }
