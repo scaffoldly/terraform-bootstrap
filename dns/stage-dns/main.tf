@@ -37,6 +37,7 @@ module "aws_dns" {
 
   source = "./aws"
 
+  dns_domain         = var.domain
   primary_domain     = var.serverless_api_domain
   additional_domains = [var.domain, "*.${var.domain}"]
 

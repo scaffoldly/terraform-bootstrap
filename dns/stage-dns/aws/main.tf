@@ -6,6 +6,10 @@ provider "aws" {
   alias = "dns"
 }
 
+variable "dns_domain" {
+  type = string
+}
+
 variable "primary_domain" {
   type = string
 }
@@ -16,7 +20,7 @@ variable "additional_domains" {
 }
 
 data "aws_route53_zone" "zone" {
-  name = "${var.domain}."
+  name = "${var.dns_domain}."
 
   provider = aws.dns
 }
