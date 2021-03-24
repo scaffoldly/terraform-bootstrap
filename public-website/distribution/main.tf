@@ -34,13 +34,11 @@ variable "certificate_arn" {
 data "aws_partition" "current" {}
 data "aws_caller_identity" "current" {}
 
-# data "aws_route53_zone" "zone" {
-#   count = var.dns_provider == "aws" ? 1 : 0
+data "aws_route53_zone" "zone" {
+  name = "${var.domain}."
 
-#   name = "${var.domain}."
-
-#   provider = aws.dns
-# }
+  provider = aws.dns
+}
 
 data "aws_s3_bucket" "logs_bucket" {
   bucket = "${var.account_name}-logs-cloudfront"
@@ -203,11 +201,9 @@ resource "aws_cloudfront_distribution" "distribution" {
 
 # NOTE: When adding simpledns, remember you can't CNAME the root record
 resource "aws_route53_record" "record" {
-  count = var.dns_provider == "aws" ? 1 : 0
-
   name    = local.domain
   type    = "CNAME"
-  zone_id = var.dns_domain_id
+  zone_id = data.aws_route53_zone.zone.zone_id
   ttl     = "300"
 
   records = [aws_cloudfront_distribution.distribution.domain_name]
