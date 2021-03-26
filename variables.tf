@@ -45,6 +45,11 @@ variable "public_websites" {
   default = {}
 }
 
+variable "enable_account_service" {
+  type    = bool
+  default = true
+}
+
 # TODO: Env Vars
 variable "serverless_apis" {
   type = map(

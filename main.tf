@@ -1,3 +1,12 @@
+locals {
+  serverless_apis = var.enable_account_service == 1 ? merge(var.serverless_apis, {
+    account = {
+      template  = "scaffoldly/sls-account-api-template"
+      repo_name = "sly-account-api"
+    }
+  }) : var.serverless_apis
+}
+
 module "aws_organization" {
   source = "./organization"
   name   = var.organization
@@ -49,21 +58,6 @@ module "aws_api_gateway" {
   ]
 }
 
-module "serverless_api" {
-  source   = "./serverless-api"
-  for_each = var.serverless_apis
-
-  name          = each.key
-  stage_domains = module.dns.stage_domains
-
-  template  = lookup(each.value, "template", "scaffoldly/sls-rest-api-template")
-  repo_name = lookup(each.value, "repo_name", null)
-
-  depends_on = [
-    module.aws_api_gateway
-  ]
-}
-
 module "public_website" {
   source   = "./public-website"
   for_each = var.public_websites
@@ -87,7 +81,7 @@ module "public_website" {
 
 module "github_config_files_serverless_apis" {
   source   = "./github-config-files"
-  for_each = var.serverless_apis
+  for_each = local.serverless_apis
 
   repository_name      = module.serverless_api[each.key].repository_name
   repository_full_name = module.serverless_api[each.key].repository_full_name
