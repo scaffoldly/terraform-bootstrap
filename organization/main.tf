@@ -23,7 +23,7 @@ resource "random_string" "random" {
 resource "aws_organizations_account" "account" {
   name      = "${local.name}-${random_string.random.result}"
   email     = var.email
-  role_name = "BootstrapAccessRole"
+  role_name = "ScaffoldlyBootstrap"
 }
 
 # Used to give AWS time to provision the new account

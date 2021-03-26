@@ -11,7 +11,8 @@ variable "organization" {
 }
 
 variable "aws_regions" {
-  type = list(string)
+  type    = list(string)
+  default = ["us-east-1"]
 }
 
 variable "dns_provider" {
