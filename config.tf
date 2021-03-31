@@ -49,7 +49,7 @@ provider "aws" {
   region = var.aws_regions[0] # TODO Create this provider in each module with region for_each
 
   assume_role {
-    role_arn = "arn:aws:iam::${module.aws_organization.account_id}:role/BootstrapAccessRole"
+    role_arn = "arn:aws:iam::${module.aws_organization.account_id}:role/ScaffoldlyBootstrap"
   }
 }
 
