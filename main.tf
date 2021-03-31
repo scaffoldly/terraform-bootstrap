@@ -58,6 +58,21 @@ module "aws_api_gateway" {
   ]
 }
 
+module "serverless_api" {
+  source   = "./serverless-api"
+  for_each = local.serverless_apis
+
+  name          = each.key
+  stage_domains = module.dns.stage_domains
+
+  template  = lookup(each.value, "template", "scaffoldly/sls-rest-api-template")
+  repo_name = lookup(each.value, "repo_name", null)
+
+  depends_on = [
+    module.aws_api_gateway
+  ]
+}
+
 module "public_website" {
   source   = "./public-website"
   for_each = var.public_websites
