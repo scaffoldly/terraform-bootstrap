@@ -71,6 +71,11 @@ resource "aws_route53_record" "verification_record" {
   provider = aws.dns
 }
 
+resource "aws_acm_certificate_validation" "validation" {
+  certificate_arn         = aws_acm_certificate.serverless_api_domain.arn
+  validation_record_fqdns = values(aws_route53_record.acm_validation)[*].fqdn
+}
+
 output "domain" {
   value = var.domain
 }
