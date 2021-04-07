@@ -63,6 +63,7 @@ module "secrets" {
 
   stage                         = each.key
   repository_name               = module.repository.name
+  repository_full_name          = module.repository.full_name
   deployer_aws_access_key       = module.aws_iam.deployer_access_key
   deployer_aws_secret_key       = module.aws_iam.deployer_secret_key
   aws_rest_api_id               = each.value.api_id

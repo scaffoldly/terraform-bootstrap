@@ -8,6 +8,9 @@ variable "stage" {
 variable "repository_name" {
   type = string
 }
+variable "repository_full_name" {
+  type = string
+}
 variable "bucket_name" {
   type = string
 }
@@ -69,43 +72,43 @@ resource "aws_iam_access_key" "access_key" {
 }
 
 resource "github_actions_secret" "deployer_aws_partition" {
-  repository      = var.repository_name
+  repository      = var.repository_full_name
   secret_name     = "${upper(var.stage)}_AWS_PARTITION"
   plaintext_value = data.aws_partition.current.partition
 }
 
 resource "github_actions_secret" "deployer_aws_account_id" {
-  repository      = var.repository_name
+  repository      = var.repository_full_name
   secret_name     = "${upper(var.stage)}_AWS_ACCOUNT_ID"
   plaintext_value = data.aws_caller_identity.current.account_id
 }
 
 resource "github_actions_secret" "deployer_aws_default_region" {
-  repository      = var.repository_name
+  repository      = var.repository_full_name
   secret_name     = "${upper(var.stage)}_AWS_DEFAULT_REGION"
   plaintext_value = data.aws_region.current.name
 }
 
 resource "github_actions_secret" "deployer_aws_access_key" {
-  repository      = var.repository_name
+  repository      = var.repository_full_name
   secret_name     = "${upper(var.stage)}_AWS_ACCESS_KEY_ID"
   plaintext_value = aws_iam_access_key.access_key.id
 }
 
 resource "github_actions_secret" "deployer_aws_secret_key" {
-  repository      = var.repository_name
+  repository      = var.repository_full_name
   secret_name     = "${upper(var.stage)}_AWS_SECRET_ACCESS_KEY"
   plaintext_value = aws_iam_access_key.access_key.secret
 }
 
 resource "github_actions_secret" "deployer_aws_bucket_name" {
-  repository      = var.repository_name
+  repository      = var.repository_full_name
   secret_name     = "${upper(var.stage)}_AWS_BUCKET_NAME"
   plaintext_value = var.bucket_name
 }
 
 resource "github_actions_secret" "deployer_aws_cloudfont_distribution_id" {
-  repository      = var.repository_name
+  repository      = var.repository_full_name
   secret_name     = "${upper(var.stage)}_AWS_CLOUDFRONT_DISTRIBUTION_ID"
   plaintext_value = var.distribution_id
 }
