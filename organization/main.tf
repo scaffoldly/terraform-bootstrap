@@ -35,14 +35,6 @@ resource "time_sleep" "wait_120_seconds" {
   ]
 }
 
-resource "aws_iam_account_alias" "alias" {
-  account_alias = aws_organizations_account.account.name
-
-  depends_on = [
-    time_sleep.wait_120_seconds
-  ]
-}
-
 output "slept_time" {
   value = time_sleep.wait_120_seconds.id
 }
