@@ -1,8 +1,8 @@
 locals {
-  serverless_apis = var.enable_account_service ? merge(var.serverless_apis, {
-    account = {
-      template  = "scaffoldly/sls-account-api-template"
-      repo_name = "sly-account-api"
+  serverless_apis = var.auth_service ? merge(var.serverless_apis, {
+    auth = {
+      template  = "scaffoldly/sls-auth-api-template"
+      repo_name = "sly-auth-api"
     }
   }) : var.serverless_apis
 }

@@ -45,9 +45,9 @@ variable "public_websites" {
   default = {}
 }
 
-variable "enable_account_service" {
+variable "auth_service" {
   type    = bool
-  default = true
+  default = false
 }
 
 # TODO: Env Vars
