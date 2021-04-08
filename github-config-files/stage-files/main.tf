@@ -12,7 +12,7 @@ variable "branch" {
   type = string
 }
 variable "stage_name" {
-  tyoe    = string
+  type    = string
   default = ""
 }
 variable "stage_urls" {
