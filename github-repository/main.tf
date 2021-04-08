@@ -2,10 +2,6 @@ terraform {
   required_version = ">= 0.14"
 }
 
-provider "github" {
-  alias = "org"
-}
-
 variable "name" {
   type = string
 }
@@ -41,8 +37,6 @@ resource "github_repository" "repository" {
       default_branch
     ]
   }
-
-  provider = github.org
 }
 
 // TODO: Branch protection

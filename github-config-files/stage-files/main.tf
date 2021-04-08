@@ -2,10 +2,6 @@ terraform {
   required_version = ">= 0.14"
 }
 
-provider "github" {
-  alias = "org"
-}
-
 variable "organization" {
   type = string
 }
@@ -49,8 +45,6 @@ resource "github_repository_file" "service_urls_json" {
       branch
     ]
   }
-
-  provider = github.org
 }
 
 resource "github_repository_file" "shared_env_vars_json" {
@@ -71,8 +65,6 @@ resource "github_repository_file" "shared_env_vars_json" {
       branch
     ]
   }
-
-  provider = github.org
 }
 
 resource "github_repository_file" "env" {
@@ -99,6 +91,4 @@ EOF
       branch
     ]
   }
-
-  provider = github.org
 }

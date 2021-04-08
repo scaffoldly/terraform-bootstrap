@@ -74,7 +74,7 @@ module "serverless_api" {
   ]
 
   providers = {
-    github.org = github.org
+    github = github
   }
 }
 
@@ -91,8 +91,8 @@ module "public_website" {
   repo_name = lookup(each.value, "repo_name", null)
 
   providers = {
-    aws.dns    = aws.root
-    github.org = github.org
+    aws.dns = aws.root
+    github  = github
   }
 
   depends_on = [
@@ -117,7 +117,7 @@ module "github_config_files_serverless_apis" {
   ]
 
   providers = {
-    github.org = github.org
+    github = github
   }
 }
 
@@ -137,6 +137,6 @@ module "github_config_files_public_websites" {
   ]
 
   providers = {
-    github.org = github.org
+    github = github
   }
 }
