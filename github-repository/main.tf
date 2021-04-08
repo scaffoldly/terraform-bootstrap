@@ -19,7 +19,7 @@ locals {
 resource "github_repository" "repository" {
   name = var.name
 
-  private                = true
+  visibility             = "private"
   has_downloads          = false
   has_issues             = false
   has_projects           = false
