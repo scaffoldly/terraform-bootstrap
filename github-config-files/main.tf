@@ -43,6 +43,8 @@ EOF
   commit_author  = "Scaffoldly Bootstrap"
   commit_email   = "bootstrap@scaffold.ly"
 
+  overwrite_on_create = true
+
   lifecycle {
     ignore_changes = [
       branch

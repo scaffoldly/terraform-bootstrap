@@ -38,6 +38,8 @@ resource "github_repository_file" "service_urls_json" {
   commit_author  = "Scaffoldly Bootstrap"
   commit_email   = "bootstrap@scaffold.ly"
 
+  overwrite_on_create = true
+
   lifecycle {
     ignore_changes = [
       branch
@@ -55,6 +57,8 @@ resource "github_repository_file" "shared_env_vars_json" {
   commit_message = "[Scaffoldly] Update ${local.stage_path}shared-env-vars.json"
   commit_author  = "Scaffoldly Bootstrap"
   commit_email   = "bootstrap@scaffold.ly"
+
+  overwrite_on_create = true
 
   lifecycle {
     ignore_changes = [
@@ -79,6 +83,8 @@ EOF
   commit_message = "[Scaffoldly] Update .env${local.env_suffix}"
   commit_author  = "Scaffoldly Bootstrap"
   commit_email   = "bootstrap@scaffold.ly"
+
+  overwrite_on_create = true
 
   lifecycle {
     ignore_changes = [
