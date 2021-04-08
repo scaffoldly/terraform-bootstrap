@@ -67,9 +67,8 @@ module "cloudfront" {
 module "repository" {
   source = "../github-repository"
 
-  template     = var.template
-  name         = local.repo_name
-  organization = var.organization
+  template = var.template
+  name     = local.repo_name
 
   providers = {
     github.org = github.org
