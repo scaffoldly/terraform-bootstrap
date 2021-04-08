@@ -6,6 +6,10 @@ provider "aws" {
   alias = "dns"
 }
 
+provider "github" {
+  alias = "org"
+}
+
 variable "organization" {
   type = string
 }
@@ -63,8 +67,13 @@ module "cloudfront" {
 module "repository" {
   source = "../github-repository"
 
-  template = var.template
-  name     = local.repo_name
+  template     = var.template
+  name         = local.repo_name
+  organization = var.organization
+
+  providers = {
+    github.org = github.org
+  }
 }
 
 module "aws_iam" {
@@ -76,6 +85,10 @@ module "aws_iam" {
   repository_name = module.repository.name
   bucket_name     = each.value.bucket_name
   distribution_id = each.value.distribution_id
+
+  providers = {
+    github.org = github.org
+  }
 }
 
 output "repository_name" {
