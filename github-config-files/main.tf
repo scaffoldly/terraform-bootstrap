@@ -2,10 +2,10 @@ terraform {
   required_version = ">= 0.14"
 }
 
-variable "repository_name" {
+variable "organization" {
   type = string
 }
-variable "repository_full_name" {
+variable "repository_name" {
   type = string
 }
 variable "stages" {
@@ -19,11 +19,11 @@ variable "shared_env_vars" {
 }
 
 data "github_repository" "repository" {
-  full_name = var.repository_full_name
+  full_name = "${var.organization}/${var.repository_name}"
 }
 
 resource "github_repository_file" "readme" {
-  repository = data.github_repository.repository.full_name
+  repository = "${var.organization}/${var.repository_name}"
   branch     = data.github_repository.repository.default_branch
   file       = ".scaffoldly/README.md"
 
@@ -54,8 +54,9 @@ module "stage_files" {
   count  = length(var.stages)
   source = "./stage-files"
 
-  repository = data.github_repository.repository.full_name
-  branch     = data.github_repository.repository.default_branch
+  organization    = var.organization
+  repository_name = var.repository_name
+  branch          = data.github_repository.repository.default_branch
 
   stage_name = var.stages[count.index]
 
@@ -70,8 +71,9 @@ module "stage_files" {
 module "stage_files_default" {
   source = "./stage-files"
 
-  repository = data.github_repository.repository.full_name
-  branch     = data.github_repository.repository.default_branch
+  organization    = var.organization
+  repository_name = var.repository_name
+  branch          = data.github_repository.repository.default_branch
 
   stage_name = ""
 

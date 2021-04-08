@@ -2,9 +2,17 @@ terraform {
   required_version = ">= 0.14"
 }
 
-variable "repository" {}
-variable "branch" {}
+variable "organization" {
+  type = string
+}
+variable "repository_name" {
+  type = string
+}
+variable "branch" {
+  type = string
+}
 variable "stage_name" {
+  tyoe    = string
   default = ""
 }
 variable "stage_urls" {
@@ -20,7 +28,7 @@ locals {
 }
 
 resource "github_repository_file" "service_urls_json" {
-  repository = var.repository
+  repository = "${var.organization}/${var.repository_name}"
   branch     = var.branch
   file       = ".scaffoldly/${local.stage_path}service-urls.json"
 
@@ -38,7 +46,7 @@ resource "github_repository_file" "service_urls_json" {
 }
 
 resource "github_repository_file" "shared_env_vars_json" {
-  repository = var.repository
+  repository = "${var.organization}/${var.repository_name}"
   branch     = var.branch
   file       = ".scaffoldly/${local.stage_path}shared-env-vars.json"
 
@@ -56,7 +64,7 @@ resource "github_repository_file" "shared_env_vars_json" {
 }
 
 resource "github_repository_file" "env" {
-  repository = var.repository
+  repository = "${var.organization}/${var.repository_name}"
   branch     = var.branch
   file       = ".scaffoldly/.env${local.env_suffix}"
 

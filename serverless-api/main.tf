@@ -2,6 +2,9 @@ terraform {
   required_version = ">= 0.14"
 }
 
+variable "organization" {
+  type = string
+}
 variable "name" {
   type = string
 }
@@ -62,8 +65,8 @@ module "secrets" {
   for_each = module.stage
 
   stage                         = each.key
+  organization                  = var.organization
   repository_name               = module.repository.name
-  repository_full_name          = module.repository.full_name
   deployer_aws_access_key       = module.aws_iam.deployer_access_key
   deployer_aws_secret_key       = module.aws_iam.deployer_secret_key
   aws_rest_api_id               = each.value.api_id
@@ -76,9 +79,6 @@ output "service_name" {
 
 output "repository_name" {
   value = module.repository.name
-}
-output "repository_full_name" {
-  value = module.repository.full_name
 }
 
 output "stage_urls" {

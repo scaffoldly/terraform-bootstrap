@@ -62,6 +62,7 @@ module "serverless_api" {
   source   = "./serverless-api"
   for_each = local.serverless_apis
 
+  organization  = var.organization
   name          = each.key
   stage_domains = module.dns.stage_domains
 
@@ -78,6 +79,7 @@ module "public_website" {
   for_each = var.public_websites
 
   account_name  = module.aws_organization.account_name
+  organization  = var.organization
   name          = each.key
   stage_domains = module.dns.stage_domains
 
@@ -98,11 +100,11 @@ module "github_config_files_serverless_apis" {
   source   = "./github-config-files"
   for_each = local.serverless_apis
 
-  repository_name      = module.serverless_api[each.key].repository_name
-  repository_full_name = module.serverless_api[each.key].repository_full_name
-  stages               = keys(var.stages)
-  stage_urls           = zipmap(values(module.serverless_api)[*].repository_name, values(module.serverless_api)[*].stage_urls)
-  shared_env_vars      = var.shared_env_vars
+  organization    = var.organization
+  repository_name = module.serverless_api[each.key].repository_name
+  stages          = keys(var.stages)
+  stage_urls      = zipmap(values(module.serverless_api)[*].repository_name, values(module.serverless_api)[*].stage_urls)
+  shared_env_vars = var.shared_env_vars
 
   depends_on = [
     module.public_website,
@@ -114,11 +116,11 @@ module "github_config_files_public_websites" {
   source   = "./github-config-files"
   for_each = var.public_websites
 
-  repository_name      = module.public_website[each.key].repository_name
-  repository_full_name = module.public_website[each.key].repository_full_name
-  stages               = keys(var.stages)
-  stage_urls           = zipmap(values(module.serverless_api)[*].repository_name, values(module.serverless_api)[*].stage_urls)
-  shared_env_vars      = var.shared_env_vars
+  organization    = var.organization
+  repository_name = module.public_website[each.key].repository_name
+  stages          = keys(var.stages)
+  stage_urls      = zipmap(values(module.serverless_api)[*].repository_name, values(module.serverless_api)[*].stage_urls)
+  shared_env_vars = var.shared_env_vars
 
   depends_on = [
     module.public_website,
