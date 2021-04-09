@@ -2,6 +2,10 @@ terraform {
   required_version = ">= 0.14"
 }
 
+provider "github" {
+  alias = "org"
+}
+
 variable "stage" {
   type = string
 }
@@ -31,36 +35,48 @@ resource "github_actions_secret" "deployer_aws_partition" {
   repository      = "${var.organization}/${var.repository_name}"
   secret_name     = "${upper(var.stage)}_AWS_PARTITION"
   plaintext_value = data.aws_partition.current.partition
+
+  provider = github.org
 }
 
 resource "github_actions_secret" "deployer_aws_account_id" {
   repository      = "${var.organization}/${var.repository_name}"
   secret_name     = "${upper(var.stage)}_AWS_ACCOUNT_ID"
   plaintext_value = data.aws_caller_identity.current.account_id
+
+  provider = github.org
 }
 
 resource "github_actions_secret" "deployer_aws_access_key" {
   repository      = "${var.organization}/${var.repository_name}"
   secret_name     = "${upper(var.stage)}_AWS_ACCESS_KEY_ID"
   plaintext_value = var.deployer_aws_access_key
+
+  provider = github.org
 }
 
 resource "github_actions_secret" "deployer_aws_secret_key" {
   repository      = "${var.organization}/${var.repository_name}"
   secret_name     = "${upper(var.stage)}_AWS_SECRET_ACCESS_KEY"
   plaintext_value = var.deployer_aws_secret_key
+
+  provider = github.org
 }
 
 resource "github_actions_secret" "deployer_aws_rest_api_id" {
   repository      = "${var.organization}/${var.repository_name}"
   secret_name     = "${upper(var.stage)}_AWS_REST_API_ID"
   plaintext_value = var.aws_rest_api_id
+
+  provider = github.org
 }
 
 resource "github_actions_secret" "deployer_aws_rest_api_root_resource_id" {
   repository      = "${var.organization}/${var.repository_name}"
   secret_name     = "${upper(var.stage)}_AWS_REST_API_ROOT_RESOURCE_ID"
   plaintext_value = var.aws_rest_api_root_resource_id
+
+  provider = github.org
 }
 
 // TODO create a secrets repo and load them in from there

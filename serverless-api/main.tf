@@ -2,6 +2,10 @@ terraform {
   required_version = ">= 0.14"
 }
 
+provider "github" {
+  alias = "org"
+}
+
 variable "organization" {
   type = string
 }
@@ -42,7 +46,7 @@ module "repository" {
   name     = local.repo_name
 
   providers = {
-    github = github
+    github.org = github.org
   }
 }
 
@@ -77,7 +81,7 @@ module "secrets" {
   aws_rest_api_root_resource_id = each.value.root_resource_id
 
   providers = {
-    github = github
+    github.org = github.org
   }
 }
 

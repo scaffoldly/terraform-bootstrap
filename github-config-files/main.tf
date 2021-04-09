@@ -2,6 +2,10 @@ terraform {
   required_version = ">= 0.14"
 }
 
+provider "github" {
+  alias = "org"
+}
+
 variable "organization" {
   type = string
 }
@@ -20,6 +24,8 @@ variable "shared_env_vars" {
 
 data "github_repository" "repository" {
   full_name = "${var.organization}/${var.repository_name}"
+
+  provider = github.org
 }
 
 resource "github_repository_file" "readme" {
@@ -50,6 +56,8 @@ EOF
       branch
     ]
   }
+
+  provider = github.org
 }
 
 module "stage_files" {
@@ -70,7 +78,7 @@ module "stage_files" {
   shared_env_vars = var.shared_env_vars
 
   providers = {
-    github = github
+    github.org = github.org
   }
 }
 
@@ -91,6 +99,6 @@ module "stage_files_default" {
   shared_env_vars = var.shared_env_vars
 
   providers = {
-    github = github
+    github.org = github.org
   }
 }

@@ -6,6 +6,10 @@ provider "aws" {
   alias = "dns"
 }
 
+provider "github" {
+  alias = "org"
+}
+
 variable "organization" {
   type = string
 }
@@ -67,7 +71,7 @@ module "repository" {
   name     = local.repo_name
 
   providers = {
-    github = github
+    github.org = github.org
   }
 }
 
@@ -82,7 +86,7 @@ module "aws_iam" {
   distribution_id = each.value.distribution_id
 
   providers = {
-    github = github
+    github.org = github.org
   }
 }
 
