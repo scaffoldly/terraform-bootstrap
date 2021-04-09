@@ -29,7 +29,7 @@ data "github_repository" "repository" {
 }
 
 resource "github_repository_file" "readme" {
-  repository = "${var.organization}/${var.repository_name}"
+  repository = data.github_repository.repository.name
   branch     = data.github_repository.repository.default_branch
   file       = ".scaffoldly/README.md"
 
@@ -62,8 +62,7 @@ module "stage_files" {
   count  = length(var.stages)
   source = "./stage-files"
 
-  organization    = var.organization
-  repository_name = var.repository_name
+  repository_name = data.github_repository.repository.name
   branch          = data.github_repository.repository.default_branch
 
   stage_name = var.stages[count.index]
@@ -79,8 +78,7 @@ module "stage_files" {
 module "stage_files_default" {
   source = "./stage-files"
 
-  organization    = var.organization
-  repository_name = var.repository_name
+  repository_name = data.github_repository.repository.name
   branch          = data.github_repository.repository.default_branch
 
   stage_name = ""
