@@ -6,9 +6,6 @@ provider "aws" {
   alias = "dns"
 }
 
-variable "organization" {
-  type = string
-}
 variable "account_name" {
   type = string
 }
@@ -72,7 +69,6 @@ module "aws_iam" {
   for_each = module.cloudfront
 
   stage           = each.value.stage
-  organization    = var.organization
   repository_name = module.repository.name
   bucket_name     = each.value.bucket_name
   distribution_id = each.value.distribution_id

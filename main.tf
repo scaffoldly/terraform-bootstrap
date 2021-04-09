@@ -62,7 +62,6 @@ module "serverless_api" {
   source   = "./serverless-api"
   for_each = local.serverless_apis
 
-  organization  = var.organization
   name          = each.key
   stage_domains = module.dns.stage_domains
 
@@ -79,7 +78,6 @@ module "public_website" {
   for_each = var.public_websites
 
   account_name  = module.aws_organization.account_name
-  organization  = var.organization
   name          = each.key
   stage_domains = module.dns.stage_domains
 
