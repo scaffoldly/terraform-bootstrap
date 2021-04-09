@@ -54,7 +54,6 @@ provider "aws" {
 }
 
 provider "github" {
-  alias        = "org"
   token        = var.github_token
   organization = var.organization
 }
