@@ -53,6 +53,6 @@ provider "aws" {
 }
 
 provider "github" {
-  token        = var.github_token
-  organization = var.organization
+  token = var.github_token
+  owner = var.organization
 }

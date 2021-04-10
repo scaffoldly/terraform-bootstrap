@@ -48,5 +48,5 @@ resource "github_repository" "repository" {
 // TODO: Branch protection
 
 output "name" {
-  value = github_repository.repository.name
+  value = var.name
 }

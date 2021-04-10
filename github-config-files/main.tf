@@ -62,7 +62,7 @@ module "stage_files_default" {
 }
 
 resource "github_repository_file" "readme" {
-  repository = data.github_repository.repository.name
+  repository = var.repository_name
   branch     = data.github_repository.repository.default_branch
   file       = ".scaffoldly/README.md"
 
