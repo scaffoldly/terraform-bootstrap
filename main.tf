@@ -1,7 +1,7 @@
 locals {
   serverless_apis = var.auth_service ? merge(var.serverless_apis, {
     auth = {
-      template  = "scaffoldly/sls-auth-api-template"
+      template  = "scaffoldly/sly-auth-api-template"
       repo_name = "sly-auth-api"
     }
   }) : var.serverless_apis
