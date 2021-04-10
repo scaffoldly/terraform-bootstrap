@@ -61,6 +61,17 @@ module "stage_files_default" {
   shared_env_vars = var.shared_env_vars
 }
 
+# Used to give GitHub time to set up the repo for Actions
+resource "time_sleep" "wait_60_seconds" {
+  create_duration = "60s"
+
+  depends_on = [
+    module.stage_files,
+    module.stage_files_default
+  ]
+}
+
+# This will trigger a nonlive release
 resource "github_repository_file" "readme" {
   repository = var.repository_name
   branch     = data.github_repository.repository.default_branch
@@ -71,11 +82,11 @@ resource "github_repository_file" "readme" {
 
 *NOTE: DO NOT MANUALLY EDIT THESE FILES*
 
-They are managed by Terraform and the Bootstrap project in your oganization.
+These are managed by the `scaffoldly-bootstrap` project in your oganization.
 
-They can be updated indirectly by adjusting the configuration in that project.
+They are by adjusting the configuration in that project.
 
-More info: https://docs.scaffold.ly
+For more info: https://docs.scaffold.ly/infrastructure/configuration-files
 
 ## Stages
 
@@ -94,7 +105,6 @@ ${yamlencode(var.stage_urls)}
 ```yaml
 ${yamlencode(var.shared_env_vars)}
 ```
-
 EOF
 
   // Leave off [Scaffoldly] to trigger a release
