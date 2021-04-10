@@ -99,8 +99,6 @@ EOF
 
   // Leave off [Scaffoldly] to trigger a release
   commit_message = "Update Stages, Stage URLs, and Shared Env Vars"
-  commit_author  = "Scaffoldly Bootstrap"
-  commit_email   = "bootstrap@scaffold.ly"
 
   overwrite_on_create = true
 
