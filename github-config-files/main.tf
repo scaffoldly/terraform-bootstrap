@@ -61,16 +61,6 @@ module "stage_files_default" {
   shared_env_vars = var.shared_env_vars
 }
 
-# Used to give GitHub time to set up the repo for Actions
-resource "time_sleep" "wait_60_seconds" {
-  create_duration = "60s"
-
-  depends_on = [
-    module.stage_files,
-    module.stage_files_default
-  ]
-}
-
 # This will trigger a nonlive release
 resource "github_repository_file" "readme" {
   repository = var.repository_name
@@ -109,6 +99,8 @@ EOF
 
   // Leave off [Scaffoldly] to trigger a release
   commit_message = "Update Stages, Stage URLs, and Shared Env Vars"
+  commit_author  = "Scaffoldly Bootstrap"
+  commit_email   = "bootstrap@scaffold.ly"
 
   overwrite_on_create = true
 
