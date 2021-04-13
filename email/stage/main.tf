@@ -98,21 +98,30 @@ resource "aws_route53_record" "verification_record" {
   provider = aws.dns
 }
 
+resource "time_sleep" "wait_60_seconds" {
+  create_duration = "60s"
+
+  depends_on = [
+    aws_route53_record.verification_record
+  ]
+}
+
 resource "aws_ses_receipt_rule" "bounce_noreply" {
   name          = "${var.stage}-bounce-noreply"
   rule_set_name = var.rule_set_name
-  recipients    = ["no-reply111@${var.domain}"]
+  recipients    = ["no-reply@${var.domain}"]
   enabled       = true
   scan_enabled  = true
 
   bounce_action {
     message         = "Unknown recipient"
-    sender          = "no-reply222@${var.domain}"
+    sender          = "no-reply@${var.domain}"
     smtp_reply_code = "550"
+    status_code     = "5.2.0"
     position        = 1
   }
 
   depends_on = [
-    aws_route53_record.verification_record
+    time_sleep.wait_60_seconds
   ]
 }
