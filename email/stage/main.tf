@@ -117,7 +117,7 @@ resource "aws_ses_receipt_rule" "bounce_noreply" {
     message         = "Unknown recipient"
     sender          = "no-reply@${var.domain}"
     smtp_reply_code = "550"
-    status_code     = "5.2.0"
+    status_code     = "5.2.1"
     position        = 1
   }
 
