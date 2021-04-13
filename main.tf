@@ -44,6 +44,21 @@ module "dns" {
   ]
 }
 
+module "email" {
+  source = "./email"
+
+  root_email    = var.root_email
+  stage_domains = module.dns.stage_domains
+
+  providers = {
+    aws.dns = aws.root
+  }
+
+  depends_on = [
+    module.dns
+  ]
+}
+
 module "aws_api_gateway" {
   source = "./api-gateway"
 
