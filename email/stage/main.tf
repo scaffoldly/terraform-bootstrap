@@ -42,12 +42,6 @@ resource "aws_ses_domain_identity" "identity" {
   domain = var.domain
 }
 
-resource "aws_ses_identity_policy" "send_policy" {
-  identity = aws_ses_domain_identity.identity.arn
-  name     = var.stage
-  policy   = data.aws_iam_policy_document.send_policy.json
-}
-
 resource "aws_ses_domain_dkim" "dkim" {
   domain = aws_ses_domain_identity.identity.domain
 }
