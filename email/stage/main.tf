@@ -48,7 +48,7 @@ data "aws_iam_policy_document" "send_policy" {
     resources = [aws_ses_domain_identity.identity.arn]
 
     principals {
-      identifiers = ["arn:*:iam::${data.aws_caller_identity.current.account_id}:role/*-nonlive"]
+      identifiers = ["arn:*:iam::${data.aws_caller_identity.current.account_id}:role/*-${var.stage}"]
       type        = "AWS"
     }
   }
