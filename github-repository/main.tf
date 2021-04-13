@@ -25,7 +25,7 @@ locals {
 resource "github_repository" "repository" {
   name = var.name
 
-  visibility             = "private"
+  private                = true
   has_downloads          = false
   has_issues             = false
   has_projects           = false
@@ -40,7 +40,9 @@ resource "github_repository" "repository" {
   lifecycle {
     ignore_changes = [
       template,
-      default_branch
+      default_branch,
+      private,
+      visibility
     ]
   }
 }
