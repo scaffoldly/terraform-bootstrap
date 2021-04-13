@@ -42,18 +42,6 @@ resource "aws_ses_domain_identity" "identity" {
   domain = var.domain
 }
 
-data "aws_iam_policy_document" "send_policy" {
-  statement {
-    actions   = ["SES:SendEmail", "SES:SendRawEmail"]
-    resources = [aws_ses_domain_identity.identity.arn]
-
-    principals {
-      identifiers = ["arn:*:iam::${data.aws_caller_identity.current.account_id}:role/*-${var.stage}"]
-      type        = "AWS"
-    }
-  }
-}
-
 resource "aws_ses_identity_policy" "send_policy" {
   identity = aws_ses_domain_identity.identity.arn
   name     = var.stage
@@ -119,13 +107,13 @@ resource "aws_route53_record" "verification_record" {
 resource "aws_ses_receipt_rule" "bounce_noreply" {
   name          = "${var.stage}-bounce-noreply"
   rule_set_name = var.rule_set_name
-  recipients    = ["no-reply@${var.domain}"]
+  recipients    = ["no-reply111@${var.domain}"]
   enabled       = true
   scan_enabled  = true
 
   bounce_action {
     message         = "Unknown recipient"
-    sender          = "no-reply@${var.domain}"
+    sender          = "no-reply222@${var.domain}"
     smtp_reply_code = "550"
     position        = 1
   }

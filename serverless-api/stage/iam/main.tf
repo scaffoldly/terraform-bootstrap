@@ -20,6 +20,8 @@ data "aws_iam_policy_document" "base" {
       "cloudwatch:PutMetricData",
       "xray:PutTelemetryRecords",
       "xray:PutTraceSegments",
+      "ses:SendEmail",
+      "ses:SendRawEmail",
     ]
 
     resources = ["*"] # TODO Be more specific
