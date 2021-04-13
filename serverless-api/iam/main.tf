@@ -142,13 +142,16 @@ data "aws_iam_policy_document" "cloudformation" {
       "lambda:Invoke*",
       "lambda:Tag*",
       "lambda:Untag*",
+      "lambda:*Permission*",
     ]
 
     resources = [
-      "arn:*:lambda:*:*:function:${var.repository_name}*"
+      "arn:*:lambda:*:*:function:${var.repository_name}*",
+      "arn:*:lambda:*:*:function:*-authorize-E*",
     ]
   }
 
+  # TODO: Uhmmm these are redundant.
   statement {
     actions = [
       "lambda:*"
