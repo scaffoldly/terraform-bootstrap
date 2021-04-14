@@ -86,7 +86,7 @@ resource "aws_ses_event_destination" "sns_destination" {
   matching_types         = ["send", "reject", "bounce", "complaint", "delivery", "open", "click", "renderingFailure"]
 
   sns_destination {
-    topic_arn = aws_sns_topic.topic.arn
+    topic_arn = aws_sns_topic.events.arn
   }
 }
 
