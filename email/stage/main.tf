@@ -140,6 +140,7 @@ resource "aws_ses_receipt_rule" "bounce_noreply" {
     sender          = "no-reply@${var.domain}"
     smtp_reply_code = "550"
     status_code     = "5.1.1"
+    topic_arn       = aws_sns_topic.events.arn
     position        = 1
   }
 
