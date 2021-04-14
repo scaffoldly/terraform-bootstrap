@@ -55,16 +55,38 @@ resource "aws_ses_configuration_set" "configuration_set" {
   name = var.stage
 }
 
-resource "aws_ses_event_destination" "destination" {
+data "aws_iam_policy_document" "event_policy" {
+  statement {
+    actions = [
+      "sns:Publish",
+    ]
+
+    resources = ["*"]
+
+    principals {
+      type = "Service"
+      identifiers = [
+        "ses.amazonaws.com",
+      ]
+    }
+  }
+}
+
+resource "aws_sns_topic" "events" {
+  name         = "${var.stage}-email-events"
+  display_name = "${var.stage}-email-events"
+
+  policy = data.aws_iam_policy_document.event_policy.json
+}
+
+resource "aws_ses_event_destination" "sns_destination" {
   name                   = var.stage
   configuration_set_name = aws_ses_configuration_set.configuration_set.name
   enabled                = true
   matching_types         = ["send", "reject", "bounce", "complaint", "delivery", "open", "click", "renderingFailure"]
 
-  cloudwatch_destination {
-    default_value  = "default"
-    dimension_name = "${var.stage}-emailHeader"
-    value_source   = "emailHeader"
+  sns_destination {
+    topic_arn = aws_sns_topic.topic.arn
   }
 }
 
@@ -114,10 +136,10 @@ resource "aws_ses_receipt_rule" "bounce_noreply" {
   scan_enabled  = true
 
   bounce_action {
-    message         = "Unknown recipient"
+    message         = "Mailbox does not exist"
     sender          = "no-reply@${var.domain}"
     smtp_reply_code = "550"
-    status_code     = "5.2.1"
+    status_code     = "5.1.1"
     position        = 1
   }
 
