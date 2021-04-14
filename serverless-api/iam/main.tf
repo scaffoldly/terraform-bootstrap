@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 0.14"
+  required_version = ">= 0.15"
 }
 
 variable "repository_name" {
@@ -373,5 +373,6 @@ output "deployer_access_key" {
 }
 
 output "deployer_secret_key" {
-  value = aws_iam_access_key.access_key.secret
+  value     = aws_iam_access_key.access_key.secret
+  sensitive = true
 }

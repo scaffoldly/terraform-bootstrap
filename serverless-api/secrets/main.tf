@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 0.14"
+  required_version = ">= 0.15"
 
   required_providers {
     github = {
@@ -18,7 +18,8 @@ variable "deployer_aws_access_key" {
   type = string
 }
 variable "deployer_aws_secret_key" {
-  type = string
+  type      = string
+  sensitive = true
 }
 variable "aws_rest_api_id" {
   type = string
