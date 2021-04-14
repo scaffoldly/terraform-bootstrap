@@ -90,6 +90,16 @@ resource "aws_ses_event_destination" "sns_destination" {
   }
 }
 
+resource "aws_route53_record" "mx" {
+  zone_id = var.dns_domain_id
+  name    = var.domain
+  type    = "MX"
+  ttl     = "600"
+  records = ["10 inbound-smtp.${data.aws_region.current.name}.amazonaws.com"]
+
+  provider = aws.dns
+}
+
 resource "aws_route53_record" "mail_from_mx" {
   zone_id = var.dns_domain_id
   name    = aws_ses_domain_mail_from.mail_from.mail_from_domain
