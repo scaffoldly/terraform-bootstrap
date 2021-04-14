@@ -120,6 +120,15 @@ resource "aws_route53_record" "verification_record" {
   provider = aws.dns
 }
 
+resource "aws_route53_record" "dkim_record" {
+  count   = 3
+  zone_id = var.dns_domain_id
+  name    = "${element(aws_ses_domain_dkim.dkim.dkim_tokens, count.index)}._domainkey"
+  type    = "CNAME"
+  ttl     = "600"
+  records = ["${element(aws_ses_domain_dkim.dkim.dkim_tokens, count.index)}.dkim.amazonses.com"]
+}
+
 resource "time_sleep" "wait_60_seconds" {
   create_duration = "60s"
 
