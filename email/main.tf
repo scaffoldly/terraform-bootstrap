@@ -39,7 +39,7 @@ module "stage" {
 
   stage            = each.key
   root_email       = var.root_email
-  domain           = lookup(each.value, "serverless_api_domain", "unknown-serverless-api-domain")
+  domain           = lookup(each.value, "domain", "unknown-domain")
   subdomain_suffix = lookup(each.value, "subdomain_suffix", "unknown-subdomain-suffix")
   dns_provider     = lookup(each.value, "dns_provider", "unknown-dns-provider")
   dns_domain_id    = lookup(each.value, "dns_domain_id", "unknown-dns-domain-id")
