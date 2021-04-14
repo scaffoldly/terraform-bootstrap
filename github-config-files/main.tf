@@ -20,6 +20,9 @@ variable "stages" {
 variable "stage_urls" {
   type = map(any) # TODO Figure out proper type
 }
+variable "stage_env_vars" {
+  type = map(any) # TODO Figure out proper type (stage: string -> map { name: string value: string })
+}
 variable "shared_env_vars" {
   type = map(string)
 }
@@ -42,6 +45,11 @@ module "stage_files" {
     key => lookup(value, var.stages[count.index], "unknown-url")
   }
 
+  env_vars = {
+    for key, value in var.stage_env_vars :
+    key => lookup(value, var.stages[count.index], {})
+  }
+
   shared_env_vars = var.shared_env_vars
 }
 
@@ -56,6 +64,11 @@ module "stage_files_default" {
   stage_urls = {
     for key, value in var.stage_urls :
     key => lookup(value, "nonlive", "unknown-url") # TODO: Configurable default stage
+  }
+
+  env_vars = {
+    for key, value in var.stage_env_vars :
+    key => lookup(value, var.stages[count.index], {})
   }
 
   shared_env_vars = var.shared_env_vars
@@ -90,6 +103,12 @@ ${yamlencode(var.stages)}
 ${yamlencode(var.stage_urls)}
 ```
 
+## Stage Env Vars
+
+```yaml
+${yamlencode(var.stage_env_vars)}
+```
+
 ## Shared Env Vars
 
 ```yaml
@@ -98,7 +117,7 @@ ${yamlencode(var.shared_env_vars)}
 EOF
 
   // Leave off [Scaffoldly] to trigger a release
-  commit_message = "Update Stages, Stage URLs, and Shared Env Vars"
+  commit_message = "Update Stages, Stage URLs, and Env Vars"
   commit_author  = "Scaffoldly Bootstrap"
   commit_email   = "bootstrap@scaffold.ly"
 

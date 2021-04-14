@@ -16,6 +16,7 @@ variable "stage_domains" {
       certificate_arn       = string
       dns_provider          = string
       dns_domain_id         = string
+      stage_env_vars        = map(string)
     })
   )
 }

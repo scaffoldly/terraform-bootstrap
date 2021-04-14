@@ -11,6 +11,9 @@ variable "name" {
 variable "stage" {
   type = string
 }
+variable "stage_env_vars" {
+  type = map(string)
+}
 variable "repository_name" {
   type = string
 }
@@ -175,6 +178,10 @@ output "root_resource_id" {
 
 output "name" {
   value = var.stage
+}
+
+output "stage_env_vars" {
+  value = var.stage_env_vars
 }
 
 output "domain" {

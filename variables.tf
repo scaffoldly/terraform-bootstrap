@@ -30,6 +30,7 @@ variable "stages" {
     object({
       domain           = string
       subdomain_suffix = optional(string)
+      env_vars         = optional(map(string))
     })
   )
 }

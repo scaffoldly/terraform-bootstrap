@@ -25,11 +25,23 @@ variable "subdomain_suffix" {
 variable "delegation_set_id" { # TODO Remove
   type = string
 }
-
-locals {
-  serverless_api_domain = var.subdomain_suffix != "" ? "${var.subdomain}-${var.subdomain_suffix}.${var.domain}" : "${var.subdomain}.${var.domain}"
+variable "stage_env_vars" {
+  type    = map(string)
+  default = {}
 }
 
+locals {
+  mail_domain           = var.subdomain_suffix != "" ? "mail-${var.subdomain_suffix}.${var.domain}" : "mail.${var.domain}"
+  serverless_api_domain = var.subdomain_suffix != "" ? "${var.subdomain}-${var.subdomain_suffix}.${var.domain}" : "${var.subdomain}.${var.domain}"
+  stage_env_vars = merge(
+    var.stage_env_vars,
+    {
+      SERVERLESS_API_DOMAIN = local.serverless_api_domain
+      MAIL_DOMAIN           = local.mail_domain
+  })
+}
+
+data "aws_region" "current" {}
 data "aws_route53_zone" "zone" {
   name = "${var.domain}."
 
@@ -76,6 +88,16 @@ resource "aws_acm_certificate_validation" "validation" {
   validation_record_fqdns = values(aws_route53_record.verification_record)[*].fqdn
 }
 
+resource "aws_route53_record" "mx" {
+  zone_id = data.aws_route53_zone.zone.zone_id
+  name    = local.mail_domain
+  type    = "MX"
+  ttl     = "300"
+  records = ["10 inbound-smtp.${data.aws_region.current.name}.amazonaws.com"]
+
+  provider = aws.dns
+}
+
 output "domain" {
   value = var.domain
 }
@@ -94,6 +116,10 @@ output "serverless_api_domain" {
 
 output "stage" {
   value = var.stage
+}
+
+output "stage_env_vars" {
+  value = local.stage_env_vars
 }
 
 output "certificate_arn" {

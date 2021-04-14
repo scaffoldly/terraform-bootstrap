@@ -15,6 +15,10 @@ variable "name" {
 variable "stage" {
   type = string
 }
+variable "stage_env_vars" {
+  type    = map(string)
+  default = {}
+}
 variable "dns_provider" {
   type = string
 }
@@ -213,6 +217,10 @@ resource "aws_route53_record" "record" {
 
 output "stage" {
   value = var.stage
+}
+
+output "stage_env_vars" {
+  value = var.stage_env_vars
 }
 
 output "bucket_name" {

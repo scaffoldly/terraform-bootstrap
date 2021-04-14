@@ -15,6 +15,7 @@ variable "stage_domains" {
       certificate_arn       = string
       dns_provider          = string
       dns_domain_id         = string
+      stage_env_vars        = map(string)
     })
   )
 }
@@ -49,7 +50,8 @@ module "stage" {
   source   = "./stage"
   for_each = var.stage_domains
 
-  domain = lookup(each.value, "serverless_api_domain", "unknown-domain")
+  domain         = lookup(each.value, "serverless_api_domain", "unknown-domain")
+  stage_env_vars = lookup(each.value, "stage_env_vars", {})
 
   name  = var.name
   stage = each.key
@@ -81,5 +83,12 @@ output "stage_urls" {
   value = {
     for stage in module.stage :
     stage.name => stage.url
+  }
+}
+
+output "stage_env_vars" {
+  value = {
+    for stage in module.stage :
+    stage.name => stage.stage_env_vars
   }
 }

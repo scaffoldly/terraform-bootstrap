@@ -22,6 +22,7 @@ variable "stage_domains" {
       certificate_arn       = string
       dns_provider          = string
       dns_domain_id         = string
+      stage_env_vars        = map(string)
     })
   )
 }
@@ -51,6 +52,7 @@ module "cloudfront" {
   domain           = lookup(each.value, "domain", "unknown-domain")
   subdomain_suffix = lookup(each.value, "subdomain_suffix", "unknown-subdomain-suffix")
   certificate_arn  = lookup(each.value, "certificate_arn", "unknown-certificate-arn")
+  stage_env_vars   = lookup(each.value, "stage_env_vars", {})
 
   providers = {
     aws.dns = aws.dns
@@ -78,3 +80,9 @@ output "repository_name" {
   value = module.repository.name
 }
 
+output "stage_env_vars" {
+  value = {
+    for stage in module.cloudfront :
+    stage.stage => stage.stage_env_vars
+  }
+}

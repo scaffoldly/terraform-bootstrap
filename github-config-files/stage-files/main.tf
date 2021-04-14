@@ -21,6 +21,9 @@ variable "stage_name" {
 variable "stage_urls" {
   type = map(any)
 }
+variable "env_vars" {
+  type = map(any)
+}
 variable "shared_env_vars" {
   type = map(any)
 }
@@ -28,6 +31,7 @@ variable "shared_env_vars" {
 locals {
   stage_path = var.stage_name != "" ? "${var.stage_name}/" : ""
   env_suffix = var.stage_name != "" ? ".${var.stage_name}" : ""
+  env_vars   = merge(var.shared_env_vars, var.env_vars)
 }
 
 resource "github_repository_file" "service_urls_json" {
@@ -50,14 +54,14 @@ resource "github_repository_file" "service_urls_json" {
   }
 }
 
-resource "github_repository_file" "shared_env_vars_json" {
+resource "github_repository_file" "env_vars_json" {
   repository = var.repository_name
   branch     = var.branch
-  file       = ".scaffoldly/${local.stage_path}shared-env-vars.json"
+  file       = ".scaffoldly/${local.stage_path}env-vars.json"
 
-  content = jsonencode(var.shared_env_vars)
+  content = jsonencode(local.env_vars)
 
-  commit_message = "[Scaffoldly] Update ${local.stage_path}shared-env-vars.json"
+  commit_message = "[Scaffoldly] Update ${local.stage_path}env-vars.json"
   commit_author  = "Scaffoldly Bootstrap"
   commit_email   = "bootstrap@scaffold.ly"
 
@@ -80,7 +84,7 @@ resource "github_repository_file" "env" {
 # THIS FILE IS MANAGED BY THE BOOTSTRAP PROJECT IN THIS ORGANIZATION.
 
 service_urls=${jsonencode(var.stage_urls)}
-shared_env_vars=${jsonencode(var.shared_env_vars)}
+env_vars=${jsonencode(var.env_vars)}
 EOF
 
   commit_message = "[Scaffoldly] Update .env${local.env_suffix}"

@@ -11,16 +11,11 @@ variable "stage" {
   type = string
 }
 
-variable "subdomain_suffix" {
-  type    = string
-  default = ""
-}
-
 variable "root_email" {
   type = string
 }
 
-variable "domain" {
+variable "mail_domain" {
   type = string
 }
 
@@ -39,16 +34,12 @@ variable "rule_set_name" {
 data "aws_region" "current" {}
 data "aws_caller_identity" "current" {}
 
-locals {
-  domain = var.subdomain_suffix != "" ? "mail-${var.subdomain_suffix}.${var.domain}" : "mail.${var.domain}"
-}
-
 resource "aws_ses_email_identity" "example" {
   email = var.root_email
 }
 
 resource "aws_ses_domain_identity" "identity" {
-  domain = local.domain
+  domain = var.mail_domain
 }
 
 resource "aws_ses_domain_dkim" "dkim" {
@@ -99,16 +90,6 @@ resource "aws_ses_event_destination" "sns_destination" {
   }
 }
 
-resource "aws_route53_record" "mx" {
-  zone_id = var.dns_domain_id
-  name    = local.domain
-  type    = "MX"
-  ttl     = "600"
-  records = ["10 inbound-smtp.${data.aws_region.current.name}.amazonaws.com"]
-
-  provider = aws.dns
-}
-
 resource "aws_route53_record" "mail_from_mx" {
   zone_id = var.dns_domain_id
   name    = aws_ses_domain_mail_from.mail_from.mail_from_domain
@@ -131,7 +112,7 @@ resource "aws_route53_record" "mail_from_txt" {
 
 resource "aws_route53_record" "verification_record" {
   zone_id = var.dns_domain_id
-  name    = "_amazonses.${local.domain}"
+  name    = "_amazonses.${var.mail_domain}"
   type    = "TXT"
   ttl     = "600"
   records = [aws_ses_domain_identity.identity.verification_token]
@@ -142,7 +123,7 @@ resource "aws_route53_record" "verification_record" {
 resource "aws_route53_record" "dkim_record" {
   count   = 3
   zone_id = var.dns_domain_id
-  name    = "${element(aws_ses_domain_dkim.dkim.dkim_tokens, count.index)}._domainkey.${local.domain}"
+  name    = "${element(aws_ses_domain_dkim.dkim.dkim_tokens, count.index)}._domainkey.${var.mail_domain}"
   type    = "CNAME"
   ttl     = "600"
   records = ["${element(aws_ses_domain_dkim.dkim.dkim_tokens, count.index)}.dkim.amazonses.com"]
@@ -161,13 +142,13 @@ resource "time_sleep" "wait_60_seconds" {
 resource "aws_ses_receipt_rule" "bounce_noreply" {
   name          = "${var.stage}-bounce-noreply"
   rule_set_name = var.rule_set_name
-  recipients    = ["no-reply@${local.domain}"]
+  recipients    = ["no-reply@${var.mail_domain}"]
   enabled       = true
   scan_enabled  = true
 
   bounce_action {
     message         = "Mailbox does not exist"
-    sender          = "no-reply@${local.domain}"
+    sender          = "no-reply@${var.mail_domain}"
     smtp_reply_code = "550"
     status_code     = "5.1.1"
     topic_arn       = aws_sns_topic.events.arn
