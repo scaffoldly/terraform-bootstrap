@@ -127,6 +127,8 @@ resource "aws_route53_record" "dkim_record" {
   type    = "CNAME"
   ttl     = "600"
   records = ["${element(aws_ses_domain_dkim.dkim.dkim_tokens, count.index)}.dkim.amazonses.com"]
+
+  provider = aws.dns
 }
 
 resource "time_sleep" "wait_60_seconds" {
