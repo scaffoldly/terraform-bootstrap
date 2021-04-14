@@ -37,12 +37,13 @@ module "stage" {
   source   = "./stage"
   for_each = var.stage_domains
 
-  stage         = each.key
-  root_email    = var.root_email
-  domain        = lookup(each.value, "serverless_api_domain", "unknown-domain")
-  dns_provider  = lookup(each.value, "dns_provider", "unknown-dns-provider")
-  dns_domain_id = lookup(each.value, "dns_domain_id", "unknown-dns-domain-id")
-  rule_set_name = aws_ses_receipt_rule_set.primary.rule_set_name
+  stage            = each.key
+  root_email       = var.root_email
+  domain           = lookup(each.value, "serverless_api_domain", "unknown-serverless-api-domain")
+  subdomain_suffix = lookup(each.value, "subdomain_suffix", "unknown-subdomain-suffix")
+  dns_provider     = lookup(each.value, "dns_provider", "unknown-dns-provider")
+  dns_domain_id    = lookup(each.value, "dns_domain_id", "unknown-dns-domain-id")
+  rule_set_name    = aws_ses_receipt_rule_set.primary.rule_set_name
 
   providers = {
     aws.dns = aws.dns

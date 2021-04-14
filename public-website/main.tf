@@ -49,7 +49,7 @@ module "cloudfront" {
   dns_provider     = lookup(each.value, "dns_provider", "unknown-dns-provider")
   dns_domain_id    = lookup(each.value, "dns_domain_id", "unknown-dns-domain-id")
   domain           = lookup(each.value, "domain", "unknown-domain")
-  subdomain_suffix = lookup(each.value, "subdomain_suffix", "unknown-domain-suffix")
+  subdomain_suffix = lookup(each.value, "subdomain_suffix", "unknown-subdomain-suffix")
   certificate_arn  = lookup(each.value, "certificate_arn", "unknown-certificate-arn")
 
   providers = {
