@@ -114,6 +114,10 @@ output "serverless_api_domain" {
   value = local.serverless_api_domain
 }
 
+output "mail_domain" {
+  value = local.mail_domain
+}
+
 output "stage" {
   value = var.stage
 }

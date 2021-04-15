@@ -50,6 +50,7 @@ output "stage_domains" {
       subdomain             = domain.subdomain
       subdomain_suffix      = domain.subdomain_suffix
       serverless_api_domain = domain.serverless_api_domain
+      mail_domain           = domain.mail_domain
       stage_env_vars        = domain.stage_env_vars
       certificate_arn       = domain.certificate_arn
       dns_provider          = domain.dns_provider
