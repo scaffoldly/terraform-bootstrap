@@ -22,7 +22,8 @@ variable "stage_urls" {
   type = map(any)
 }
 variable "env_vars" {
-  type = map(any)
+  type    = map(any)
+  default = {}
 }
 variable "shared_env_vars" {
   type = map(any)
