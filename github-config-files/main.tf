@@ -20,10 +20,10 @@ variable "stages" {
 variable "stage_urls" {
   type = map(any) # TODO Figure out proper type
 }
-# variable "stage_env_vars" {
-#   type = map(any) # TODO Figure out proper type (stage: string -> map { name: string value: string })
-#   default = {}
-# }
+variable "stage_env_vars" {
+  type    = map(any) # TODO Figure out proper type (stage: string -> map { name: string value: string })
+  default = {}
+}
 variable "shared_env_vars" {
   type = map(string)
 }

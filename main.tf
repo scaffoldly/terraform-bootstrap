@@ -117,17 +117,13 @@ module "github_config_files_serverless_apis" {
   repository_name = module.serverless_api[each.key].repository_name
   stages          = keys(var.stages)
   stage_urls      = zipmap(values(module.serverless_api)[*].repository_name, values(module.serverless_api)[*].stage_urls)
-  # stage_env_vars  = module.serverless_api[each.key].stage_env_vars
+  stage_env_vars  = module.serverless_api[each.key].stage_env_vars
   shared_env_vars = var.shared_env_vars
 
   depends_on = [
     module.public_website,
     module.serverless_api
   ]
-}
-
-output "TEMP_nl_output" {
-  value = module.serverless_api["nonlive"].stage_env_vars
 }
 
 module "github_config_files_public_websites" {
@@ -138,7 +134,7 @@ module "github_config_files_public_websites" {
   repository_name = module.public_website[each.key].repository_name
   stages          = keys(var.stages)
   stage_urls      = zipmap(values(module.serverless_api)[*].repository_name, values(module.serverless_api)[*].stage_urls)
-  # stage_env_vars  = module.public_website[each.key].stage_env_vars
+  stage_env_vars  = module.public_website[each.key].stage_env_vars
   shared_env_vars = var.shared_env_vars
 
   depends_on = [
