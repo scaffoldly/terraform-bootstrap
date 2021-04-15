@@ -120,6 +120,8 @@ module "github_config_files_serverless_apis" {
   stage_env_vars  = module.serverless_api[each.key].stage_env_vars
   shared_env_vars = var.shared_env_vars
 
+  stage_domains = module.dns.stage_domains
+
   depends_on = [
     module.public_website,
     module.serverless_api
@@ -136,6 +138,8 @@ module "github_config_files_public_websites" {
   stage_urls      = zipmap(values(module.serverless_api)[*].repository_name, values(module.serverless_api)[*].stage_urls)
   stage_env_vars  = module.public_website[each.key].stage_env_vars
   shared_env_vars = var.shared_env_vars
+
+  stage_domains = module.dns.stage_domains
 
   depends_on = [
     module.public_website,

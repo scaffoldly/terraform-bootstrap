@@ -26,6 +26,10 @@ variable "stage_env_vars" {
 variable "shared_env_vars" {
   type = map(string)
 }
+variable "stage_domains" {
+  # Using any so as the variable evolves/changes, everything still gets written
+  type = any
+}
 
 data "github_repository" "repository" {
   full_name = "${var.organization}/${var.repository_name}"
@@ -97,7 +101,7 @@ ${yamlencode(var.stages)}
 ${yamlencode(var.stage_urls)}
 ```
 
-## Stage Env Vars
+## Stage Env Vars (Higher precedence than Shared Env Vars)
 
 ```yaml
 ${yamlencode(var.stage_env_vars)}
@@ -108,10 +112,25 @@ ${yamlencode(var.stage_env_vars)}
 ```yaml
 ${yamlencode(var.shared_env_vars)}
 ```
+
+## Full `stage_domains` Config
+
+_NOTE:_ This map isn't *directly* written to any configuration files and is 
+meant to be informative for service owners visibility of what's availalbe
+on the platform.
+
+```yaml
+${yamlencode(var.stage_domains)}
+```
+
+If any of this configuration needs to be exported, an issue can be raised on the
+[Scaffoldly Terraform Bootstrap](https://github.com/scaffoldly/terraform-scaffoldly-bootstrap)
+project.
+
 EOF
 
-  // Leave off [Scaffoldly] to trigger a release
-  commit_message = "Update Stages, Stage URLs, and Env Vars"
+  // Use a different prefix so nonlive releases get triggered
+  commit_message = "[scaffoldly-bootstrap] Update Platform Configuration"
   commit_author  = "Scaffoldly Bootstrap"
   commit_email   = "bootstrap@scaffold.ly"
 

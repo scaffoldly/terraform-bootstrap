@@ -18,6 +18,7 @@ variable "stage_domains" {
       subdomain             = string
       subdomain_suffix      = string
       serverless_api_domain = string
+      platform_domains      = map(string)
       certificate_arn       = string
       dns_provider          = string
       dns_domain_id         = string
@@ -40,8 +41,8 @@ module "stage" {
 
   stage         = each.key
   root_email    = var.root_email
-  mail_domain   = lookup(each.value, "mail_domain", "unknown-mail-domain")
-  dns_provider  = lookup(each.value, "dns_provider", "unknown-dns-provider")
+  mail_domain   = each.value.platform_domains.mail_domain
+  dns_provider  = lookup(each.value, "dns_provider", "unknown-dns-provider") # TODO: Remove lookup(...) usage
   dns_domain_id = lookup(each.value, "dns_domain_id", "unknown-dns-domain-id")
   rule_set_name = aws_ses_receipt_rule_set.primary.rule_set_name
 

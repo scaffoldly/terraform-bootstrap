@@ -110,12 +110,16 @@ output "subdomain_suffix" {
   value = var.subdomain_suffix
 }
 
+# TODO: Deprecate usage of this and use platform_domains downstream
 output "serverless_api_domain" {
   value = local.serverless_api_domain
 }
 
-output "mail_domain" {
-  value = local.mail_domain
+output "platform_domains" {
+  value = {
+    serverless_api_domain = local.serverless_api_domain
+    mail_domain           = local.mail_domain
+  }
 }
 
 output "stage" {
