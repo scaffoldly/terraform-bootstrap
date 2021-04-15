@@ -18,11 +18,10 @@ variable "stages" {
   type = list(string)
 }
 variable "stage_urls" {
-  type = map(any) # TODO Figure out proper type
+  type = map(string)
 }
 variable "stage_env_vars" {
-  type    = map(any) # TODO Figure out proper type (stage: string -> map { name: string value: string })
-  default = {}
+  type = map(map(string))
 }
 variable "shared_env_vars" {
   type = map(string)
