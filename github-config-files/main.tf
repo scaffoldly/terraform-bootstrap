@@ -45,10 +45,7 @@ module "stage_files" {
     key => lookup(value, var.stages[count.index], "unknown-url")
   }
 
-  env_vars = {
-    for key, value in var.stage_env_vars :
-    key => lookup(value, var.stages[count.index])
-  }
+  env_vars = lookup(var.stage_env_vars, var.stages[count.index])
 
   shared_env_vars = var.shared_env_vars
 }
@@ -66,10 +63,7 @@ module "stage_files_default" {
     key => lookup(value, "nonlive", "unknown-url") # TODO: Configurable default stage
   }
 
-  env_vars = {
-    for key, value in var.stage_env_vars :
-    key => lookup(value, "nonlive")
-  }
+  env_vars = lookup(var.stage_env_vars, "nonlive")
 
   shared_env_vars = var.shared_env_vars
 }
