@@ -19,14 +19,13 @@ variable "stage_name" {
   default = ""
 }
 variable "stage_urls" {
-  type = map(any)
+  type = map(string)
 }
 variable "env_vars" {
-  type    = map(any)
-  default = {}
+  type = map(string)
 }
 variable "shared_env_vars" {
-  type = map(any)
+  type = map(string)
 }
 
 locals {

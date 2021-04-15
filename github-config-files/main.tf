@@ -18,10 +18,10 @@ variable "stages" {
   type = list(string)
 }
 variable "stage_urls" {
-  type = map(string)
+  type = map(map(string)) # Repo Name -> Stage -> URL
 }
 variable "stage_env_vars" {
-  type = map(map(string))
+  type = map(map(string)) # Stage -> Name -> Value
 }
 variable "shared_env_vars" {
   type = map(string)
@@ -45,10 +45,10 @@ module "stage_files" {
     key => lookup(value, var.stages[count.index], "unknown-url")
   }
 
-  # env_vars = {
-  #   for key, value in var.stage_env_vars :
-  #   key => lookup(value, var.stages[count.index], { UNKNOWN_ENV_VARS = "true" })
-  # }
+  env_vars = {
+    for key, value in var.stage_env_vars :
+    key => lookup(value, var.stages[count.index], { UNKNOWN_ENV_VARS = "true" })
+  }
 
   shared_env_vars = var.shared_env_vars
 }
@@ -66,10 +66,10 @@ module "stage_files_default" {
     key => lookup(value, "nonlive", "unknown-url") # TODO: Configurable default stage
   }
 
-  # env_vars = {
-  #   for key, value in var.stage_env_vars :
-  #   key => lookup(value, var.stages[count.index], { UNKNOWN_ENV_VARS = "true" })
-  # }
+  env_vars = {
+    for key, value in var.stage_env_vars :
+    key => lookup(value, "nonlive", { UNKNOWN_ENV_VARS = "true" })
+  }
 
   shared_env_vars = var.shared_env_vars
 }
