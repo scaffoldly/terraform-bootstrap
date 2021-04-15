@@ -47,7 +47,7 @@ module "stage_files" {
 
   env_vars = {
     for key, value in var.stage_env_vars :
-    key => lookup(value, var.stages[count.index], {})
+    key => lookup(value, var.stages[count.index], { UNKNOWN_ENV_VARS = "true" })
   }
 
   shared_env_vars = var.shared_env_vars
@@ -68,7 +68,7 @@ module "stage_files_default" {
 
   env_vars = {
     for key, value in var.stage_env_vars :
-    key => lookup(value, var.stages[count.index], {})
+    key => lookup(value, var.stages[count.index], { UNKNOWN_ENV_VARS = "true" })
   }
 
   shared_env_vars = var.shared_env_vars
