@@ -22,6 +22,9 @@ data "aws_iam_policy_document" "base" {
       "xray:PutTraceSegments",
       "ses:SendEmail",
       "ses:SendRawEmail",
+      "ses:List*",
+      "ses:Describe*",
+      "ses:Get*",
     ]
 
     resources = ["*"] # TODO Be more specific
