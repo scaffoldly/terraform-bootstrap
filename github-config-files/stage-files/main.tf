@@ -84,7 +84,7 @@ resource "github_repository_file" "env" {
 # THIS FILE IS MANAGED BY THE BOOTSTRAP PROJECT IN THIS ORGANIZATION.
 
 service_urls=${jsonencode(var.stage_urls)}
-env_vars=${jsonencode(var.env_vars)}
+env_vars=${jsonencode(local.env_vars)}
 EOF
 
   commit_message = "[Scaffoldly] Update .env${local.env_suffix}"
