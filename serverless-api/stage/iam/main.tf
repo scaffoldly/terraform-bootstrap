@@ -25,6 +25,7 @@ data "aws_iam_policy_document" "base" {
       "ses:List*",
       "ses:Describe*",
       "ses:Get*",
+      "ses:*Template*",
     ]
 
     resources = ["*"] # TODO Be more specific
