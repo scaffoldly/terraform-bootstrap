@@ -31,7 +31,7 @@ variable "stage_env_vars" {
 }
 
 locals {
-  mail_domain           = var.subdomain_suffix != "" ? "mail-${var.subdomain_suffix}.${var.domain}" : "mail.${var.domain}"
+  mail_domain           = var.subdomain_suffix != "" ? "slyses-${var.subdomain_suffix}.${var.domain}" : "slyses.${var.domain}"
   serverless_api_domain = var.subdomain_suffix != "" ? "${var.subdomain}-${var.subdomain_suffix}.${var.domain}" : "${var.subdomain}.${var.domain}"
   stage_env_vars = merge(
     var.stage_env_vars,
