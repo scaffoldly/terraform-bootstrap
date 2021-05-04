@@ -1,6 +1,5 @@
 terraform {
   required_version = ">= 0.15"
-  experiments      = [module_variable_optional_attrs]
 
   required_providers {
     github = {
@@ -13,7 +12,8 @@ variable "repository_name" {
   type = string
 }
 variable "repository_description" {
-  type = optional(string)
+  type    = string
+  default = ""
 }
 variable "branch" {
   type = string
@@ -37,7 +37,7 @@ locals {
   env_suffix = var.stage_name != "" ? ".${var.stage_name}" : ""
   env_vars = merge(
     {
-      application_name = var.repository_description ? var.repository_description : var.repository_name
+      application_name = var.repository_description != "" ? var.repository_description : var.repository_name
     },
     var.shared_env_vars,
     var.env_vars,
