@@ -37,7 +37,8 @@ locals {
   env_suffix = var.stage_name != "" ? ".${var.stage_name}" : ""
   env_vars = merge(
     {
-      application_name = var.repository_description != "" ? var.repository_description : var.repository_name
+      APPLICATION_NAME          = var.repository_name
+      APPLICATION_FRIENDLY_NAME = var.repository_description != "" ? var.repository_description : var.repository_name
     },
     var.shared_env_vars,
     var.env_vars,
