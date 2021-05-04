@@ -58,7 +58,6 @@ module "stage_files" {
 module "stage_files_default" {
   source = "./stage-files"
 
-  organization           = var.organization
   repository_name        = var.repository_name
   repository_description = data.github_repository.repository.description
   branch                 = data.github_repository.repository.default_branch
