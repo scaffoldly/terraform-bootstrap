@@ -18,6 +18,17 @@ variable "repository_name" {
   type = string
 }
 
+locals {
+  cors_response_types = [
+    "API_CONFIGURATION_ERROR",
+    "AUTHORIZER_FAILURE",
+    "DEFAULT_4XX",
+    "DEFAULT_5XX",
+    "INTEGRATION_FAILURE",
+    "INTEGRATION_TIMEOUT",
+  ]
+}
+
 resource "aws_api_gateway_rest_api" "api" {
   name = "${var.name}-${var.stage}"
 }
@@ -34,99 +45,11 @@ resource "aws_cloudwatch_log_group" "execution_group" {
   name = "API-Gateway-Execution-Logs_${aws_api_gateway_rest_api.api.id}/${var.stage}"
 }
 
-resource "aws_api_gateway_gateway_response" "response_cors" {
+resource "aws_api_gateway_gateway_response" "cors_responses" {
+  count = length(local.cors_response_types)
+
   rest_api_id   = aws_api_gateway_rest_api.api.id
-  response_type = "API_CONFIGURATION_ERROR"
-
-  response_parameters = {
-    "gatewayresponse.header.Access-Control-Allow-Origin"  = "'*'"
-    "gatewayresponse.header.Access-Control-Allow-Headers" = "'*'"
-    "gatewayresponse.header.Access-Control-Allow-Methods" = "'*'"
-  }
-
-  response_templates = {
-    "application/json" = "{\"message\":$context.error.messageString}"
-  }
-}
-
-resource "aws_api_gateway_gateway_response" "response_cors" {
-  rest_api_id   = aws_api_gateway_rest_api.api.id
-  response_type = "AUTHORIZER_CONFIGURATION_ERROR"
-
-  response_parameters = {
-    "gatewayresponse.header.Access-Control-Allow-Origin"  = "'*'"
-    "gatewayresponse.header.Access-Control-Allow-Headers" = "'*'"
-    "gatewayresponse.header.Access-Control-Allow-Methods" = "'*'"
-  }
-
-  response_templates = {
-    "application/json" = "{\"message\":$context.error.messageString}"
-  }
-}
-
-resource "aws_api_gateway_gateway_response" "response_cors" {
-  rest_api_id   = aws_api_gateway_rest_api.api.id
-  response_type = "AUTHORIZER_FAILURE"
-
-  response_parameters = {
-    "gatewayresponse.header.Access-Control-Allow-Origin"  = "'*'"
-    "gatewayresponse.header.Access-Control-Allow-Headers" = "'*'"
-    "gatewayresponse.header.Access-Control-Allow-Methods" = "'*'"
-  }
-
-  response_templates = {
-    "application/json" = "{\"message\":$context.error.messageString}"
-  }
-}
-
-resource "aws_api_gateway_gateway_response" "response_cors" {
-  rest_api_id   = aws_api_gateway_rest_api.api.id
-  response_type = "DEFAULT_4XX"
-
-  response_parameters = {
-    "gatewayresponse.header.Access-Control-Allow-Origin"  = "'*'"
-    "gatewayresponse.header.Access-Control-Allow-Headers" = "'*'"
-    "gatewayresponse.header.Access-Control-Allow-Methods" = "'*'"
-  }
-
-  response_templates = {
-    "application/json" = "{\"message\":$context.error.messageString}"
-  }
-}
-
-resource "aws_api_gateway_gateway_response" "response_cors" {
-  rest_api_id   = aws_api_gateway_rest_api.api.id
-  response_type = "DEFAULT_5XX"
-
-  response_parameters = {
-    "gatewayresponse.header.Access-Control-Allow-Origin"  = "'*'"
-    "gatewayresponse.header.Access-Control-Allow-Headers" = "'*'"
-    "gatewayresponse.header.Access-Control-Allow-Methods" = "'*'"
-  }
-
-  response_templates = {
-    "application/json" = "{\"message\":$context.error.messageString}"
-  }
-}
-
-resource "aws_api_gateway_gateway_response" "response_cors" {
-  rest_api_id   = aws_api_gateway_rest_api.api.id
-  response_type = "INTEGRATION_FAILURE"
-
-  response_parameters = {
-    "gatewayresponse.header.Access-Control-Allow-Origin"  = "'*'"
-    "gatewayresponse.header.Access-Control-Allow-Headers" = "'*'"
-    "gatewayresponse.header.Access-Control-Allow-Methods" = "'*'"
-  }
-
-  response_templates = {
-    "application/json" = "{\"message\":$context.error.messageString}"
-  }
-}
-
-resource "aws_api_gateway_gateway_response" "response_cors" {
-  rest_api_id   = aws_api_gateway_rest_api.api.id
-  response_type = "INTEGRATION_TIMEOUT"
+  response_type = local.cors_response_types[count.index]
 
   response_parameters = {
     "gatewayresponse.header.Access-Control-Allow-Origin"  = "'*'"
