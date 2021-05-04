@@ -30,6 +30,7 @@ resource "github_repository" "repository" {
   has_issues             = false
   has_projects           = false
   has_wiki               = false
+  vulnerability_alerts   = true
   delete_branch_on_merge = true
 
   template {
