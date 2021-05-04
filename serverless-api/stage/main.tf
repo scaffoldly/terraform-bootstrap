@@ -36,7 +36,97 @@ resource "aws_cloudwatch_log_group" "execution_group" {
 
 resource "aws_api_gateway_gateway_response" "response_cors" {
   rest_api_id   = aws_api_gateway_rest_api.api.id
+  response_type = "API_CONFIGURATION_ERROR"
+
+  response_parameters = {
+    "gatewayresponse.header.Access-Control-Allow-Origin"  = "'*'"
+    "gatewayresponse.header.Access-Control-Allow-Headers" = "'*'"
+    "gatewayresponse.header.Access-Control-Allow-Methods" = "'*'"
+  }
+
+  response_templates = {
+    "application/json" = "{\"message\":$context.error.messageString}"
+  }
+}
+
+resource "aws_api_gateway_gateway_response" "response_cors" {
+  rest_api_id   = aws_api_gateway_rest_api.api.id
+  response_type = "AUTHORIZER_CONFIGURATION_ERROR"
+
+  response_parameters = {
+    "gatewayresponse.header.Access-Control-Allow-Origin"  = "'*'"
+    "gatewayresponse.header.Access-Control-Allow-Headers" = "'*'"
+    "gatewayresponse.header.Access-Control-Allow-Methods" = "'*'"
+  }
+
+  response_templates = {
+    "application/json" = "{\"message\":$context.error.messageString}"
+  }
+}
+
+resource "aws_api_gateway_gateway_response" "response_cors" {
+  rest_api_id   = aws_api_gateway_rest_api.api.id
+  response_type = "AUTHORIZER_FAILURE"
+
+  response_parameters = {
+    "gatewayresponse.header.Access-Control-Allow-Origin"  = "'*'"
+    "gatewayresponse.header.Access-Control-Allow-Headers" = "'*'"
+    "gatewayresponse.header.Access-Control-Allow-Methods" = "'*'"
+  }
+
+  response_templates = {
+    "application/json" = "{\"message\":$context.error.messageString}"
+  }
+}
+
+resource "aws_api_gateway_gateway_response" "response_cors" {
+  rest_api_id   = aws_api_gateway_rest_api.api.id
   response_type = "DEFAULT_4XX"
+
+  response_parameters = {
+    "gatewayresponse.header.Access-Control-Allow-Origin"  = "'*'"
+    "gatewayresponse.header.Access-Control-Allow-Headers" = "'*'"
+    "gatewayresponse.header.Access-Control-Allow-Methods" = "'*'"
+  }
+
+  response_templates = {
+    "application/json" = "{\"message\":$context.error.messageString}"
+  }
+}
+
+resource "aws_api_gateway_gateway_response" "response_cors" {
+  rest_api_id   = aws_api_gateway_rest_api.api.id
+  response_type = "DEFAULT_5XX"
+
+  response_parameters = {
+    "gatewayresponse.header.Access-Control-Allow-Origin"  = "'*'"
+    "gatewayresponse.header.Access-Control-Allow-Headers" = "'*'"
+    "gatewayresponse.header.Access-Control-Allow-Methods" = "'*'"
+  }
+
+  response_templates = {
+    "application/json" = "{\"message\":$context.error.messageString}"
+  }
+}
+
+resource "aws_api_gateway_gateway_response" "response_cors" {
+  rest_api_id   = aws_api_gateway_rest_api.api.id
+  response_type = "INTEGRATION_FAILURE"
+
+  response_parameters = {
+    "gatewayresponse.header.Access-Control-Allow-Origin"  = "'*'"
+    "gatewayresponse.header.Access-Control-Allow-Headers" = "'*'"
+    "gatewayresponse.header.Access-Control-Allow-Methods" = "'*'"
+  }
+
+  response_templates = {
+    "application/json" = "{\"message\":$context.error.messageString}"
+  }
+}
+
+resource "aws_api_gateway_gateway_response" "response_cors" {
+  rest_api_id   = aws_api_gateway_rest_api.api.id
+  response_type = "INTEGRATION_TIMEOUT"
 
   response_parameters = {
     "gatewayresponse.header.Access-Control-Allow-Origin"  = "'*'"
