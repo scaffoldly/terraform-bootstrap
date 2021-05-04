@@ -8,6 +8,9 @@ terraform {
   }
 }
 
+variable "organization" {
+  type = string
+}
 variable "repository_name" {
   type = string
 }
@@ -28,10 +31,20 @@ variable "shared_env_vars" {
   type = map(string)
 }
 
+data "github_organization" "organization" {
+  name = var.organization
+}
+
 locals {
   stage_path = var.stage_name != "" ? "${var.stage_name}/" : ""
   env_suffix = var.stage_name != "" ? ".${var.stage_name}" : ""
-  env_vars   = merge(var.shared_env_vars, var.env_vars)
+  env_vars = merge(
+    {
+      organization_name = data.github_organization.organization.name
+    },
+    var.shared_env_vars,
+    var.env_vars,
+  )
 }
 
 resource "github_repository_file" "service_urls_json" {
