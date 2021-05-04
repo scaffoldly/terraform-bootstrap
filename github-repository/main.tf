@@ -43,7 +43,8 @@ resource "github_repository" "repository" {
       template,
       default_branch,
       private,
-      visibility
+      visibility,
+      description,
     ]
   }
 }
