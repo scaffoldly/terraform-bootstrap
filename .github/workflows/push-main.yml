@@ -1,0 +1,18 @@
+name: Push to Main
+on:
+  push:
+    branches: [main]
+jobs:
+  prerelease:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: hashicorp/setup-terraform@v1
+      - run: terraform init
+      - run: terraform fmt -check -recursive -diff
+      - run: terraform validate
+      - uses: scaffoldly/bump-version-action@1.0.86
+        with:
+          action: prerelease
+          version-file: module.json
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
