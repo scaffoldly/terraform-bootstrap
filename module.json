@@ -1,1 +1,4 @@
-{"name":"terraform-scaffoldly-bootstrap","version":"v0.15.19"}
+{
+  "name": "terraform-scaffoldly-bootstrap",
+  "version": "0.15.20-0"
+}
