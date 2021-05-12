@@ -154,11 +154,11 @@ resource "aws_api_gateway_integration" "catchall" {
 
   request_templates = {
     "application/json" = <<EOF
-#set($statusCode = 404)
-#if($input.params('proxy') == "" && ($context.httpMethod == "GET" || $context.httpMethod == "HEAD" || $context.httpMethod == "OPTIONS"))
-    #set($statusCode = 200)
+#if($input.params('proxy') == "")
+    {"statusCode": 200}
+#else
+    {"statusCode": 404}
 #end
-"{\"statusCode\": $statusCode)}"
 EOF
   }
 }
@@ -202,7 +202,7 @@ resource "aws_api_gateway_integration_response" "catchall_200" {
   resource_id       = aws_api_gateway_resource.catchall.id
   http_method       = aws_api_gateway_method.catchall.http_method
   status_code       = aws_api_gateway_method_response.catchall_200.status_code
-  selection_pattern = "\"statusCode\": 200"
+  selection_pattern = "200"
 
   response_templates = {
     "application/json" = ""
