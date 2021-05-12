@@ -19,14 +19,71 @@ variable "repository_name" {
 }
 
 locals {
-  cors_response_types = [
-    "API_CONFIGURATION_ERROR",
-    "AUTHORIZER_FAILURE",
-    "DEFAULT_4XX",
-    "DEFAULT_5XX",
-    "INTEGRATION_FAILURE",
-    "INTEGRATION_TIMEOUT",
-  ]
+  cors_response_types = {
+    ACCESS_DENIED = {
+      status_code = 403
+    }
+    API_CONFIGURATION_ERROR = {
+      status_code = 500
+    }
+    AUTHORIZER_CONFIGURATION_ERROR = {
+      status_code = 500
+    }
+    AUTHORIZER_FAILURE = {
+      status_code = 500
+    }
+    BAD_REQUEST_PARAMETERS = {
+      status_code = 400
+    }
+    BAD_REQUEST_BODY = {
+      status_code = 400
+    }
+    DEFAULT_4XX = {
+      status_code = null
+    }
+    DEFAULT_5XX = {
+      status_code = null
+    }
+    EXPIRED_TOKEN = {
+      status_code = 403
+    }
+    INTEGRATION_FAILURE = {
+      status_code = 504
+    }
+    INTEGRATION_TIMEOUT = {
+      status_code = 504
+    }
+    INVALID_API_KEY = {
+      status_code = 403
+    }
+    INVALID_SIGNATURE = {
+      status_code = 403
+    }
+    MISSING_AUTHENTICATION_TOKEN = {
+      status_code = 403
+    }
+    QUOTA_EXCEEDED = {
+      status_code = 429
+    }
+    REQUEST_TOO_LARGE = {
+      status_code = 413
+    }
+    RESOURCE_NOT_FOUND = {
+      status_code = 404
+    }
+    THROTTLED = {
+      status_code = 429
+    }
+    UNAUTHORIZED = {
+      status_code = 401
+    }
+    UNSUPPORTED_MEDIA_TYPE = {
+      status_code = 415
+    }
+    WAF_FILTERED = {
+      status_code = 403
+    }
+  }
 }
 
 resource "aws_api_gateway_rest_api" "api" {
@@ -46,10 +103,11 @@ resource "aws_cloudwatch_log_group" "execution_group" {
 }
 
 resource "aws_api_gateway_gateway_response" "cors_responses" {
-  count = length(local.cors_response_types)
+  for_each = local.cors_response_types
 
   rest_api_id   = aws_api_gateway_rest_api.api.id
-  response_type = local.cors_response_types[count.index]
+  response_type = each.key
+  status_code   = each.value.status_code
 
   response_parameters = {
     "gatewayresponse.header.Access-Control-Allow-Origin"  = "'*'"
@@ -58,7 +116,7 @@ resource "aws_api_gateway_gateway_response" "cors_responses" {
   }
 
   response_templates = {
-    "application/json" = "{\"message\":$context.error.messageString}"
+    "application/json" = "{\"error\":\"${each.key}\",\"message\":$context.error.messageString,\"context\":{}}"
   }
 }
 
