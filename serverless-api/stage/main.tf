@@ -140,7 +140,7 @@ resource "aws_api_gateway_integration" "health_get" {
   type        = "MOCK"
 
   request_templates = {
-    "application/json" = ""
+    "application/json" = "{\"statusCode\": 200}"
   }
 }
 
@@ -198,7 +198,7 @@ resource "aws_api_gateway_integration" "not_found_any" {
   type        = "MOCK"
 
   request_templates = {
-    "application/json" = ""
+    "application/json" = "{\"statusCode\": 404}"
   }
 }
 
