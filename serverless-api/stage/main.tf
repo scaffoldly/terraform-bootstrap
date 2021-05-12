@@ -121,20 +121,12 @@ resource "aws_api_gateway_gateway_response" "cors_responses" {
 }
 
 //
-// Catchall to return 404s (or a 200)
-// This resource is a mock which will return status code 404 by default
-// It will return 200 if 'proxy' isn't set in the headers/path/querystring
-//
-// This catchall is used by aws_api_gateway_resource.proxy, which will catch
-//    all non-matching requests to the API, and make an HTTP request to /catchall
-//    with 'proxy' added to the path with the requested path
-//
-// TODO: Response body on 404s displaying the invalid path
+// Catchall to return 404s for unmatched resources (or a 200 if the root resource)
 //
 resource "aws_api_gateway_resource" "catchall" {
   rest_api_id = aws_api_gateway_rest_api.api.id
   parent_id   = aws_api_gateway_rest_api.api.root_resource_id
-  path_part   = "catchall"
+  path_part   = "{path+}"
 }
 
 resource "aws_api_gateway_method" "catchall" {
@@ -153,7 +145,7 @@ resource "aws_api_gateway_integration" "catchall" {
 
   request_templates = {
     "application/json" = <<EOF
-#if($input.params('proxy') == "")
+#if($context.resourcePath == "")
     {"statusCode": 200}
 #else
     {"statusCode": 404}
@@ -231,30 +223,6 @@ resource "aws_api_gateway_integration_response" "catchall_404" {
   }
 }
 
-resource "aws_api_gateway_resource" "proxy" {
-  rest_api_id = aws_api_gateway_rest_api.api.id
-  parent_id   = aws_api_gateway_rest_api.api.root_resource_id
-  path_part   = "{proxy+}"
-}
-
-resource "aws_api_gateway_method" "proxy" {
-  rest_api_id   = aws_api_gateway_rest_api.api.id
-  resource_id   = aws_api_gateway_resource.proxy.id
-  http_method   = "ANY"
-  authorization = "NONE"
-}
-
-resource "aws_api_gateway_integration" "proxy" {
-  rest_api_id             = aws_api_gateway_rest_api.api.id
-  resource_id             = aws_api_gateway_resource.proxy.id
-  http_method             = aws_api_gateway_method.proxy.http_method
-  integration_http_method = "ANY"
-  type                    = "HTTP_PROXY"
-  connection_type         = "INTERNET"
-
-  uri = "https://${var.domain}/${var.name}/catchall?proxy={proxy}"
-}
-
 resource "aws_api_gateway_deployment" "deployment" {
   rest_api_id       = aws_api_gateway_rest_api.api.id
   stage_name        = "bootstrap"
@@ -267,7 +235,6 @@ resource "aws_api_gateway_deployment" "deployment" {
   depends_on = [
     aws_api_gateway_integration_response.catchall_200,
     aws_api_gateway_integration_response.catchall_404,
-    aws_api_gateway_integration.proxy
   ]
 }
 
