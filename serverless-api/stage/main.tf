@@ -168,15 +168,12 @@ resource "aws_api_gateway_integration_response" "health_get_response_200" {
   status_code = aws_api_gateway_method_response.health_get_response_200.status_code
 
   response_templates = {
-    "application/json" = <<EOF
-#set($inputRoot = $input.path('$'))
-{}
-EOF
+    "application/json" = ""
   }
 
   response_parameters = {
-    "method.response.header.Access-Control-Allow-Headers" = "'*'"
-    "method.response.header.Access-Control-Allow-Methods" = "'*'"
+    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+    "method.response.header.Access-Control-Allow-Methods" = "'GET,HEAD'"
     "method.response.header.Access-Control-Allow-Origin"  = "'*'"
   }
 }
@@ -229,15 +226,12 @@ resource "aws_api_gateway_integration_response" "not_found_any_response_404" {
   status_code = aws_api_gateway_method_response.not_found_any_response_404.status_code
 
   response_templates = {
-    "application/json" = <<EOF
-#set($inputRoot = $input.path('$'))
-{}
-EOF
+    "application/json" = ""
   }
 
   response_parameters = {
-    "method.response.header.Access-Control-Allow-Headers" = "'*'"
-    "method.response.header.Access-Control-Allow-Methods" = "'*'"
+    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+    "method.response.header.Access-Control-Allow-Methods" = "'GET,HEAD,PUT,POST,PATCH,DELETE'"
     "method.response.header.Access-Control-Allow-Origin"  = "'*'"
   }
 }
