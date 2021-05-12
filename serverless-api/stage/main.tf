@@ -120,9 +120,6 @@ resource "aws_api_gateway_gateway_response" "cors_responses" {
   }
 }
 
-//
-// Catchall to return 404s for unmatched resources (or a 200 if the root resource)
-//
 resource "aws_api_gateway_resource" "catchall" {
   rest_api_id = aws_api_gateway_rest_api.api.id
   parent_id   = aws_api_gateway_rest_api.api.root_resource_id
@@ -145,7 +142,7 @@ resource "aws_api_gateway_integration" "catchall" {
 
   request_templates = {
     "application/json" = <<EOF
-#if($context.resourcePath == "")
+#if($context.resourcePath == "/health")
     {"statusCode": 200}
 #else
     {"statusCode": 404}
