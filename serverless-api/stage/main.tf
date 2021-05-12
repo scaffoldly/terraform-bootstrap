@@ -244,12 +244,13 @@ resource "aws_api_gateway_method" "catchall_any" {
 }
 
 resource "aws_api_gateway_integration" "catchall_any" {
-  rest_api_id          = aws_api_gateway_rest_api.api.id
-  resource_id          = aws_api_gateway_resource.catchall.id
-  http_method          = aws_api_gateway_method.catchall_any.http_method
-  type                 = "HTTP_PROXY"
-  connection_type      = "INTERNET"
-  passthrough_behavior = "NEVER"
+  rest_api_id             = aws_api_gateway_rest_api.api.id
+  resource_id             = aws_api_gateway_resource.catchall.id
+  http_method             = aws_api_gateway_method.catchall_any.http_method
+  integration_http_method = "ANY"
+  type                    = "HTTP_PROXY"
+  connection_type         = "INTERNET"
+  passthrough_behavior    = "NEVER"
 
   uri = "https://${var.domain}/${var.name}/404"
 }
