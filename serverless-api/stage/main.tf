@@ -124,7 +124,6 @@ resource "aws_api_gateway_gateway_response" "cors_responses" {
 // Catchall to return 404s (or a 200)
 // This resource is a mock which will return status code 404 by default
 // It will return 200 if 'proxy' isn't set in the headers/path/querystring
-//    and the request is a GET, HEAD, or OPTIONS
 //
 // This catchall is used by aws_api_gateway_resource.proxy, which will catch
 //    all non-matching requests to the API, and make an HTTP request to /catchall
