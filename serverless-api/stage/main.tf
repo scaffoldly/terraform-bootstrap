@@ -134,11 +134,14 @@ resource "aws_api_gateway_method" "health_get" {
 }
 
 resource "aws_api_gateway_integration" "health_get" {
-  rest_api_id          = aws_api_gateway_rest_api.api.id
-  resource_id          = aws_api_gateway_resource.health.id
-  http_method          = aws_api_gateway_method.health_get.http_method
-  type                 = "MOCK"
-  passthrough_behavior = "NEVER"
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  resource_id = aws_api_gateway_resource.health.id
+  http_method = aws_api_gateway_method.health_get.http_method
+  type        = "MOCK"
+
+  request_templates = {
+    "application/json" = ""
+  }
 }
 
 resource "aws_api_gateway_method_response" "health_get_response_200" {
@@ -189,11 +192,14 @@ resource "aws_api_gateway_method" "not_found_any" {
 }
 
 resource "aws_api_gateway_integration" "not_found_any" {
-  rest_api_id          = aws_api_gateway_rest_api.api.id
-  resource_id          = aws_api_gateway_resource.not_found.id
-  http_method          = aws_api_gateway_method.not_found_any.http_method
-  type                 = "MOCK"
-  passthrough_behavior = "NEVER"
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  resource_id = aws_api_gateway_resource.not_found.id
+  http_method = aws_api_gateway_method.not_found_any.http_method
+  type        = "MOCK"
+
+  request_templates = {
+    "application/json" = ""
+  }
 }
 
 resource "aws_api_gateway_method_response" "not_found_any_response_404" {
@@ -250,7 +256,7 @@ resource "aws_api_gateway_integration" "catchall_any" {
   integration_http_method = "ANY"
   type                    = "HTTP_PROXY"
   connection_type         = "INTERNET"
-  passthrough_behavior    = "NEVER"
+  passthrough_behavior    = "WHEN_NO_MATCH"
 
   uri = "https://${var.domain}/${var.name}/404"
 }
