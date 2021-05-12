@@ -168,7 +168,10 @@ resource "aws_api_gateway_integration_response" "health_get_response_200" {
   status_code = aws_api_gateway_method_response.health_get_response_200.status_code
 
   response_templates = {
-    "application/json" = "Empty"
+    "application/json" = <<EOF
+#set($inputRoot = $input.path('$'))
+{}
+EOF
   }
 
   response_parameters = {
@@ -226,7 +229,10 @@ resource "aws_api_gateway_integration_response" "not_found_any_response_404" {
   status_code = aws_api_gateway_method_response.not_found_any_response_404.status_code
 
   response_templates = {
-    "application/json" = "Empty"
+    "application/json" = <<EOF
+#set($inputRoot = $input.path('$'))
+{}
+EOF
   }
 
   response_parameters = {
