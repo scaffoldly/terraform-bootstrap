@@ -120,34 +120,53 @@ resource "aws_api_gateway_gateway_response" "cors_responses" {
   }
 }
 
-resource "aws_api_gateway_resource" "health" {
+//
+// Catchall to return 404s (or a 200)
+// This resource is a mock which will return status code 404 by default
+// It will return 200 if 'proxy' isn't set in the headers/path/querystring
+//    and the request is a GET, HEAD, or OPTIONS
+//
+// This catchall is used by aws_api_gateway_resource.proxy, which will catch
+//    all non-matching requests to the API, and make an HTTP request to /catchall
+//    with 'proxy' added to the path with the requested path
+//
+// TODO: Response body on 404s displaying the invalid path
+//
+resource "aws_api_gateway_resource" "catchall" {
   rest_api_id = aws_api_gateway_rest_api.api.id
   parent_id   = aws_api_gateway_rest_api.api.root_resource_id
-  path_part   = "health"
+  path_part   = "catchall"
 }
 
-resource "aws_api_gateway_method" "health_get" {
+resource "aws_api_gateway_method" "catchall" {
   rest_api_id   = aws_api_gateway_rest_api.api.id
-  resource_id   = aws_api_gateway_resource.health.id
-  http_method   = "GET"
+  resource_id   = aws_api_gateway_resource.catchall.id
+  http_method   = "ANY"
   authorization = "NONE"
 }
 
-resource "aws_api_gateway_integration" "health_get" {
-  rest_api_id = aws_api_gateway_rest_api.api.id
-  resource_id = aws_api_gateway_resource.health.id
-  http_method = aws_api_gateway_method.health_get.http_method
-  type        = "MOCK"
+resource "aws_api_gateway_integration" "catchall" {
+  rest_api_id          = aws_api_gateway_rest_api.api.id
+  resource_id          = aws_api_gateway_resource.catchall.id
+  http_method          = aws_api_gateway_method.catchall.http_method
+  type                 = "MOCK"
+  passthrough_behavior = "WHEN_NO_MATCH"
 
   request_templates = {
-    "application/json" = "{\"statusCode\": 200}"
+    "application/json" = <<EOF
+#set($statusCode = 404)
+#if($input.params('proxy') == "" && ($context.httpMethod == "GET" || $context.httpMethod == "HEAD" || $context.httpMethod == "OPTIONS"))
+    #set($statusCode = 200)
+#end
+"{\"statusCode\": $statusCode)}"
+EOF
   }
 }
 
-resource "aws_api_gateway_method_response" "health_get_response_200" {
+resource "aws_api_gateway_method_response" "catchall_200" {
   rest_api_id = aws_api_gateway_rest_api.api.id
-  resource_id = aws_api_gateway_resource.health.id
-  http_method = aws_api_gateway_method.health_get.http_method
+  resource_id = aws_api_gateway_resource.catchall.id
+  http_method = aws_api_gateway_method.catchall.http_method
   status_code = "200"
 
   response_models = {
@@ -161,51 +180,10 @@ resource "aws_api_gateway_method_response" "health_get_response_200" {
   }
 }
 
-resource "aws_api_gateway_integration_response" "health_get_response_200" {
+resource "aws_api_gateway_method_response" "catchall_404" {
   rest_api_id = aws_api_gateway_rest_api.api.id
-  resource_id = aws_api_gateway_resource.health.id
-  http_method = aws_api_gateway_method.health_get.http_method
-  status_code = aws_api_gateway_method_response.health_get_response_200.status_code
-
-  response_templates = {
-    "application/json" = ""
-  }
-
-  response_parameters = {
-    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
-    "method.response.header.Access-Control-Allow-Methods" = "'GET,HEAD'"
-    "method.response.header.Access-Control-Allow-Origin"  = "'*'"
-  }
-}
-
-resource "aws_api_gateway_resource" "not_found" {
-  rest_api_id = aws_api_gateway_rest_api.api.id
-  parent_id   = aws_api_gateway_rest_api.api.root_resource_id
-  path_part   = "404"
-}
-
-resource "aws_api_gateway_method" "not_found_any" {
-  rest_api_id   = aws_api_gateway_rest_api.api.id
-  resource_id   = aws_api_gateway_resource.not_found.id
-  http_method   = "ANY"
-  authorization = "NONE"
-}
-
-resource "aws_api_gateway_integration" "not_found_any" {
-  rest_api_id = aws_api_gateway_rest_api.api.id
-  resource_id = aws_api_gateway_resource.not_found.id
-  http_method = aws_api_gateway_method.not_found_any.http_method
-  type        = "MOCK"
-
-  request_templates = {
-    "application/json" = "{\"statusCode\": 404}"
-  }
-}
-
-resource "aws_api_gateway_method_response" "not_found_any_response_404" {
-  rest_api_id = aws_api_gateway_rest_api.api.id
-  resource_id = aws_api_gateway_resource.not_found.id
-  http_method = aws_api_gateway_method.not_found_any.http_method
+  resource_id = aws_api_gateway_resource.catchall.id
+  http_method = aws_api_gateway_method.catchall.http_method
   status_code = "404"
 
   response_models = {
@@ -219,11 +197,11 @@ resource "aws_api_gateway_method_response" "not_found_any_response_404" {
   }
 }
 
-resource "aws_api_gateway_integration_response" "not_found_any_response_404" {
+resource "aws_api_gateway_integration_response" "catchall_200" {
   rest_api_id = aws_api_gateway_rest_api.api.id
-  resource_id = aws_api_gateway_resource.not_found.id
-  http_method = aws_api_gateway_method.not_found_any.http_method
-  status_code = aws_api_gateway_method_response.not_found_any_response_404.status_code
+  resource_id = aws_api_gateway_resource.catchall.id
+  http_method = aws_api_gateway_method.catchall.http_method
+  status_code = aws_api_gateway_method_response.catchall_200.status_code
 
   response_templates = {
     "application/json" = ""
@@ -231,38 +209,53 @@ resource "aws_api_gateway_integration_response" "not_found_any_response_404" {
 
   response_parameters = {
     "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
-    "method.response.header.Access-Control-Allow-Methods" = "'GET,HEAD,PUT,POST,PATCH,DELETE'"
+    "method.response.header.Access-Control-Allow-Methods" = "'OPTIONS,GET,HEAD,PUT,POST,PATCH,DELETE'"
     "method.response.header.Access-Control-Allow-Origin"  = "'*'"
   }
 }
 
-resource "aws_api_gateway_resource" "catchall" {
+resource "aws_api_gateway_integration_response" "catchall_404" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  resource_id = aws_api_gateway_resource.catchall.id
+  http_method = aws_api_gateway_method.catchall.http_method
+  status_code = aws_api_gateway_method_response.catchall_404.status_code
+
+  response_templates = {
+    "application/json" = ""
+  }
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+    "method.response.header.Access-Control-Allow-Methods" = "'OPTIONS,GET,HEAD,PUT,POST,PATCH,DELETE'"
+    "method.response.header.Access-Control-Allow-Origin"  = "'*'"
+  }
+}
+
+resource "aws_api_gateway_resource" "proxy" {
   rest_api_id = aws_api_gateway_rest_api.api.id
   parent_id   = aws_api_gateway_rest_api.api.root_resource_id
   path_part   = "{proxy+}"
 }
 
-resource "aws_api_gateway_method" "catchall_any" {
+resource "aws_api_gateway_method" "proxy" {
   rest_api_id   = aws_api_gateway_rest_api.api.id
-  resource_id   = aws_api_gateway_resource.catchall.id
+  resource_id   = aws_api_gateway_resource.proxy.id
   http_method   = "ANY"
   authorization = "NONE"
 }
 
-resource "aws_api_gateway_integration" "catchall_any" {
+resource "aws_api_gateway_integration" "proxy" {
   rest_api_id             = aws_api_gateway_rest_api.api.id
-  resource_id             = aws_api_gateway_resource.catchall.id
-  http_method             = aws_api_gateway_method.catchall_any.http_method
+  resource_id             = aws_api_gateway_resource.proxy.id
+  http_method             = aws_api_gateway_method.proxy.http_method
   integration_http_method = "ANY"
   type                    = "HTTP_PROXY"
   connection_type         = "INTERNET"
-  passthrough_behavior    = "WHEN_NO_MATCH"
 
-  uri = "https://${var.domain}/${var.name}/404"
+  uri = "https://${var.domain}/${var.name}/catchall?proxy={proxy}"
 }
 
 resource "aws_api_gateway_deployment" "deployment" {
-  depends_on        = [aws_api_gateway_integration.health_get]
   rest_api_id       = aws_api_gateway_rest_api.api.id
   stage_name        = "bootstrap"
   stage_description = "A basic stage created to remediate a race condition in API Gateway"
@@ -270,6 +263,12 @@ resource "aws_api_gateway_deployment" "deployment" {
   lifecycle {
     create_before_destroy = true
   }
+
+  depends_on = [
+    aws_api_gateway_integration_response.catchall_200,
+    aws_api_gateway_integration_response.catchall_404,
+    aws_api_gateway_integration.proxy
+  ]
 }
 
 resource "aws_api_gateway_stage" "stage" {
