@@ -190,7 +190,7 @@ resource "aws_api_gateway_method" "not_found_any" {
 
 resource "aws_api_gateway_integration" "not_found_any" {
   rest_api_id          = aws_api_gateway_rest_api.api.id
-  resource_id          = aws_api_gateway_resource.not_found_any.id
+  resource_id          = aws_api_gateway_resource.not_found.id
   http_method          = aws_api_gateway_method.not_found_any.http_method
   type                 = "MOCK"
   passthrough_behavior = "NEVER"
