@@ -134,14 +134,11 @@ resource "aws_api_gateway_method" "health_get" {
 }
 
 resource "aws_api_gateway_integration" "health_get" {
-  rest_api_id = aws_api_gateway_rest_api.api.id
-  resource_id = aws_api_gateway_resource.health.id
-  http_method = aws_api_gateway_method.health_get.http_method
-  type        = "MOCK"
-
-  request_templates = {
-    "application/json" = "{\"statusCode\": 200}"
-  }
+  rest_api_id          = aws_api_gateway_rest_api.api.id
+  resource_id          = aws_api_gateway_resource.health.id
+  http_method          = aws_api_gateway_method.health_get.http_method
+  type                 = "MOCK"
+  passthrough_behavior = "NEVER"
 }
 
 resource "aws_api_gateway_method_response" "health_get_response_200" {
@@ -172,10 +169,89 @@ resource "aws_api_gateway_integration_response" "health_get_response_200" {
   }
 
   response_parameters = {
-    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
-    "method.response.header.Access-Control-Allow-Methods" = "'GET'"
+    "method.response.header.Access-Control-Allow-Headers" = "'*'"
+    "method.response.header.Access-Control-Allow-Methods" = "'*'"
     "method.response.header.Access-Control-Allow-Origin"  = "'*'"
   }
+}
+
+resource "aws_api_gateway_resource" "not_found" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  parent_id   = aws_api_gateway_rest_api.api.root_resource_id
+  path_part   = "404"
+}
+
+resource "aws_api_gateway_method" "not_found_any" {
+  rest_api_id   = aws_api_gateway_rest_api.api.id
+  resource_id   = aws_api_gateway_resource.not_found.id
+  http_method   = "ANY"
+  authorization = "NONE"
+}
+
+resource "aws_api_gateway_integration" "not_found_any" {
+  rest_api_id          = aws_api_gateway_rest_api.api.id
+  resource_id          = aws_api_gateway_resource.not_found_any.id
+  http_method          = aws_api_gateway_method.not_found_any.http_method
+  type                 = "MOCK"
+  passthrough_behavior = "NEVER"
+}
+
+resource "aws_api_gateway_method_response" "not_found_any_response_404" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  resource_id = aws_api_gateway_resource.not_found.id
+  http_method = aws_api_gateway_method.not_found_any.http_method
+  status_code = "404"
+
+  response_models = {
+    "application/json" = "Empty"
+  }
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Headers" = true
+    "method.response.header.Access-Control-Allow-Methods" = true
+    "method.response.header.Access-Control-Allow-Origin"  = true
+  }
+}
+
+resource "aws_api_gateway_integration_response" "not_found_any_response_404" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  resource_id = aws_api_gateway_resource.not_found.id
+  http_method = aws_api_gateway_method.not_found_any.http_method
+  status_code = aws_api_gateway_method_response.not_found_any_response_404.status_code
+
+  response_templates = {
+    "application/json" = ""
+  }
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Headers" = "'*'"
+    "method.response.header.Access-Control-Allow-Methods" = "'*'"
+    "method.response.header.Access-Control-Allow-Origin"  = "'*'"
+  }
+}
+
+resource "aws_api_gateway_resource" "catchall" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  parent_id   = aws_api_gateway_rest_api.api.root_resource_id
+  path_part   = "{proxy+}"
+}
+
+resource "aws_api_gateway_method" "catchall_any" {
+  rest_api_id   = aws_api_gateway_rest_api.api.id
+  resource_id   = aws_api_gateway_resource.catchall.id
+  http_method   = "ANY"
+  authorization = "NONE"
+}
+
+resource "aws_api_gateway_integration" "catchall_any" {
+  rest_api_id          = aws_api_gateway_rest_api.api.id
+  resource_id          = aws_api_gateway_resource.catchall.id
+  http_method          = aws_api_gateway_method.catchall_any.http_method
+  type                 = "HTTP_PROXY"
+  connection_type      = "INTERNET"
+  passthrough_behavior = "NEVER"
+
+  uri = "https://${var.domain}/${var.name}/404"
 }
 
 resource "aws_api_gateway_deployment" "deployment" {
