@@ -142,7 +142,7 @@ resource "aws_api_gateway_integration" "catchall" {
 
   request_templates = {
     "application/json" = <<EOF
-#if($context.resourcePath == "/health")
+#if($input.params('path') == "health")
     {"statusCode": 200}
 #else
     {"statusCode": 404}
