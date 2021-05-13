@@ -11,7 +11,7 @@ jobs:
       - run: terraform init
       - run: terraform fmt -check -recursive -diff
       - run: terraform validate
-      - uses: scaffoldly/bump-version-action@1.0.86
+      - uses: scaffoldly/bump-version-action@v1
         with:
           action: postrelease
           version-file: module.json
