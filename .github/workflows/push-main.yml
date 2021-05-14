@@ -2,6 +2,8 @@ name: Push to Main
 on:
   push:
     branches: [main]
+env:
+  TF_CLI_CONFIG_FILE: custom_providers/custom.tfrc
 jobs:
   prerelease:
     runs-on: ubuntu-latest

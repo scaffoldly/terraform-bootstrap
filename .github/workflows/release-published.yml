@@ -2,6 +2,8 @@ name: Release Published
 on:
   release:
     types: [published]
+env:
+  TF_CLI_CONFIG_FILE: custom_providers/custom.tfrc
 jobs:
   postrelease:
     runs-on: ubuntu-latest
