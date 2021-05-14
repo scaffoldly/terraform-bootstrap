@@ -1,7 +1,0 @@
-provider_installation {
-  dev_overrides {
-    "integrations/github" = "./custom_providers/"
-  }
-
-  direct {}
-}
