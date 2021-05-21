@@ -185,6 +185,27 @@ resource "aws_cloudfront_distribution" "distribution" {
     }
   }
 
+  ordered_cache_behavior {
+    path_pattern = "index.html"
+
+    min_ttl     = 0
+    default_ttl = 0
+    max_ttl     = 0
+
+    allowed_methods        = ["GET", "HEAD"]
+    cached_methods         = ["GET", "HEAD"]
+    target_origin_id       = aws_s3_bucket.bucket.id
+    viewer_protocol_policy = var.redirect_http ? "redirect-to-https" : "allow-all"
+
+    forwarded_values {
+      query_string = false
+
+      cookies {
+        forward = "none"
+      }
+    }
+  }
+
   restrictions {
     geo_restriction {
       restriction_type = "none"
