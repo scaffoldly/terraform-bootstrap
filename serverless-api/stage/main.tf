@@ -120,41 +120,37 @@ resource "aws_api_gateway_gateway_response" "cors_responses" {
   }
 }
 
-resource "aws_api_gateway_resource" "catchall" {
+resource "aws_api_gateway_resource" "health" {
   rest_api_id = aws_api_gateway_rest_api.api.id
   parent_id   = aws_api_gateway_rest_api.api.root_resource_id
-  path_part   = "{path+}"
+  path_part   = "health"
 }
 
-resource "aws_api_gateway_method" "catchall" {
+resource "aws_api_gateway_method" "health" {
   rest_api_id   = aws_api_gateway_rest_api.api.id
-  resource_id   = aws_api_gateway_resource.catchall.id
+  resource_id   = aws_api_gateway_resource.health.id
   http_method   = "ANY"
   authorization = "NONE"
 }
 
-resource "aws_api_gateway_integration" "catchall" {
+resource "aws_api_gateway_integration" "health" {
   rest_api_id          = aws_api_gateway_rest_api.api.id
-  resource_id          = aws_api_gateway_resource.catchall.id
-  http_method          = aws_api_gateway_method.catchall.http_method
+  resource_id          = aws_api_gateway_resource.health.id
+  http_method          = aws_api_gateway_method.health.http_method
   type                 = "MOCK"
   passthrough_behavior = "WHEN_NO_MATCH"
 
   request_templates = {
     "application/json" = <<EOF
-#if($input.params('path') == "health")
-    {"statusCode": 200}
-#else
-    {"statusCode": 404}
-#end
+{"statusCode": 200}
 EOF
   }
 }
 
-resource "aws_api_gateway_method_response" "catchall_200" {
+resource "aws_api_gateway_method_response" "health_200" {
   rest_api_id = aws_api_gateway_rest_api.api.id
-  resource_id = aws_api_gateway_resource.catchall.id
-  http_method = aws_api_gateway_method.catchall.http_method
+  resource_id = aws_api_gateway_resource.health.id
+  http_method = aws_api_gateway_method.health.http_method
   status_code = "200"
 
   response_models = {
@@ -168,46 +164,12 @@ resource "aws_api_gateway_method_response" "catchall_200" {
   }
 }
 
-resource "aws_api_gateway_method_response" "catchall_404" {
-  rest_api_id = aws_api_gateway_rest_api.api.id
-  resource_id = aws_api_gateway_resource.catchall.id
-  http_method = aws_api_gateway_method.catchall.http_method
-  status_code = "404"
-
-  response_models = {
-    "application/json" = "Empty"
-  }
-
-  response_parameters = {
-    "method.response.header.Access-Control-Allow-Headers" = true
-    "method.response.header.Access-Control-Allow-Methods" = true
-    "method.response.header.Access-Control-Allow-Origin"  = true
-  }
-}
-
-resource "aws_api_gateway_integration_response" "catchall_200" {
+resource "aws_api_gateway_integration_response" "health_200" {
   rest_api_id       = aws_api_gateway_rest_api.api.id
-  resource_id       = aws_api_gateway_resource.catchall.id
-  http_method       = aws_api_gateway_method.catchall.http_method
-  status_code       = aws_api_gateway_method_response.catchall_200.status_code
+  resource_id       = aws_api_gateway_resource.health.id
+  http_method       = aws_api_gateway_method.health.http_method
+  status_code       = aws_api_gateway_method_response.health_200.status_code
   selection_pattern = "200"
-
-  response_templates = {
-    "application/json" = ""
-  }
-
-  response_parameters = {
-    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
-    "method.response.header.Access-Control-Allow-Methods" = "'OPTIONS,GET,HEAD,PUT,POST,PATCH,DELETE'"
-    "method.response.header.Access-Control-Allow-Origin"  = "'*'"
-  }
-}
-
-resource "aws_api_gateway_integration_response" "catchall_404" {
-  rest_api_id = aws_api_gateway_rest_api.api.id
-  resource_id = aws_api_gateway_resource.catchall.id
-  http_method = aws_api_gateway_method.catchall.http_method
-  status_code = aws_api_gateway_method_response.catchall_404.status_code
 
   response_templates = {
     "application/json" = ""
@@ -230,8 +192,7 @@ resource "aws_api_gateway_deployment" "deployment" {
   }
 
   depends_on = [
-    aws_api_gateway_integration_response.catchall_200,
-    aws_api_gateway_integration_response.catchall_404,
+    aws_api_gateway_integration_response.health_200,
   ]
 }
 
