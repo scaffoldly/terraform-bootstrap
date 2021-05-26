@@ -195,7 +195,7 @@ resource "aws_cloudfront_distribution" "distribution" {
     allowed_methods        = ["GET", "HEAD"]
     cached_methods         = ["GET", "HEAD"]
     target_origin_id       = aws_s3_bucket.bucket.id
-    viewer_protocol_policy = var.redirect_http ? "redirect-to-https" : "allow-all"
+    viewer_protocol_policy = "redirect-to-https"
 
     forwarded_values {
       query_string = false
