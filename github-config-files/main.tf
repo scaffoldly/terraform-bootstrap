@@ -46,7 +46,7 @@ module "stage_files" {
   stage_name = var.stages[count.index]
 
   stage_config = {
-    for key, value in var.stage_config :
+    for key, value in var.services :
     key => lookup(value, var.stages[count.index])
   }
 
