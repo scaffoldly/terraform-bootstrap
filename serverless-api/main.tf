@@ -87,6 +87,17 @@ output "stage_urls" {
   }
 }
 
+output "stage_config" {
+  value = {
+    for stage in module.stage :
+    stage.name => {
+      base_url     = stage.url
+      repo_name    = module.repository.name
+      service_name = var.name
+    }
+  }
+}
+
 output "stage_env_vars" {
   value = {
     for stage in module.stage :

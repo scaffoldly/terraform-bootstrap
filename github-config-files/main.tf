@@ -17,8 +17,8 @@ variable "repository_name" {
 variable "stages" {
   type = list(string)
 }
-variable "stage_urls" {
-  type = map(map(string)) # Repo Name -> Stage -> URL
+variable "services" {
+  type = map(map(map(string))) # Service Name -> Stage -> [key: base_url|service_name|repo_nane] = value
 }
 variable "stage_env_vars" {
   type = map(map(string)) # Stage -> Name -> Value
@@ -45,9 +45,9 @@ module "stage_files" {
 
   stage_name = var.stages[count.index]
 
-  stage_urls = {
-    for key, value in var.stage_urls :
-    key => lookup(value, var.stages[count.index], "unknown-url")
+  stage_config = {
+    for key, value in var.stage_config :
+    key => lookup(value, var.stages[count.index])
   }
 
   env_vars = lookup(var.stage_env_vars, var.stages[count.index])
@@ -64,9 +64,9 @@ module "stage_files_default" {
 
   stage_name = ""
 
-  stage_urls = {
-    for key, value in var.stage_urls :
-    key => lookup(value, "nonlive", "unknown-url") # TODO: Configurable default stage
+  stage_config = {
+    for key, value in var.services :
+    key => lookup(value, "nonlive")
   }
 
   env_vars = lookup(var.stage_env_vars, "nonlive")
@@ -97,10 +97,10 @@ For more info: https://docs.scaffold.ly/infrastructure/configuration-files
 ${yamlencode(var.stages)}
 ```
 
-## Stage URLs
+## Services
 
 ```yaml
-${yamlencode(var.stage_urls)}
+${yamlencode(var.services)}
 ```
 
 ## Stage Env Vars (Higher precedence than Shared Env Vars)

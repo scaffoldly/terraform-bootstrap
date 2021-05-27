@@ -22,8 +22,8 @@ variable "stage_name" {
   type    = string
   default = ""
 }
-variable "stage_urls" {
-  type = map(string)
+variable "stage_config" {
+  type = map(map(string))
 }
 variable "env_vars" {
   type = map(string)
@@ -45,12 +45,12 @@ locals {
   )
 }
 
-resource "github_repository_file" "service_urls_json" {
+resource "github_repository_file" "services_json" {
   repository = var.repository_name
   branch     = var.branch
-  file       = ".scaffoldly/${local.stage_path}service-urls.json"
+  file       = ".scaffoldly/${local.stage_path}services.json"
 
-  content = jsonencode(var.stage_urls)
+  content = jsonencode(var.stage_config)
 
   commit_message = "[Scaffoldly] Update ${local.stage_path}service-urls.json"
   commit_author  = "Scaffoldly Bootstrap"
@@ -94,7 +94,7 @@ resource "github_repository_file" "env" {
 # DO NOT EDIT. 
 # THIS FILE IS MANAGED BY THE BOOTSTRAP PROJECT IN THIS ORGANIZATION.
 
-service_urls=${jsonencode(var.stage_urls)}
+stage_config=${jsonencode(var.stage_config)}
 env_vars=${jsonencode(local.env_vars)}
 EOF
 
