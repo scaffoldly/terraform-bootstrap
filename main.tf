@@ -115,6 +115,7 @@ module "github_config_files_serverless_apis" {
 
   organization    = var.organization
   repository_name = module.serverless_api[each.key].repository_name
+  service_name    = module.serverless_api[each.key].service_name
   stages          = keys(var.stages)
   services        = zipmap(values(module.serverless_api)[*].service_name, values(module.serverless_api)[*].stage_config)
   stage_env_vars  = module.serverless_api[each.key].stage_env_vars
@@ -134,6 +135,7 @@ module "github_config_files_public_websites" {
 
   organization    = var.organization
   repository_name = module.public_website[each.key].repository_name
+  service_name    = module.public_website[each.key].service_name
   stages          = keys(var.stages)
   services        = zipmap(values(module.serverless_api)[*].service_name, values(module.serverless_api)[*].stage_config)
   stage_env_vars  = module.public_website[each.key].stage_env_vars

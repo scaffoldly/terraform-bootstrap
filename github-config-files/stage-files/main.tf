@@ -11,6 +11,9 @@ terraform {
 variable "repository_name" {
   type = string
 }
+variable "service_name" {
+  type = string
+}
 variable "repository_description" {
   type    = string
   default = ""
@@ -37,6 +40,7 @@ locals {
   env_suffix = var.stage_name != "" ? ".${var.stage_name}" : ""
   env_vars = merge(
     {
+      SERVICE_NAME              = var.service_name
       APPLICATION_NAME          = var.repository_name
       APPLICATION_FRIENDLY_NAME = var.repository_description != "" ? var.repository_description : var.repository_name
     },

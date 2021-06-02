@@ -77,6 +77,10 @@ module "aws_iam" {
   distribution_id = each.value.distribution_id
 }
 
+output "service_name" {
+  value = var.name
+}
+
 output "repository_name" {
   value = module.repository.name
 }

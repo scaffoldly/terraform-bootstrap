@@ -14,6 +14,9 @@ variable "organization" {
 variable "repository_name" {
   type = string
 }
+variable "service_name" {
+  type = string
+}
 variable "stages" {
   type = list(string)
 }
@@ -40,6 +43,7 @@ module "stage_files" {
   source = "./stage-files"
 
   repository_name        = var.repository_name
+  service_name           = var.service_name
   repository_description = data.github_repository.repository.description
   branch                 = data.github_repository.repository.default_branch
 
@@ -59,6 +63,7 @@ module "stage_files_default" {
   source = "./stage-files"
 
   repository_name        = var.repository_name
+  service_name           = var.service_name
   repository_description = data.github_repository.repository.description
   branch                 = data.github_repository.repository.default_branch
 
