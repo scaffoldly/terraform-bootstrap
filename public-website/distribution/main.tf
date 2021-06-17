@@ -1,9 +1,11 @@
 terraform {
   required_version = ">= 0.15"
-}
-
-provider "aws" {
-  alias = "dns"
+  required_providers {
+    aws = {
+      source                = "hashicorp/aws"
+      configuration_aliases = [aws.dns]
+    }
+  }
 }
 
 variable "account_name" {

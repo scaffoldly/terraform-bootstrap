@@ -1,10 +1,12 @@
 terraform {
   required_version = ">= 0.15"
   experiments      = [module_variable_optional_attrs]
-}
-
-provider "aws" {
-  alias = "dns"
+  required_providers {
+    aws = {
+      source                = "hashicorp/aws"
+      configuration_aliases = [aws.dns]
+    }
+  }
 }
 
 variable "stage" {

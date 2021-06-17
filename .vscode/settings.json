@@ -1,3 +1,7 @@
 {
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "terraform.languageServer": {
+    "external": true,
+    "args": ["serve", "-tf-exec=/usr/local/bin/terraform"]
+  }
 }

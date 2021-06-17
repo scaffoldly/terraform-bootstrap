@@ -43,20 +43,22 @@ variable "public_websites" {
       repo_name = optional(string)
     })
   )
+  // TODO: Decom procedure
   default = {}
 }
 
 variable "auth_service" {
   type    = bool
-  default = true
+  default = true // TODO: Decom procedure
 }
 
 # TODO: Env Vars
 variable "serverless_apis" {
   type = map(
     object({
-      template  = string
-      repo_name = optional(string)
+      template       = string
+      repo_name      = optional(string)
+      decommissioned = optional(bool)
     })
   )
   default = {}
