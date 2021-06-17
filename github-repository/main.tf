@@ -32,6 +32,7 @@ resource "github_repository" "repository" {
   has_wiki               = false
   vulnerability_alerts   = true
   delete_branch_on_merge = true
+  archive_on_destroy     = true
 
   template {
     owner      = local.template_owner
