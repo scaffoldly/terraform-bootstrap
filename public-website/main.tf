@@ -77,6 +77,10 @@ module "aws_iam" {
   repository_name = module.repository.name
   bucket_name     = each.value.bucket_name
   distribution_id = each.value.distribution_id
+
+  depends_on = [
+    module.repository
+  ]
 }
 
 output "service_name" {

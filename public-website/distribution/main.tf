@@ -57,6 +57,7 @@ locals {
 resource "aws_s3_bucket" "bucket" {
   bucket_prefix = "${var.account_name}-${var.name}-${var.stage}"
   acl           = "private"
+  force_destroy = true
 
   versioning {
     enabled = true

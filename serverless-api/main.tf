@@ -45,6 +45,10 @@ module "aws_iam" {
   source = "./iam"
 
   repository_name = module.repository.name
+
+  depends_on = [
+    module.repository
+  ]
 }
 
 module "stage" {
@@ -58,6 +62,10 @@ module "stage" {
   stage = each.key
 
   repository_name = module.repository.name
+
+  depends_on = [
+    module.repository
+  ]
 }
 
 module "secrets" {
@@ -70,6 +78,10 @@ module "secrets" {
   deployer_aws_secret_key       = module.aws_iam.deployer_secret_key
   aws_rest_api_id               = each.value.api_id
   aws_rest_api_root_resource_id = each.value.root_resource_id
+
+  depends_on = [
+    module.repository
+  ]
 }
 
 output "service_name" {
