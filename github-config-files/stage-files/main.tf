@@ -40,12 +40,14 @@ locals {
   env_suffix = var.stage_name != "" ? ".${var.stage_name}" : ""
   env_vars = merge(
     {
-      SERVICE_NAME              = var.service_name
-      APPLICATION_NAME          = var.repository_name
       APPLICATION_FRIENDLY_NAME = var.repository_description != "" ? var.repository_description : var.repository_name
     },
     var.shared_env_vars,
     var.env_vars,
+    {
+      SERVICE_NAME     = var.service_name
+      APPLICATION_NAME = var.repository_name
+    }
   )
 }
 
@@ -94,13 +96,7 @@ resource "github_repository_file" "env" {
   branch     = var.branch
   file       = ".scaffoldly/.env${local.env_suffix}"
 
-  content = <<EOF
-# DO NOT EDIT. 
-# THIS FILE IS MANAGED BY THE BOOTSTRAP PROJECT IN THIS ORGANIZATION.
-
-stage_config=${jsonencode(var.stage_config)}
-env_vars=${jsonencode(local.env_vars)}
-EOF
+  content = templatefile("${path.module}/dotenv.tpl", { env_vars = local.env_vars })
 
   commit_message = "[Scaffoldly] Update .env${local.env_suffix}"
   commit_author  = "Scaffoldly Bootstrap"
