@@ -71,6 +71,13 @@ data "aws_iam_policy_document" "event_policy" {
         "ses.amazonaws.com",
       ]
     }
+
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceOwner"
+
+      values = [data.aws_caller_identity.current.account_id]
+    }
   }
 }
 
@@ -81,9 +88,23 @@ resource "aws_sns_topic" "events" {
   policy = data.aws_iam_policy_document.event_policy.json
 }
 
-resource "aws_sns_topic_subscription" "root_email_json" {
-  topic_arn = aws_sns_topic.events.arn
-  protocol  = "email-json"
+resource "aws_sns_topic" "bounce" {
+  name         = "${var.stage}-bounce-events"
+  display_name = "${var.stage}-bounce-events"
+
+  policy = data.aws_iam_policy_document.event_policy.json
+}
+
+resource "aws_sns_topic" "complaint" {
+  name         = "${var.stage}-complaint-events"
+  display_name = "${var.stage}-complaint-events"
+
+  policy = data.aws_iam_policy_document.event_policy.json
+}
+
+resource "aws_sns_topic_subscription" "root_email_compaints" {
+  topic_arn = aws_sns_topic.complaint.arn
+  protocol  = "email"
   endpoint  = var.root_email
 }
 
@@ -91,22 +112,44 @@ resource "aws_ses_event_destination" "sns_destination" {
   name                   = var.stage
   configuration_set_name = aws_ses_configuration_set.configuration_set.name
   enabled                = true
-  matching_types         = ["send", "reject", "bounce", "complaint", "delivery", "open", "click", "renderingFailure"]
+  matching_types         = ["send", "reject", "delivery", "open", "click", "renderingFailure"]
 
   sns_destination {
     topic_arn = aws_sns_topic.events.arn
   }
 }
 
+resource "aws_ses_event_destination" "sns_destination_bounce" {
+  name                   = var.stage
+  configuration_set_name = aws_ses_configuration_set.configuration_set.name
+  enabled                = true
+  matching_types         = ["bounce"]
+
+  sns_destination {
+    topic_arn = aws_sns_topic.bounce.arn
+  }
+}
+
+resource "aws_ses_event_destination" "sns_destination_complaint" {
+  name                   = var.stage
+  configuration_set_name = aws_ses_configuration_set.configuration_set.name
+  enabled                = true
+  matching_types         = ["complaint"]
+
+  sns_destination {
+    topic_arn = aws_sns_topic.complaint.arn
+  }
+}
+
 resource "aws_ses_identity_notification_topic" "bounce" {
-  topic_arn                = aws_sns_topic.events.arn
+  topic_arn                = aws_sns_topic.bounce.arn
   notification_type        = "Bounce"
   identity                 = aws_ses_domain_identity.identity.domain
   include_original_headers = true
 }
 
 resource "aws_ses_identity_notification_topic" "complaint" {
-  topic_arn                = aws_sns_topic.events.arn
+  topic_arn                = aws_sns_topic.complaint.arn
   notification_type        = "Complaint"
   identity                 = aws_ses_domain_identity.identity.domain
   include_original_headers = true
