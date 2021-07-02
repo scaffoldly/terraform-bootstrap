@@ -81,6 +81,12 @@ resource "aws_sns_topic" "events" {
   policy = data.aws_iam_policy_document.event_policy.json
 }
 
+resource "aws_sns_topic_subscription" "root_email_json" {
+  topic_arn = aws_sns_topic.events.arn
+  protocol  = "email-json"
+  endpoint  = var.root_email
+}
+
 resource "aws_ses_event_destination" "sns_destination" {
   name                   = var.stage
   configuration_set_name = aws_ses_configuration_set.configuration_set.name
@@ -90,6 +96,27 @@ resource "aws_ses_event_destination" "sns_destination" {
   sns_destination {
     topic_arn = aws_sns_topic.events.arn
   }
+}
+
+resource "aws_ses_identity_notification_topic" "bounce" {
+  topic_arn                = aws_sns_topic.events.arn
+  notification_type        = "Bounce"
+  identity                 = aws_ses_domain_identity.identity.domain
+  include_original_headers = true
+}
+
+resource "aws_ses_identity_notification_topic" "complaint" {
+  topic_arn                = aws_sns_topic.events.arn
+  notification_type        = "Complaint"
+  identity                 = aws_ses_domain_identity.identity.domain
+  include_original_headers = true
+}
+
+resource "aws_ses_identity_notification_topic" "delivery" {
+  topic_arn                = aws_sns_topic.events.arn
+  notification_type        = "Delivery"
+  identity                 = aws_ses_domain_identity.identity.domain
+  include_original_headers = true
 }
 
 resource "aws_route53_record" "mail_from_mx" {
