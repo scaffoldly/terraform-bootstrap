@@ -120,7 +120,7 @@ resource "aws_ses_event_destination" "sns_destination" {
 }
 
 resource "aws_ses_event_destination" "sns_destination_bounce" {
-  name                   = var.stage
+  name                   = "${var.stage}-bounce"
   configuration_set_name = aws_ses_configuration_set.configuration_set.name
   enabled                = true
   matching_types         = ["bounce"]
@@ -131,7 +131,7 @@ resource "aws_ses_event_destination" "sns_destination_bounce" {
 }
 
 resource "aws_ses_event_destination" "sns_destination_complaint" {
-  name                   = var.stage
+  name                   = "${var.stage}-complaint"
   configuration_set_name = aws_ses_configuration_set.configuration_set.name
   enabled                = true
   matching_types         = ["complaint"]
