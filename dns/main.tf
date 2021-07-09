@@ -29,7 +29,9 @@ resource "aws_route53_delegation_set" "main" {}
 
 module "dns" {
   for_each = var.stages
-  source   = "./stage-dns"
+
+  source  = "scaffoldly/stage-dns/aws"
+  version = "0.15.3"
 
   dns_provider      = var.dns_provider
   stage             = each.key
