@@ -10,8 +10,8 @@ locals {
 module "aws_organization" {
   source  = "scaffoldly/organization/aws"
   version = "0.15.9"
-  name   = var.organization
-  email  = var.root_email
+  name    = var.organization
+  email   = var.root_email
 
   providers = {
     aws = aws.root

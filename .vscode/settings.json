@@ -3,5 +3,11 @@
   "terraform.languageServer": {
     "external": true,
     "args": ["serve", "-tf-exec=/usr/local/bin/terraform"]
+  },
+  "terraform-ls.experimentalFeatures": {
+    "validateOnSave": true
+  },
+  "[terraform]": {
+    "editor.formatOnSave": true
   }
 }
