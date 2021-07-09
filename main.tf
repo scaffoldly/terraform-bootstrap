@@ -29,9 +29,9 @@ module "aws_logging" {
   ]
 }
 
-# TODO test with xyz.com|dev AND subdomain_suffix
 module "dns" {
-  source = "./dns"
+  source  = "scaffoldly/dns/aws"
+  version = "0.15.1"
 
   serverless_api_subdomain = var.serverless_api_subdomain
   stages                   = var.stages
