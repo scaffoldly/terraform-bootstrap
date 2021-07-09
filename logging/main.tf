@@ -4,14 +4,9 @@ terraform {
 
 # TODO: Log storage in the root account
 
-variable "account_name" {
-  type = string
-}
 
-locals {
-  cloudtrail_bucket_name = "${var.account_name}-logs-cloudtrail"
-  cloudfront_bucket_name = "${var.account_name}-logs-cloudfront"
-}
+
+
 
 data "aws_partition" "current" {}
 data "aws_region" "current" {}

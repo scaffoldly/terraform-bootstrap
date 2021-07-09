@@ -19,7 +19,8 @@ module "aws_organization" {
 }
 
 module "aws_logging" {
-  source = "./logging" # TODO Add main.tf in ./logging
+  source  = "scaffoldly/logging/aws"
+  version = "0.15.2"
 
   account_name = module.aws_organization.account_name
 
