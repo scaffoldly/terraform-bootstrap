@@ -63,7 +63,8 @@ module "email" {
 }
 
 module "aws_api_gateway" {
-  source = "./api-gateway"
+  source  = "scaffoldly/api-gateway/aws"
+  version = "0.15.1"
 
   stage_domains = module.dns.stage_domains
 
