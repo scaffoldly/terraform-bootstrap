@@ -63,7 +63,8 @@ module "cloudfront" {
 }
 
 module "repository" {
-  source = "../github-repository"
+  source  = "scaffoldly/repository/github"
+  version = "0.15.1"
 
   template = var.template
   name     = local.repo_name

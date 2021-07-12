@@ -78,7 +78,9 @@ module "aws_api_gateway" {
 }
 
 module "serverless_api" {
-  source   = "./serverless-api"
+  source  = "scaffoldly/serverless-api/aws"
+  version = "0.15.1"
+
   for_each = local.serverless_apis
 
   name          = each.key
