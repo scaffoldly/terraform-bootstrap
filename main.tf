@@ -95,7 +95,9 @@ module "serverless_api" {
 }
 
 module "public_website" {
-  source   = "./public-website"
+  source  = "scaffoldly/public-website/aws"
+  version = "0.15.1"
+
   for_each = var.public_websites
 
   account_name  = module.aws_organization.account_name
@@ -116,7 +118,9 @@ module "public_website" {
 }
 
 module "github_config_files_serverless_apis" {
-  source   = "./github-config-files"
+  source  = "scaffoldly/config-files/github"
+  version = "0.15.1"
+
   for_each = local.serverless_apis
 
   organization    = var.organization
@@ -136,7 +140,9 @@ module "github_config_files_serverless_apis" {
 }
 
 module "github_config_files_public_websites" {
-  source   = "./github-config-files"
+  source  = "scaffoldly/config-files/github"
+  version = "0.15.1"
+
   for_each = var.public_websites
 
   organization    = var.organization

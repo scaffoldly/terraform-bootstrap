@@ -39,8 +39,10 @@ data "github_repository" "repository" {
 }
 
 module "stage_files" {
+  source  = "scaffoldly/stage-config-files/github"
+  version = "0.15.1"
+
   count  = length(var.stages)
-  source = "./stage-files"
 
   repository_name        = var.repository_name
   service_name           = var.service_name
@@ -60,7 +62,8 @@ module "stage_files" {
 }
 
 module "stage_files_default" {
-  source = "./stage-files"
+  source  = "scaffoldly/stage-config-files/github"
+  version = "0.15.1"
 
   repository_name        = var.repository_name
   service_name           = var.service_name
