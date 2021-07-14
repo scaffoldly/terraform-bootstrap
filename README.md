@@ -47,7 +47,7 @@ No providers.
 | <a name="module_aws_logging"></a> [aws\_logging](#module\_aws\_logging) | scaffoldly/logging/aws | 0.15.2 |
 | <a name="module_aws_organization"></a> [aws\_organization](#module\_aws\_organization) | scaffoldly/organization/aws | 0.15.9 |
 | <a name="module_dns"></a> [dns](#module\_dns) | scaffoldly/dns/aws | 0.15.3 |
-| <a name="module_email"></a> [email](#module\_email) | scaffoldly/email/aws | 0.15.2 |
+| <a name="module_email"></a> [email](#module\_email) | scaffoldly/email/aws | 0.15.3 |
 | <a name="module_github_config_files_public_websites"></a> [github\_config\_files\_public\_websites](#module\_github\_config\_files\_public\_websites) | scaffoldly/config-files/github | 0.15.1 |
 | <a name="module_github_config_files_serverless_apis"></a> [github\_config\_files\_serverless\_apis](#module\_github\_config\_files\_serverless\_apis) | scaffoldly/config-files/github | 0.15.1 |
 | <a name="module_public_website"></a> [public\_website](#module\_public\_website) | scaffoldly/public-website/aws | 0.15.1 |
