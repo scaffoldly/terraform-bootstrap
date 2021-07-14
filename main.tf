@@ -31,7 +31,7 @@ module "aws_logging" {
 
 module "dns" {
   source  = "scaffoldly/dns/aws"
-  version = "0.15.2"
+  version = "0.15.3"
 
   serverless_api_subdomain = var.serverless_api_subdomain
   stages                   = var.stages
