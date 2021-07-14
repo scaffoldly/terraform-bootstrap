@@ -48,7 +48,7 @@ module "dns" {
 
 module "email" {
   source  = "scaffoldly/email/aws"
-  version = "0.15.2"
+  version = "0.15.3"
 
   root_email    = var.root_email
   stage_domains = module.dns.stage_domains
