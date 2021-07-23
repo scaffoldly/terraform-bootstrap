@@ -79,7 +79,7 @@ module "aws_api_gateway" {
 
 module "serverless_api" {
   source  = "scaffoldly/serverless-api/aws"
-  version = "0.15.2"
+  version = "0.15.3"
 
   for_each = local.serverless_apis
 
