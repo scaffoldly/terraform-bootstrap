@@ -51,7 +51,7 @@ No providers.
 | <a name="module_github_config_files_public_websites"></a> [github\_config\_files\_public\_websites](#module\_github\_config\_files\_public\_websites) | scaffoldly/config-files/github | 0.15.1 |
 | <a name="module_github_config_files_serverless_apis"></a> [github\_config\_files\_serverless\_apis](#module\_github\_config\_files\_serverless\_apis) | scaffoldly/config-files/github | 0.15.1 |
 | <a name="module_public_website"></a> [public\_website](#module\_public\_website) | scaffoldly/public-website/aws | 0.15.1 |
-| <a name="module_serverless_api"></a> [serverless\_api](#module\_serverless\_api) | scaffoldly/serverless-api/aws | 0.15.4 |
+| <a name="module_serverless_api"></a> [serverless\_api](#module\_serverless\_api) | scaffoldly/serverless-api/aws | 0.15.5 |
 
 ## Resources
 
